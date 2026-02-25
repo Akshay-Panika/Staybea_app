@@ -7,7 +7,7 @@ class LocationAllowScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F7),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -81,15 +81,35 @@ class LocationAllowScreen extends StatelessWidget {
                         ),
 
                         /// LOCATION ICON
-                        const Icon(Icons.location_on,
+                        const Icon(Icons.location_on_outlined,
                             size: 40, color: Colors.grey),
 
                         /// AVATARS
-                        positionedAvatar("assets/a1.jpg", -90, -70),
-                        positionedAvatar("assets/a2.jpg", 80, -60),
-                        positionedAvatar("assets/a3.jpg", -90, 60),
-                        positionedAvatar("assets/a4.jpg", 80, 70),
-                        positionedAvatar("assets/a5.jpg", 0, 110),
+                        positionedAvatar(
+                          "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+                          -90,
+                          -70,
+                        ),
+                        positionedAvatar(
+                          "https://images.unsplash.com/photo-1438761681033-6461ffad8d80",
+                          80,
+                          -60,
+                        ),
+                        positionedAvatar(
+                          "https://images.unsplash.com/photo-1544005313-94ddf0286df2",
+                          -90,
+                          60,
+                        ),
+                        positionedAvatar(
+                          "https://images.unsplash.com/photo-1524504388940-b1c1722653e1",
+                          80,
+                          70,
+                        ),
+                        positionedAvatar(
+                          "https://images.unsplash.com/photo-1517841905240-472988babdf9",
+                          0,
+                          110,
+                        ),
                       ],
                     ),
                   ),
@@ -161,7 +181,8 @@ class LocationAllowScreen extends StatelessWidget {
       top: 130 + y,
       child: CircleAvatar(
         radius: 22,
-        backgroundImage: AssetImage(image),
+        backgroundColor: Colors.white,
+        backgroundImage: NetworkImage(image),
       ),
     );
   }

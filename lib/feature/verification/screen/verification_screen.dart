@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:staybea_app/core/constant/app_icon.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:staybea_app/core/utils/app_logo.dart';
 
 import 'mobile_number_verify_screen.dart';
 
@@ -88,9 +89,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
                         Expanded(
                           child: Column(
                             children: [
-                              _imageCard(height: 150), // fixed height
+                              _imageCard(height: 150, img: 'assets/auth/auth_img1.jpg'), // fixed height
                               const SizedBox(height: 10),
-                              Expanded(child: _imageCard()), // flexible
+                              Expanded(child: _imageCard(img: 'assets/auth/auth_img3.jpg')), // flexible
                             ],
                           ),
                         ),
@@ -98,9 +99,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
                         Expanded(
                           child: Column(
                             children: [
-                              _imageCard(height: 250),
+                              _imageCard(height: 250, img: 'assets/auth/auth_img2.jpg'),
                               const SizedBox(height: 10),
-                              Expanded(child: _imageCard()),
+                              Expanded(child: _imageCard(img: 'assets/auth/auth_img4.jpg')),
                             ],
                           ),
                         ),
@@ -110,15 +111,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
                   Column(
                     children: [
-                      const SizedBox(height: 16),
-                      const Text(
-                        "STAYBEA",
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff5C2A5E),
-                        ),
-                      ),
+                      const SizedBox(height: 22),
+                      Image.asset(AppLogo.appLogo,height: 40,),
 
 
                       const SizedBox(height: 14),
@@ -169,12 +163,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
     );
   }
 
-  Widget _imageCard({double? height}) {
+  Widget _imageCard({double? height, String? img}) {
     return Container(
       height: height,
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
         borderRadius: BorderRadius.circular(12),
+        image: DecorationImage(image: AssetImage(img.toString()),fit: BoxFit.cover)
       ),
     );
   }

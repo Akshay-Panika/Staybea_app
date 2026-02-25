@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:staybea_app/core/utils/app_logo.dart';
 
 import '../../../core/constant/App_color.dart';
 import '../../verification/screen/verification_screen.dart';
@@ -19,7 +20,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    /// Runs only once after 2 seconds
     Timer(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
@@ -33,13 +33,13 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
 
       body: Center(
-        child: Text(
-          "Staybea",
-          style: TextStyle(
-            color: AppColors.primary,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
+        child: Container(
+          height: 200,width: 400,
+          padding: EdgeInsets.all(75),
+          decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage('assets/intro/intro_card_bgi.png'),fit: BoxFit.fill)
           ),
+          child: Image.asset(AppLogo.appLogo,),
         ),
       ),
     );

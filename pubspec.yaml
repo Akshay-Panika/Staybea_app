@@ -25,6 +25,7 @@ dependencies:
   google_fonts: ^6.0.0
   google_sign_in: ^6.1.1
   flutter_facebook_auth: ^6.0.0
+  file_picker: ^10.3.10
 
 dev_dependencies:
   flutter_test:
@@ -50,8 +51,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/image/
     - assets/intro/
     - assets/icon/
+    - assets/auth/
+    - assets/logo/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
