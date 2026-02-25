@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/constant/App_color.dart';
+import '../../explore/screen/explore_screen.dart';
 import '../../home/screen/home_screen.dart';
+import '../../like/screen/like_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -16,8 +18,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   final _screens = [
     HomeScreen(),
-    Center(child: Text('Explore', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
-    Center(child: Text('Like', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+    ExploreScreen(),
+    LikeScreen(),
     Center(child: Text('Chat', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
     Center(child: Text('Events', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
   ];

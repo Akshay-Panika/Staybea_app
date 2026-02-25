@@ -1,21 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+import 'package:staybea_app/core/constant/App_color.dart';
+import 'package:staybea_app/core/utils/app_logo.dart';
 
-class DatingProfile {
-  final String name;
-  final int age;
-  final String distance;
-  final String imageUrl;
-  final bool isVerified;
-
-  const DatingProfile({
-    required this.name,
-    required this.age,
-    required this.distance,
-    required this.imageUrl,
-    this.isVerified = false,
-  });
-}
+import '../../profile/screen/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,279 +12,447 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<DatingProfile> _profiles = [
-    const DatingProfile(
-      name: 'Shraddhaaa',
-      age: 21,
-      distance: 'Just 7 km away from you',
-      imageUrl:
-      'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=80',
-      isVerified: true,
-    ),
-    const DatingProfile(
-      name: 'Priya',
-      age: 24,
-      distance: 'Just 3 km away from you',
-      imageUrl:
-      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&q=80',
-      isVerified: true,
-    ),
-    const DatingProfile(
-      name: 'Ananya',
-      age: 22,
-      distance: 'Just 12 km away from you',
-      imageUrl:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80',
-    ),
-    const DatingProfile(
-      name: 'Meera',
-      age: 26,
-      distance: 'Just 5 km away from you',
-      imageUrl:
-      'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=600&q=80',
-      isVerified: true,
-    ),
+  final List<Map<String, dynamic>> _data = [
+    // Girls
+    {
+      "profileImage": "https://randomuser.me/api/portraits/women/11.jpg",
+      "name": "Mitali",
+      "age": "23",
+      "rangeKM": "3.5 KM",
+      "verifyID": true,
+    },
+    {
+      "profileImage": "https://randomuser.me/api/portraits/women/12.jpg",
+      "name": "Rini",
+      "age": "21",
+      "rangeKM": "2.8 KM",
+      "verifyID": false,
+    },
+    {
+      "profileImage": "https://randomuser.me/api/portraits/women/13.jpg",
+      "name": "Lena",
+      "age": "26",
+      "rangeKM": "5.0 KM",
+      "verifyID": true,
+    },
+    {
+      "profileImage": "https://randomuser.me/api/portraits/women/14.jpg",
+      "name": "Tashi",
+      "age": "24",
+      "rangeKM": "4.2 KM",
+      "verifyID": true,
+    },
+
+    // Boys
+    {
+      "profileImage": "https://randomuser.me/api/portraits/men/11.jpg",
+      "name": "Rohit",
+      "age": "25",
+      "rangeKM": "4.5 KM",
+      "verifyID": true,
+    },
+    {
+      "profileImage": "https://randomuser.me/api/portraits/men/12.jpg",
+      "name": "Amit",
+      "age": "24",
+      "rangeKM": "6.0 KM",
+      "verifyID": false,
+    },
+    {
+      "profileImage": "https://randomuser.me/api/portraits/men/13.jpg",
+      "name": "Karan",
+      "age": "27",
+      "rangeKM": "2.8 KM",
+      "verifyID": true,
+    },
+    {
+      "profileImage": "https://randomuser.me/api/portraits/men/14.jpg",
+      "name": "Tenzin",
+      "age": "23",
+      "rangeKM": "3.9 KM",
+      "verifyID": false,
+    },
   ];
 
   int _currentIndex = 0;
-  int _selectedTab = 1;
+  Offset _dragOffset = Offset.zero;
+  double _dragAngle = 0;
 
-  void _onSwipeLeft() {
+  // ✅ Center animation state
+  String? _centerAction;
+  bool _showCenterAnimation = false;
+
+  void _onDragUpdate(DragUpdateDetails details) {
     setState(() {
-      if (_currentIndex < _profiles.length - 1) _currentIndex++;
+      _dragOffset += details.delta;
+      _dragAngle = _dragOffset.dx / 300 * 0.3;
     });
   }
 
-  void _onSwipeRight() {
+  void _onDragEnd(DragEndDetails details) {
+    if (_dragOffset.dx > 100) {
+      _swipe('like');
+    } else if (_dragOffset.dx < -100) {
+      _swipe('dislike');
+    } else {
+      setState(() {
+        _dragOffset = Offset.zero;
+        _dragAngle = 0;
+      });
+    }
+  }
+
+  void _swipe(String action) {
     setState(() {
-      if (_currentIndex < _profiles.length - 1) _currentIndex++;
+      _dragOffset = Offset.zero;
+      _dragAngle = 0;
+      if (_currentIndex < _data.length - 1) {
+        _currentIndex++;
+      } else {
+        _currentIndex = 0;
+      }
     });
+  }
+
+  // ✅ Center animation trigger
+  void _triggerCenterAnimation(String action) async {
+    setState(() {
+      _centerAction = action;
+      _showCenterAnimation = true;
+    });
+
+    await Future.delayed(Duration(milliseconds: 800));
+
+    setState(() {
+      _showCenterAnimation = false;
+    });
+
+    await Future.delayed(Duration(milliseconds: 200));
+
+    _swipe(action);
+  }
+
+  // ✅ Action ke hisab se icon + color
+  Map<String, dynamic> _getActionStyle(String action) {
+    switch (action) {
+      case 'like':
+        return {
+          'icon': 'assets/icon/like.png',
+          'color': Colors.green,
+          'label': 'LIKE',
+        };
+      case 'dislike':
+        return {
+          'icon': 'assets/icon/back_arrow.png',
+          'color': Colors.red,
+          'label': 'NOPE',
+        };
+      case 'superlike':
+        return {
+          'icon': 'assets/icon/super_like.png',
+          'color': Colors.blue,
+          'label': 'SUPER',
+        };
+      default:
+        return {
+          'icon': 'assets/icon/like.png',
+          'color': Colors.green,
+          'label': 'LIKE',
+        };
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildAppBar(),
-            Expanded(
-              child: Container(
-                color: Colors.white, // ensures background is white
-                child: _profiles.isEmpty || _currentIndex >= _profiles.length
-                    ? _buildEmptyState()
-                    : _buildCardStack(),
-              ),
+      appBar: AppBar(
+        toolbarHeight: 0,
+        backgroundColor: Colors.white,
+      ),
+      body: Column(
+        children: [
+          _buildAppBar(context),
+          SizedBox(height: 20,),
+          Expanded(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Back card
+                if (_currentIndex + 1 < _data.length)
+                  Positioned.fill(
+                    child: Container(
+                      margin: EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: _buildProfileCard(_data[_currentIndex + 1]),
+                    ),
+                  ),
+
+                // Front card
+                Positioned.fill(
+                  child: GestureDetector(
+                    onPanUpdate: _onDragUpdate,
+                    onPanEnd: _onDragEnd,
+                    child: AnimatedContainer(
+                      duration: _dragOffset == Offset.zero
+                          ? Duration(milliseconds: 300)
+                          : Duration.zero,
+                      margin: EdgeInsets.all(10),
+                      child: Transform.translate(
+                        offset: _dragOffset,
+                        child: Transform.rotate(
+                          angle: _dragAngle,
+                          child: Stack(
+                            children: [
+                              _buildProfileCard(_data[_currentIndex]),
+
+                              // Drag LIKE overlay
+                              if (_dragOffset.dx > 30)
+                                Positioned(
+                                  top: 40,
+                                  left: 20,
+                                  child: _overlayLabel('LIKE', Colors.green),
+                                ),
+
+                              // Drag NOPE overlay
+                              if (_dragOffset.dx < -30)
+                                Positioned(
+                                  top: 40,
+                                  right: 20,
+                                  child: _overlayLabel('NOPE', Colors.red),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // ✅ Center Animation Overlay
+                if (_showCenterAnimation && _centerAction != null)
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: Container(
+                        margin: EdgeInsets.all(16),
+                        child: Center(
+                          child: _CenterActionAnimation(
+                            action: _centerAction!,
+                            style: _getActionStyle(_centerAction!),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-            _buildBottomNav(),
-          ],
-        ),
+          ),
+
+          // Action Buttons
+          Container(
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Color(0xFFFFF5FF),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                GestureDetector(
+                  onTap: () => _triggerCenterAnimation('dislike'), // ✅
+                  child: _actionButton(icon: 'assets/icon/back_arrow.png'),
+                ),
+                GestureDetector(
+                  onTap: () => _triggerCenterAnimation('superlike'), // ✅
+                  child: _actionButton(icon: 'assets/icon/super_like.png'),
+                ),
+                GestureDetector(
+                  onTap: () => _triggerCenterAnimation('like'), // ✅
+                  child: _actionButton(icon: 'assets/icon/like.png'),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20),
+        ],
       ),
     );
   }
 
-  // ── AppBar
-  Widget _buildAppBar() {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildProfileCard(Map<String, dynamic> profile) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          const Text(
-            'Staybea',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF1A1A1A),
-              letterSpacing: -0.5,
+          Image.network(
+            profile['profileImage'],
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
+              color: Color(0xFFFFF5FF),
+              child: Icon(Icons.person, size: 100, color: Colors.grey),
             ),
           ),
-          Row(
-            children: [
-              _iconButton(Icons.notifications_outlined),
-              const SizedBox(width: 8),
-              _iconButton(Icons.person_outline),
-            ],
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.7),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "${profile['name']}, ${profile['age']}",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      if (profile['verifyID'] == true)
+                        Icon(Icons.verified, color: Colors.blue, size: 20),
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.location_on, color: Colors.white, size: 16),
+                      SizedBox(width: 4),
+                      Text(
+                        profile['rangeKM'],
+                        style:
+                        TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _iconButton(IconData icon) {
+  Widget _overlayLabel(String text, Color color) {
+    return Transform.rotate(
+      angle: text == 'LIKE' ? -0.3 : 0.3,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          border: Border.all(color: color, width: 3),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: color,
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _actionButton({required String icon}) {
     return Container(
-      width: 40,
-      height: 40,
+      height: 50,
+      width: 50,
+      padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 8,
-              offset: const Offset(0, 2))
-        ],
-      ),
-      child: Icon(icon, size: 20, color: const Color(0xFF1A1A1A)),
-    );
-  }
-
-  // ── Card Stack
-  Widget _buildCardStack() {
-    if (_profiles.isEmpty || _currentIndex >= _profiles.length) {
-      return const SizedBox();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Next card
-          if (_currentIndex + 1 < _profiles.length)
-            Positioned(
-              top: 5,
-              left: 5,
-              right: 5,
-              bottom: 5,
-              child: _buildCard(_profiles[_currentIndex + 1], isBack: true),
-            ),
-          // Front card
-          _SwipeableCard(
-            key: ValueKey(_currentIndex),
-            profile: _profiles[_currentIndex],
-            onSwipeLeft: _onSwipeLeft,
-            onSwipeRight: _onSwipeRight,
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: Offset(0, 2),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildCard(DatingProfile profile, {bool isBack = false}) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          )
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: Image.network(
-          profile.imageUrl,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) =>
-              Container(color: const Color(0xFFE0E0E0)),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('💔', style: TextStyle(fontSize: 64)),
-          SizedBox(height: 16),
-          Text(
-            'No more profiles',
-            style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black),
-          ),
-          SizedBox(height: 8),
-          Text('Check back later!',
-              style: TextStyle(color: Colors.black, fontSize: 16)),
-        ],
-      ),
-    );
-  }
-
-  // ── Bottom Nav
-  Widget _buildBottomNav() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 40),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _navBtn(Icons.replay_rounded, const Color(0xFFFFB347), 0, size: 26),
-          _navBtn(Icons.catching_pokemon_rounded, const Color(0xFFFF4D6D), 1,
-              size: 32, isPrimary: true),
-          _navBtn(Icons.favorite_border_rounded, const Color(0xFFFF4D6D), 2,
-              size: 26),
-        ],
-      ),
-    );
-  }
-
-  Widget _navBtn(IconData icon, Color color, int index,
-      {double size = 24, bool isPrimary = false}) {
-    final isSelected = _selectedTab == index;
-    return GestureDetector(
-      onTap: () => setState(() => _selectedTab = index),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: isPrimary ? 64 : 52,
-        height: isPrimary ? 64 : 52,
-        decoration: BoxDecoration(
-          color:
-          isPrimary ? color : (isSelected ? color.withOpacity(0.1) : Colors.white),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: isPrimary ? color.withOpacity(0.4) : Colors.black.withOpacity(0.06),
-              blurRadius: isPrimary ? 16 : 8,
-              offset: const Offset(0, 4),
-            )
-          ],
-        ),
-        child: Icon(
-          icon,
-          color: isPrimary ? Colors.white : (isSelected ? color : const Color(0xFFAAAAAA)),
-          size: size,
-        ),
-      ),
+      child: Image.asset(icon),
     );
   }
 }
 
-// ─── Swipeable Card
-class _SwipeableCard extends StatefulWidget {
-  final DatingProfile profile;
-  final VoidCallback onSwipeLeft;
-  final VoidCallback onSwipeRight;
+// ✅ Separate AnimatedWidget for center action
+class _CenterActionAnimation extends StatefulWidget {
+  final String action;
+  final Map<String, dynamic> style;
 
-  const _SwipeableCard({
-    super.key,
-    required this.profile,
-    required this.onSwipeLeft,
-    required this.onSwipeRight,
+  const _CenterActionAnimation({
+    required this.action,
+    required this.style,
   });
 
   @override
-  State<_SwipeableCard> createState() => _SwipeableCardState();
+  State<_CenterActionAnimation> createState() =>
+      _CenterActionAnimationState();
 }
 
-class _SwipeableCardState extends State<_SwipeableCard>
+class _CenterActionAnimationState extends State<_CenterActionAnimation>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  Offset _dragOffset = Offset.zero;
-  bool _isDragging = false;
-  _SwipeDirection? _swipeDir;
-  double _overlayOpacity = 0;
+  late Animation<double> _scaleAnim;
+  late Animation<double> _opacityAnim;
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 700),
+    );
+
+    // Scale: 0.5 → 1.2 → 1.0
+    _scaleAnim = TweenSequence([
+      TweenSequenceItem(
+        tween: Tween(begin: 0.5, end: 1.2),
+        weight: 60,
+      ),
+      TweenSequenceItem(
+        tween: Tween(begin: 1.2, end: 1.0),
+        weight: 40,
+      ),
+    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+    // Opacity: 0 → 1 → fade out
+    _opacityAnim = TweenSequence([
+      TweenSequenceItem(
+        tween: Tween(begin: 0.0, end: 1.0),
+        weight: 30,
+      ),
+      TweenSequenceItem(
+        tween: Tween(begin: 1.0, end: 1.0),
+        weight: 40,
+      ),
+      TweenSequenceItem(
+        tween: Tween(begin: 1.0, end: 0.0),
+        weight: 30,
+      ),
+    ]).animate(_controller);
+
+    _controller.forward();
   }
 
   @override
@@ -306,276 +461,76 @@ class _SwipeableCardState extends State<_SwipeableCard>
     super.dispose();
   }
 
-  void _onPanStart(DragStartDetails _) {
-    setState(() => _isDragging = true);
-    _controller.stop();
-  }
-
-  void _onPanUpdate(DragUpdateDetails d) {
-    setState(() {
-      _dragOffset += d.delta;
-      _overlayOpacity = (_dragOffset.dx.abs() / 150).clamp(0, 1);
-      _swipeDir =
-      _dragOffset.dx > 0 ? _SwipeDirection.right : _SwipeDirection.left;
-    });
-  }
-
-  void _onPanEnd(DragEndDetails details) {
-    final velocity = details.velocity.pixelsPerSecond.dx;
-    final threshold = 100.0;
-
-    if (_dragOffset.dx.abs() > threshold || velocity.abs() > 600) {
-      final direction = (_dragOffset.dx > 0 || velocity > 0) ? 1.0 : -1.0;
-      final screenWidth = MediaQuery.of(context).size.width;
-      final targetX = direction * screenWidth * 1.5;
-
-      _animateTo(Offset(targetX, _dragOffset.dy + direction * 200), () {
-        if (direction > 0) {
-          widget.onSwipeRight();
-        } else {
-          widget.onSwipeLeft();
-        }
-      });
-    } else {
-      _animateTo(Offset.zero, null);
-    }
-  }
-
-  void _animateTo(Offset target, VoidCallback? onComplete) {
-    final startOffset = _dragOffset;
-    final startOpacity = _overlayOpacity;
-
-    _controller.reset();
-    _controller.addListener(() {
-      setState(() {
-        _dragOffset = Offset.lerp(startOffset, target, _controller.value)!;
-        _overlayOpacity = (startOpacity * (1 - _controller.value)).clamp(0, 1);
-      });
-    });
-
-    _controller.forward().whenComplete(() {
-      setState(() {
-        _isDragging = false;
-        _swipeDir = null;
-        _overlayOpacity = 0;
-      });
-      onComplete?.call();
-    });
-  }
-
-  double get _rotation => (_dragOffset.dx / 300) * (math.pi / 8);
-
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final Color color = widget.style['color'];
+    final String label = widget.style['label'];
+    final String icon = widget.style['icon'];
 
-    return GestureDetector(
-      onPanStart: _onPanStart,
-      onPanUpdate: _onPanUpdate,
-      onPanEnd: _onPanEnd,
-      child: Transform(
-        transform: Matrix4.identity()
-          ..translate(_dragOffset.dx, _dragOffset.dy)
-          ..rotateZ(_rotation),
-        alignment: Alignment.bottomCenter,
-        child: SizedBox(
-          width: size.width - 32,
-          height: size.height * 0.68,
-          child: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.15),
-                      blurRadius: 24,
-                      offset: const Offset(0, 10),
-                    )
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.network(
-                        widget.profile.imageUrl,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (_, child, progress) {
-                          if (progress == null) return child;
-                          return Container(
-                            color: const Color(0xFFE0E0E0),
-                            child: const Center(
-                                child: CircularProgressIndicator()),
-                          );
-                        },
-                        errorBuilder: (_, __, ___) => Container(
-                          color: const Color(0xFFD0D0D0),
-                          child:
-                          const Icon(Icons.person, size: 80, color: Colors.white),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        height: 220,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.vertical(
-                                bottom: Radius.circular(24)),
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.transparent,
-                                Colors.black.withOpacity(0.5) // less black
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      // overlays for swipe
-                      if (_swipeDir == _SwipeDirection.right && _overlayOpacity > 0)
-                        Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color:
-                              const Color(0xFF4CAF50).withOpacity(_overlayOpacity * 0.4),
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                          ),
-                        ),
-                      if (_swipeDir == _SwipeDirection.left && _overlayOpacity > 0)
-                        Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color:
-                              const Color(0xFFF44336).withOpacity(_overlayOpacity * 0.4),
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                          ),
-                        ),
-                      // LIKE / NOPE stamps
-                      if (_swipeDir == _SwipeDirection.right && _overlayOpacity > 0.3)
-                        Positioned(
-                          top: 40,
-                          left: 24,
-                          child: Transform.rotate(
-                            angle: -0.3,
-                            child: Opacity(
-                                opacity: ((_overlayOpacity - 0.3) / 0.7).clamp(0, 1),
-                                child: _stamp('LIKE', const Color(0xFF4CAF50))),
-                          ),
-                        ),
-                      if (_swipeDir == _SwipeDirection.left && _overlayOpacity > 0.3)
-                        Positioned(
-                          top: 40,
-                          right: 24,
-                          child: Transform.rotate(
-                            angle: 0.3,
-                            child: Opacity(
-                                opacity: ((_overlayOpacity - 0.3) / 0.7).clamp(0, 1),
-                                child: _stamp('NOPE', const Color(0xFFF44336))),
-                          ),
-                        ),
-                      // Heart icon
-                      if (_swipeDir == _SwipeDirection.right && _overlayOpacity > 0.5)
-                        Positioned(
-                          top: 80,
-                          left: 0,
-                          right: 0,
-                          child: Center(
-                            child: Opacity(
-                              opacity: ((_overlayOpacity - 0.5) / 0.5).clamp(0, 1),
-                              child: const Icon(Icons.favorite,
-                                  color: Color(0xFFFF4D6D), size: 100),
-                            ),
-                          ),
-                        ),
-                      // Profile info
-                      Positioned(
-                        bottom: 20,
-                        left: 20,
-                        right: 20,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  '${widget.profile.name} ${widget.profile.age}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: -0.3,
-                                  ),
-                                ),
-                                if (widget.profile.isVerified) ...[
-                                  const SizedBox(width: 6),
-                                  Container(
-                                    width: 20,
-                                    height: 20,
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFF2196F3),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.check,
-                                      color: Colors.white,
-                                      size: 12,
-                                    ),
-                                  ),
-                                ]
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Row(
-                              children: [
-                                const Icon(Icons.location_on,
-                                    color: Colors.white70, size: 14),
-                                const SizedBox(width: 4),
-                                Text(
-                                  widget.profile.distance,
-                                  style: const TextStyle(
-                                      color: Colors.white70, fontSize: 13),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Opacity(
+          opacity: _opacityAnim.value,
+          child: Transform.scale(
+            scale: _scaleAnim.value,
+            child: Container(
+              width: 130,
+              height: 130,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.3),
+                shape: BoxShape.circle,
+                // border: Border.all(color: color, width: 3),
               ),
-            ],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(icon, height: 60, width: 60),
+                  SizedBox(height: 6),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      color: color,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _stamp(String text, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        border: Border.all(color: color, width: 3),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: color,
-          fontSize: 28,
-          fontWeight: FontWeight.w900,
-          letterSpacing: 2,
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
-enum _SwipeDirection { left, right }
+Widget _buildAppBar(BuildContext context) {
+  return SizedBox(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Image.asset(AppLogo.appLogo, height: 30),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: 20),
+              // Icon(Icons.notifications_none),
+              SizedBox(width: 20),
+              InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen(),));
+                  },
+                  child: Icon(Icons.person_outline,size: 30,color: AppColors.primary,)),
+            ],
+          )
+        ],
+      ),
+    ),
+  );
+}
