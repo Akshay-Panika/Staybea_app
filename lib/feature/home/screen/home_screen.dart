@@ -15,64 +15,34 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<Map<String, dynamic>> _data = [
-    // Girls
+
     {
-      "profileImage": "https://randomuser.me/api/portraits/women/11.jpg",
+      "profileImage": "assets/profile/profile1.jpg",
       "name": "Mitali",
       "age": "23",
       "rangeKM": "3.5 KM",
       "verifyID": true,
     },
     {
-      "profileImage": "https://randomuser.me/api/portraits/women/12.jpg",
+      "profileImage": "assets/profile/profile2.jpg",
       "name": "Rini",
       "age": "21",
       "rangeKM": "2.8 KM",
       "verifyID": false,
     },
     {
-      "profileImage": "https://randomuser.me/api/portraits/women/13.jpg",
+      "profileImage": "assets/profile/profile3.jpg",
       "name": "Lena",
       "age": "26",
       "rangeKM": "5.0 KM",
       "verifyID": true,
     },
     {
-      "profileImage": "https://randomuser.me/api/portraits/women/14.jpg",
+      "profileImage": "assets/profile/profile4.jpg",
       "name": "Tashi",
       "age": "24",
       "rangeKM": "4.2 KM",
       "verifyID": true,
-    },
-
-    // Boys
-    {
-      "profileImage": "https://randomuser.me/api/portraits/men/11.jpg",
-      "name": "Rohit",
-      "age": "25",
-      "rangeKM": "4.5 KM",
-      "verifyID": true,
-    },
-    {
-      "profileImage": "https://randomuser.me/api/portraits/men/12.jpg",
-      "name": "Amit",
-      "age": "24",
-      "rangeKM": "6.0 KM",
-      "verifyID": false,
-    },
-    {
-      "profileImage": "https://randomuser.me/api/portraits/men/13.jpg",
-      "name": "Karan",
-      "age": "27",
-      "rangeKM": "2.8 KM",
-      "verifyID": true,
-    },
-    {
-      "profileImage": "https://randomuser.me/api/portraits/men/14.jpg",
-      "name": "Tenzin",
-      "age": "23",
-      "rangeKM": "3.9 KM",
-      "verifyID": false,
     },
   ];
 
@@ -297,12 +267,12 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.network(
+          Image.asset(
             profile['profileImage'],
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) => Container(
-              color: Color(0xFFFFF5FF),
-              child: Icon(CupertinoIcons.person_crop_circle, size: 100, color: Colors.grey),
+              color: Colors.white,
+              child: Icon(Icons.image_not_supported_outlined, size: 100, color: Colors.grey.withOpacity(0.16)),
             ),
           ),
           Positioned(
