@@ -17,18 +17,22 @@ class _IntroScreenState extends State<IntroScreen> {
 
   final  titles = [
     {
+      "img": "assets/intro/intro1.gif",
       "title": "Welcome to Staybea",
       "description": "find your true life partner , follow our rules to make every step genuine ",
     },
     {
+      "img": "assets/intro/intro2.gif",
       "title": "Strat Your Love Life Journey Today",
       "description": "felling alone don't just charge your phone use it make your love connection   ",
     },
     {
+      "img": "assets/intro/intro3.gif",
       "title": "Date and make your love moments",
       "description": "start dating with trusted and genuine person , make your love moments ",
     },
     {
+      "img": "assets/intro/intro4.gif",
       "title": "build your happy relationship heartline",
       "description": "make your life long relationship heartline that stay with you",
     },
@@ -80,14 +84,17 @@ class _IntroScreenState extends State<IntroScreen> {
               padding: EdgeInsets.only(top: 60),
               child:  Column(
                 children: [
-
-                  // Text('STAYBEA',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),),
-
                   Expanded(
                     child: Container(
-                      margin: EdgeInsets.all(40),
+                      margin: const EdgeInsets.all(40),
                       decoration: BoxDecoration(
-                        // color: Colors.white70
+                        borderRadius: BorderRadius.circular(30),
+                        image: DecorationImage(
+                          image: AssetImage(
+                            titles[currentIndex]['img'].toString(),
+                          ),
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
                   )

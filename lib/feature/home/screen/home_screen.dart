@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/constant/App_color.dart';
 import 'package:staybea_app/core/utils/app_logo.dart';
-
 import '../../profile/screen/profile_screen.dart';
+import '../widget/about_widget.dart';
+import '../widget/verification_card_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -137,13 +139,13 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (action) {
       case 'like':
         return {
-          'icon': 'assets/icon/like.png',
+          'icon': 'assets/icon/dill_icon.png',
           'color': Colors.green,
           'label': 'LIKE',
         };
       case 'dislike':
         return {
-          'icon': 'assets/icon/back_arrow.png',
+          'icon': 'assets/icon/crose_icon.png',
           'color': Colors.red,
           'label': 'NOPE',
         };
@@ -170,87 +172,95 @@ class _HomeScreenState extends State<HomeScreen> {
         toolbarHeight: 0,
         backgroundColor: Colors.white,
       ),
-      body: Column(
+      body: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          _buildAppBar(context),
-          SizedBox(height: 20,),
-          Expanded(
-            child: Stack(
-              alignment: Alignment.center,
+          SingleChildScrollView(
+            child: Column(
+              spacing: 20,
               children: [
-                // Back card
-                if (_currentIndex + 1 < _data.length)
-                  Positioned.fill(
-                    child: Container(
-                      margin: EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: _buildProfileCard(_data[_currentIndex + 1]),
-                    ),
-                  ),
+                _buildAppBar(context),
+                Container(
+                  height: 650,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Back card
+                      if (_currentIndex + 1 < _data.length)
+                        Positioned.fill(
+                          child: Container(
+                            margin: EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: _buildProfileCard(_data[_currentIndex + 1]),
+                          ),
+                        ),
 
-                // Front card
-                Positioned.fill(
-                  child: GestureDetector(
-                    onPanUpdate: _onDragUpdate,
-                    onPanEnd: _onDragEnd,
-                    child: AnimatedContainer(
-                      duration: _dragOffset == Offset.zero
-                          ? Duration(milliseconds: 300)
-                          : Duration.zero,
-                      margin: EdgeInsets.all(10),
-                      child: Transform.translate(
-                        offset: _dragOffset,
-                        child: Transform.rotate(
-                          angle: _dragAngle,
-                          child: Stack(
-                            children: [
-                              _buildProfileCard(_data[_currentIndex]),
+                      // Front card
+                      Positioned.fill(
+                        child: GestureDetector(
+                          onPanUpdate: _onDragUpdate,
+                          onPanEnd: _onDragEnd,
+                          child: AnimatedContainer(
+                            duration: _dragOffset == Offset.zero
+                                ? Duration(milliseconds: 300)
+                                : Duration.zero,
+                            margin: EdgeInsets.all(10),
+                            child: Transform.translate(
+                              offset: _dragOffset,
+                              child: Transform.rotate(
+                                angle: _dragAngle,
+                                child: Stack(
+                                  children: [
+                                    _buildProfileCard(_data[_currentIndex]),
 
-                              // Drag LIKE overlay
-                              if (_dragOffset.dx > 30)
-                                Positioned(
-                                  top: 40,
-                                  left: 20,
-                                  child: _overlayLabel('LIKE', Colors.green),
+                                    // Drag LIKE overlay
+                                    if (_dragOffset.dx > 30)
+                                      Positioned(
+                                        top: 40,
+                                        left: 20,
+                                        child: _overlayLabel('LIKE', Colors.green),
+                                      ),
+
+                                    // Drag NOPE overlay
+                                    if (_dragOffset.dx < -30)
+                                      Positioned(
+                                        top: 40,
+                                        right: 20,
+                                        child: _overlayLabel('NOPE', Colors.red),
+                                      ),
+                                  ],
                                 ),
-
-                              // Drag NOPE overlay
-                              if (_dragOffset.dx < -30)
-                                Positioned(
-                                  top: 40,
-                                  right: 20,
-                                  child: _overlayLabel('NOPE', Colors.red),
-                                ),
-                            ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+
+                      // ✅ Center Animation Overlay
+                      if (_showCenterAnimation && _centerAction != null)
+                        Positioned.fill(
+                          child: IgnorePointer(
+                            child: Container(
+                              margin: EdgeInsets.all(16),
+                              child: Center(
+                                child: _CenterActionAnimation(
+                                  action: _centerAction!,
+                                  style: _getActionStyle(_centerAction!),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
-
-                // ✅ Center Animation Overlay
-                if (_showCenterAnimation && _centerAction != null)
-                  Positioned.fill(
-                    child: IgnorePointer(
-                      child: Container(
-                        margin: EdgeInsets.all(16),
-                        child: Center(
-                          child: _CenterActionAnimation(
-                            action: _centerAction!,
-                            style: _getActionStyle(_centerAction!),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                ProfileDetailsScreen(),
               ],
             ),
           ),
 
-          // Action Buttons
           Container(
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.all(16),
@@ -276,7 +286,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          SizedBox(height: 20),
         ],
       ),
     );
@@ -293,57 +302,69 @@ class _HomeScreenState extends State<HomeScreen> {
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) => Container(
               color: Color(0xFFFFF5FF),
-              child: Icon(Icons.person, size: 100, color: Colors.grey),
+              child: Icon(CupertinoIcons.person_crop_circle, size: 100, color: Colors.grey),
             ),
           ),
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
-            child: Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [
-                    Colors.black.withOpacity(0.7),
-                    Colors.transparent,
+            child: Column(
+              children: [
+                if (profile['verifyID'] == true)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    VerificationCardWidget(progress: 0.25,)
                   ],
                 ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+                Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        Colors.black.withOpacity(0.7),
+                        Colors.transparent,
+                      ],
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "${profile['name']}, ${profile['age']}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            "${profile['name']}, ${profile['age']}",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          if (profile['verifyID'] == true)
+                            Icon(Icons.verified, color: Colors.blue, size: 20),
+                        ],
                       ),
-                      SizedBox(width: 8),
-                      if (profile['verifyID'] == true)
-                        Icon(Icons.verified, color: Colors.blue, size: 20),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.location_on, color: Colors.white, size: 16),
+                          SizedBox(width: 4),
+                          Text(
+                            profile['rangeKM'],
+                            style:
+                            TextStyle(color: Colors.white, fontSize: 14),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                  SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.location_on, color: Colors.white, size: 16),
-                      SizedBox(width: 4),
-                      Text(
-                        profile['rangeKM'],
-                        style:
-                        TextStyle(color: Colors.white, fontSize: 14),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
@@ -354,21 +375,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _overlayLabel(String text, Color color) {
     return Transform.rotate(
       angle: text == 'LIKE' ? -0.3 : 0.3,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          border: Border.all(color: color, width: 3),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: color,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+      child: Image.asset(text == 'LIKE' ? 'assets/icon/dill_icon.png':'assets/icon/crose_icon.png', height: 80,),
     );
   }
 
@@ -394,7 +401,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ✅ Separate AnimatedWidget for center action
 class _CenterActionAnimation extends StatefulWidget {
   final String action;
   final Map<String, dynamic> style;
@@ -478,26 +484,12 @@ class _CenterActionAnimationState extends State<_CenterActionAnimation>
               width: 130,
               height: 130,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.3),
-                shape: BoxShape.circle,
+                // color: Colors.white.withOpacity(0.3),
+                // shape: BoxShape.circle,
+                image: DecorationImage(image:AssetImage(icon))
                 // border: Border.all(color: color, width: 3),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(icon, height: 60, width: 60),
-                  SizedBox(height: 6),
-                  Text(
-                    label,
-                    style: TextStyle(
-                      color: color,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.5,
-                    ),
-                  ),
-                ],
-              ),
+             
             ),
           ),
         );
@@ -526,7 +518,7 @@ Widget _buildAppBar(BuildContext context) {
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen(),));
                   },
-                  child: Icon(Icons.person_outline,size: 30,color: AppColors.primary,)),
+                  child: Icon(CupertinoIcons.person_crop_circle,size: 30,color: Colors.grey,)),
             ],
           )
         ],

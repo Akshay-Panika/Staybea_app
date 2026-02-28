@@ -47,7 +47,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
 
     // auto scroll to active step
     _progressController.animateTo(
-      step * 70, // approx item width
+      step * 40, // approx item width
       duration: const Duration(milliseconds: 400),
       curve: Curves.easeInOut,
     );
@@ -64,12 +64,12 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
             /// progress
             Container(
               height: 40,
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              margin: EdgeInsets.symmetric(horizontal: 16),
               child: ListView.builder(
                 controller: _progressController,
                 itemCount: _steps.length,
                 scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.zero,
+                // padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   final isActive = index <= _currentStep;
 
