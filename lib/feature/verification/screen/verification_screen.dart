@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:staybea_app/core/constant/App_color.dart';
 import 'package:staybea_app/core/constant/app_icon.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:staybea_app/core/utils/app_logo.dart';
@@ -131,17 +132,17 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   Column(
                     children: [
                       SizedBox(height: 50,),
-                      _socialButton(
-                       iconPath: AppIcon.google,
-                        text: "Continue with Google",
-                        onTap: _signInWithGoogle,
-                      ),
-                      const SizedBox(height: 12),
-                      _socialButton(
-                        iconPath: AppIcon.facebook,
-                        text: "Continue with Facebook",
-                        onTap: _signInWithFacebook,
-                      ),
+                      // _socialButton(
+                      //  iconPath: AppIcon.google,
+                      //   text: "Continue with Google",
+                      //   onTap: _signInWithGoogle,
+                      // ),
+                      // const SizedBox(height: 12),
+                      // _socialButton(
+                      //   iconPath: AppIcon.facebook,
+                      //   text: "Continue with Facebook",
+                      //   onTap: _signInWithFacebook,
+                      // ),
                       const SizedBox(height: 12),
                       _socialButton(
                         iconPath: AppIcon.phone,
@@ -186,7 +187,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: Colors.black12),
+          border: Border.all(color: AppColors.primary),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

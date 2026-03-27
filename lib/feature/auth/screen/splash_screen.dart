@@ -2,11 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/utils/app_logo.dart';
-
-import '../../../core/constant/App_color.dart';
-import '../../dashboard/screen/dashboard_screen.dart';
 import '../../home/screen/home_screen.dart';
-import '../../verification/screen/verification_screen.dart';
 import 'intro_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,10 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     Timer(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const IntroScreen()),
-      );
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const IntroScreen()));
     });
   }
 

@@ -28,14 +28,14 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   int _currentStep = 0;
 
   List<Widget> get _steps => [
-    NameStepWidget(),
-    DobStepWidget(),
-    GenderStepWidget(),
-    SexualStepWidget(),
     InterestingStepWidget(),
-    LookingStepWidget(),
-    SearchingDistanceWidget(),
-    PersonStudyingWidget(),
+    ProfileSetupWidget(),
+    // DobStepWidget(),
+    // GenderStepWidget(),
+    // SexualStepWidget(),
+    // LookingStepWidget(),
+    // SearchingDistanceWidget(),
+    // PersonStudyingWidget(),
     LifestyleWidget(),
     MattersWidget(),
     LatestPhotosWidget(),
@@ -56,7 +56,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+       backgroundColor: Colors.white,
+      // backgroundColor: Color(0xffF7F8FA),
       body: SafeArea(
         child: Column(
           children: [
@@ -79,29 +80,30 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                         AnimatedContainer(
                           duration:  Duration(milliseconds: 350),
                           curve: Curves.easeInOut,
-                          height: 2,
+                          height: 4,
                           width: 40,
                           color: isActive
-                              ? AppColors.primary
-                              : const Color(0xFFEEAECF),
-                        ),
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 350),
-                        curve: Curves.easeInOut,
-                        child: CircleAvatar(
-                          radius: 12,
-                          backgroundColor: isActive
                               ? AppColors.secondary
-                              : Colors.grey.withOpacity(0.16),
-                          child: Text(
-                            "${index + 1}",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: isActive ? Colors.white : Colors.black54,
-                            ),
-                          ),
+                              :Colors.grey.shade100
+                              // : const Color(0xFFEEAECF),
                         ),
-                      ),
+                      // AnimatedContainer(
+                      //   duration: const Duration(milliseconds: 350),
+                      //   curve: Curves.easeInOut,
+                      //   child: CircleAvatar(
+                      //     radius: 12,
+                      //     backgroundColor: isActive
+                      //         ? AppColors.secondary
+                      //         : Colors.grey.withOpacity(0.16),
+                      //     child: Text(
+                      //       "${index + 1}",
+                      //       style: TextStyle(
+                      //         fontSize: 12,
+                      //         color: isActive ? Colors.white : Colors.black54,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   );
                 },
@@ -169,10 +171,10 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
               child: Container(
                 width: double.infinity,
                 height: 55,
-                margin: const EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
                   color: const Color(0xFFA54275),
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Center(
                   child: Text(

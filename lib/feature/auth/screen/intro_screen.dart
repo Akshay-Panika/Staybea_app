@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:staybea_app/core/constant/App_color.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../verification/screen/select_language_screen.dart';
 import '../../verification/screen/verification_screen.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -58,7 +59,7 @@ class _IntroScreenState extends State<IntroScreen> {
   void goToVerification() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => const VerificationScreen()),
+      MaterialPageRoute(builder: (_) => const SelectLanguageScreen()),
     );
   }
 

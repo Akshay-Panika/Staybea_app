@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class ProfileSetupWidget extends StatefulWidget {
-  const ProfileSetupWidget({super.key});
+class ProfileStep extends StatefulWidget {
+  const ProfileStep({super.key});
 
   @override
-  State<ProfileSetupWidget> createState() => _ProfileSetupWidgetState();
+  State<ProfileStep> createState() => _ProfileStepState();
 }
 
-class _ProfileSetupWidgetState extends State<ProfileSetupWidget>
+class _ProfileStepState extends State<ProfileStep>
+
     with SingleTickerProviderStateMixin {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -108,9 +109,9 @@ class _ProfileSetupWidgetState extends State<ProfileSetupWidget>
         const Text(
           "Let's set up your profile.",
           style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w700,
-            color: Colors.black87
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: Colors.black87
           ),
         ),
         const SizedBox(height: 8),
@@ -139,8 +140,8 @@ class _ProfileSetupWidgetState extends State<ProfileSetupWidget>
         Text(
           label,
           style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
               color: Colors.black87
           ),
         ),
@@ -245,9 +246,9 @@ class _ProfileSetupWidgetState extends State<ProfileSetupWidget>
           maxLength: maxLength,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.black87
           ),
           decoration: InputDecoration(
             hintText: hint,
@@ -278,9 +279,9 @@ class _ProfileSetupWidgetState extends State<ProfileSetupWidget>
         Text(
           label,
           style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.black87
           ),
         ),
         const SizedBox(height: 8),
