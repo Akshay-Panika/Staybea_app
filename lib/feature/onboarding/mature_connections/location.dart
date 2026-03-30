@@ -160,7 +160,7 @@ class _LocationState extends State<Location> {
                                 fontSize: 14,
                                 fontWeight: isSelected
                                     ? FontWeight.w600
-                                    : FontWeight.w400,
+                                    : FontWeight.w500,
                                 color: Colors.black87,
                               ),
                             ),

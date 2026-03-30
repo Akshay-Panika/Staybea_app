@@ -3,6 +3,7 @@ import 'package:staybea_app/core/constant/App_color.dart';
 import '../../explore/screen/explore_screen.dart';
 import '../../home/screen/home_screen.dart';
 import '../../like/screen/like_screen.dart';
+import '../../onboarding/screen/date_to_marry_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -17,7 +18,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final _textStyle = const TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
 
   final _screens = [
-    HomeScreen(),
+    DateToMarryScreen(),
     ExploreScreen(),
     LikeScreen(),
     Center(child: Text('Chat', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
