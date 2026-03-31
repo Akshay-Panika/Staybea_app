@@ -15,6 +15,12 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
   String? _selectedLiveWithYou;
   String? _selectedCurrentlyLive;
 
+  bool _showMaritalStatus = false;
+  bool _showHaveChild = false;
+  bool _showNumberOfChild = false;
+  bool _showLiveWithYou = false;
+  bool _showCurrentlyLive = false;
+
   final List<String> _maritalStatuses = [
     'Never Married',
     'Divorced',
@@ -50,122 +56,18 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
   bool get _hasChildren =>
       _selectedHaveChild != null && _selectedHaveChild != 'No';
 
-  void _showBottomSheet({
-    required BuildContext context,
-    required String title,
-    required List<String> options,
-    required String? selected,
-    required ValueChanged<String> onSelected,
-  }) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 12, bottom: 8),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Navigator.pop(ctx),
-                      child: const Icon(Icons.close,
-                          size: 20, color: Colors.black54),
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(height: 1),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.4,
-                ),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: options.length,
-                  itemBuilder: (_, index) {
-                    final option = options[index];
-                    final isSelected = option == selected;
-                    return InkWell(
-                      onTap: () {
-                        onSelected(option);
-                        Navigator.pop(ctx);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 14),
-                        color: isSelected
-                            ? Colors.grey.shade100
-                            : Colors.white,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              option,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: isSelected
-                                    ? FontWeight.w600
-                                    : FontWeight.w500,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            if (isSelected)
-                              const Icon(
-                                Icons.check_circle_rounded,
-                                size: 18,
-                                color: Colors.black87,
-                              ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 12),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     AppSize appSize = AppSize(context);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: appSize.height*0.02),
+          SizedBox(height: appSize.height * 0.02),
 
-          // Title
-           Text(
+          Text(
             "More about yourself",
             style: TextStyle(
               fontSize: appSize.largeText,
@@ -174,107 +76,139 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
             ),
           ),
 
-          SizedBox(height: appSize.height*0.02),
+          SizedBox(height: appSize.height * 0.02),
 
           // Marital Status
-          _buildLabel("Marital Status"),
-          const SizedBox(height: 8),
-          _buildDropdownField(
-            hint: "Select Marital Status",
-            selected: _selectedMaritalStatus,
-            onTap: () => _showBottomSheet(
-              context: context,
-              title: "Marital Status",
-              options: _maritalStatuses,
-              selected: _selectedMaritalStatus,
-              onSelected: (val) =>
-                  setState(() => _selectedMaritalStatus = val),
-            ),
+          _buildExpandableField(
+            label: "Marital Status",
+            value: _selectedMaritalStatus,
+            isOpen: _showMaritalStatus,
+            onTap: () {
+              setState(() {
+                _showMaritalStatus = !_showMaritalStatus;
+                _showHaveChild = false;
+                _showNumberOfChild = false;
+                _showLiveWithYou = false;
+                _showCurrentlyLive = false;
+              });
+            },
+            items: _maritalStatuses,
+            onSelect: (val) {
+              setState(() {
+                _selectedMaritalStatus = val;
+                _showMaritalStatus = false;
+              });
+            },
           ),
 
           const SizedBox(height: 20),
 
           // Do you have child
-          _buildLabel("Do you have child"),
-          const SizedBox(height: 8),
-          _buildDropdownField(
-            hint: "select have child or not",
-            selected: _selectedHaveChild,
-            onTap: () => _showBottomSheet(
-              context: context,
-              title: "Do you have child?",
-              options: _haveChildOptions,
-              selected: _selectedHaveChild,
-              onSelected: (val) {
-                setState(() {
-                  _selectedHaveChild = val;
-                  if (val == 'No') {
-                    _selectedNumberOfChild = null;
-                    _selectedLiveWithYou = null;
-                  }
-                });
-              },
-            ),
+          _buildExpandableField(
+            label: "Do you have child?",
+            value: _selectedHaveChild,
+            isOpen: _showHaveChild,
+            onTap: () {
+              setState(() {
+                _showHaveChild = !_showHaveChild;
+                _showMaritalStatus = false;
+                _showNumberOfChild = false;
+                _showLiveWithYou = false;
+                _showCurrentlyLive = false;
+              });
+            },
+            items: _haveChildOptions,
+            onSelect: (val) {
+              setState(() {
+                _selectedHaveChild = val;
+                if (val == 'No') {
+                  _selectedNumberOfChild = null;
+                  _selectedLiveWithYou = null;
+                }
+                _showHaveChild = false;
+              });
+            },
           ),
 
           const SizedBox(height: 20),
 
           // Number of child
-          _buildLabel("Number of child"),
-          const SizedBox(height: 8),
-          _buildDropdownField(
-            hint: "select Number of child",
-            selected: _selectedNumberOfChild,
+          _buildExpandableField(
+            label: "Number of child",
+            value: _selectedNumberOfChild,
+            isOpen: _showNumberOfChild,
             enabled: _hasChildren,
-            onTap: !_hasChildren
-                ? null
-                : () => _showBottomSheet(
-              context: context,
-              title: "Number of child",
-              options: _numberOfChildOptions,
-              selected: _selectedNumberOfChild,
-              onSelected: (val) =>
-                  setState(() => _selectedNumberOfChild = val),
-            ),
+            onTap: _hasChildren
+                ? () {
+              setState(() {
+                _showNumberOfChild = !_showNumberOfChild;
+                _showMaritalStatus = false;
+                _showHaveChild = false;
+                _showLiveWithYou = false;
+                _showCurrentlyLive = false;
+              });
+            }
+                : null,
+            items: _numberOfChildOptions,
+            onSelect: (val) {
+              setState(() {
+                _selectedNumberOfChild = val;
+                _showNumberOfChild = false;
+              });
+            },
           ),
 
           const SizedBox(height: 20),
 
           // Do they live with you?
-          _buildLabel("Do they live with you?"),
-          const SizedBox(height: 8),
-          _buildDropdownField(
-            hint: "live with you",
-            selected: _selectedLiveWithYou,
+          _buildExpandableField(
+            label: "Do they live with you?",
+            value: _selectedLiveWithYou,
+            isOpen: _showLiveWithYou,
             enabled: _hasChildren,
-            onTap: !_hasChildren
-                ? null
-                : () => _showBottomSheet(
-              context: context,
-              title: "Do they live with you?",
-              options: _liveWithYouOptions,
-              selected: _selectedLiveWithYou,
-              onSelected: (val) =>
-                  setState(() => _selectedLiveWithYou = val),
-            ),
+            onTap: _hasChildren
+                ? () {
+              setState(() {
+                _showLiveWithYou = !_showLiveWithYou;
+                _showMaritalStatus = false;
+                _showHaveChild = false;
+                _showNumberOfChild = false;
+                _showCurrentlyLive = false;
+              });
+            }
+                : null,
+            items: _liveWithYouOptions,
+            onSelect: (val) {
+              setState(() {
+                _selectedLiveWithYou = val;
+                _showLiveWithYou = false;
+              });
+            },
           ),
 
           const SizedBox(height: 20),
 
-          // Where do you currently live?
-          _buildLabel("Where do you currently live?"),
-          const SizedBox(height: 8),
-          _buildDropdownField(
-            hint: "Where do you live?",
-            selected: _selectedCurrentlyLive,
-            onTap: () => _showBottomSheet(
-              context: context,
-              title: "Where do you currently live?",
-              options: _currentlyLiveOptions,
-              selected: _selectedCurrentlyLive,
-              onSelected: (val) =>
-                  setState(() => _selectedCurrentlyLive = val),
-            ),
+          // Currently live
+          _buildExpandableField(
+            label: "Where do you currently live?",
+            value: _selectedCurrentlyLive,
+            isOpen: _showCurrentlyLive,
+            onTap: () {
+              setState(() {
+                _showCurrentlyLive = !_showCurrentlyLive;
+                _showMaritalStatus = false;
+                _showHaveChild = false;
+                _showNumberOfChild = false;
+                _showLiveWithYou = false;
+              });
+            },
+            items: _currentlyLiveOptions,
+            onSelect: (val) {
+              setState(() {
+                _selectedCurrentlyLive = val;
+                _showCurrentlyLive = false;
+              });
+            },
           ),
 
           const SizedBox(height: 24),
@@ -283,61 +217,106 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
     );
   }
 
-  Widget _buildLabel(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: Colors.black87,
-      ),
-    );
-  }
-
-  Widget _buildDropdownField({
-    required String hint,
-    String? selected,
-    VoidCallback? onTap,
+  Widget _buildExpandableField({
+    required String label,
+    required String? value,
+    required bool isOpen,
+    required VoidCallback? onTap,
+    required List<String> items,
+    required Function(String) onSelect,
     bool enabled = true,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 52,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: enabled ? Colors.white : Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300, width: 1),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              selected ?? hint,
-              style: TextStyle(
-                fontSize: 14,
-                color:
-                selected != null ? Colors.black87 : Colors.grey.shade400,
-              ),
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: enabled ? onTap : null,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              color: enabled ? Colors.white : Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
             ),
-            Container(
-              width: 28,
-              height: 28,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey.shade300, width: 1),
-              ),
-              child: Icon(
-                Icons.keyboard_arrow_down_rounded,
-                size: 18,
-                color:
-                enabled ? Colors.grey.shade500 : Colors.grey.shade300,
-              ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    value ?? "Select $label",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: value != null
+                          ? Colors.black87
+                          : Colors.grey.shade400,
+                    ),
+                  ),
+                ),
+                Icon(
+                  isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  color: enabled ? Colors.grey.shade600 : Colors.grey.shade300,
+                )
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+        if (isOpen)
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: Column(
+              children: items.map((item) {
+                final isSelected = value == item;
+                return InkWell(
+                  onTap: () => onSelect(item),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 14),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            item,
+                            style: TextStyle(
+                                color: isSelected ? Colors.black : Colors.black54),
+                          ),
+                        ),
+                        Container(
+                          height: 20,
+                          width: 20,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: isSelected ? Colors.pink : Colors.grey),
+                          ),
+                          child: isSelected
+                              ? const Center(
+                            child: CircleAvatar(
+                              radius: 4,
+                              backgroundColor: Colors.pink,
+                            ),
+                          )
+                              : null,
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+      ],
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
+import 'package:staybea_app/core/constant/app_color.dart';
 import '../../google/translation_service.dart';
 import '../controller/location_controller.dart';
 import '../../onboarding/screen/onboarding_screen.dart';
@@ -102,70 +104,72 @@ class _LocationAllowScreenState extends State<LocationAllowScreen> with SingleTi
                     ),
                   ),
 
-                  Expanded(
-                    child: Center(
-                      child: SizedBox(
-                        width: 300,
-                        height: 300,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
+                  // Expanded(
+                  //   child: Center(
+                  //     child: SizedBox(
+                  //       width: 300,
+                  //       height: 300,
+                  //       child: Stack(
+                  //         alignment: Alignment.center,
+                  //         children: [
+                  //
+                  //           /// 🔥 Animated circles
+                  //           AnimatedBuilder(
+                  //             animation: _scaleAnimation,
+                  //             builder: (context, child) {
+                  //               return Transform.scale(
+                  //                 scale: _scaleAnimation.value,
+                  //                 child: child,
+                  //               );
+                  //             },
+                  //             child: Stack(
+                  //               alignment: Alignment.center,
+                  //               children: [
+                  //                 circle(260, 0.3),
+                  //                 circle(200, 0.5),
+                  //                 circle(140, 1),
+                  //                 const Icon(
+                  //                   Icons.location_on_outlined,
+                  //                   size: 40,
+                  //                   color: Colors.grey,
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //           ),
+                  //
+                  //           /// Avatars
+                  //           positionedAvatar(
+                  //               "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+                  //               -90,
+                  //               -70),
+                  //           positionedAvatar(
+                  //               "https://images.unsplash.com/photo-1438761681033-6461ffad8d80",
+                  //               80,
+                  //               -60),
+                  //           positionedAvatar(
+                  //               "https://images.unsplash.com/photo-1544005313-94ddf0286df2",
+                  //               -90,
+                  //               60),
+                  //           positionedAvatar(
+                  //               "https://images.unsplash.com/photo-1524504388940-b1c1722653e1",
+                  //               80,
+                  //               70),
+                  //           positionedAvatar(
+                  //               "https://images.unsplash.com/photo-1517841905240-472988babdf9",
+                  //               0,
+                  //               110),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
 
-                            /// 🔥 Animated circles
-                            AnimatedBuilder(
-                              animation: _scaleAnimation,
-                              builder: (context, child) {
-                                return Transform.scale(
-                                  scale: _scaleAnimation.value,
-                                  child: child,
-                                );
-                              },
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  circle(260, 0.3),
-                                  circle(200, 0.5),
-                                  circle(140, 1),
-                                  const Icon(
-                                    Icons.location_on_outlined,
-                                    size: 40,
-                                    color: Colors.grey,
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            /// Avatars
-                            positionedAvatar(
-                                "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
-                                -90,
-                                -70),
-                            positionedAvatar(
-                                "https://images.unsplash.com/photo-1438761681033-6461ffad8d80",
-                                80,
-                                -60),
-                            positionedAvatar(
-                                "https://images.unsplash.com/photo-1544005313-94ddf0286df2",
-                                -90,
-                                60),
-                            positionedAvatar(
-                                "https://images.unsplash.com/photo-1524504388940-b1c1722653e1",
-                                80,
-                                70),
-                            positionedAvatar(
-                                "https://images.unsplash.com/photo-1517841905240-472988babdf9",
-                                0,
-                                110),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  Expanded(child: Lottie.asset('assets/location/location.json')),
 
                   /// Allow Button
                   Obx(() {
                     return controller.isLoading.value
-                        ? const CircularProgressIndicator()
+                        ? const CircularProgressIndicator(color: AppColors.secondary,)
                         : InkWell(
                       onTap: () async {
                         await controller.fetchLocation();
@@ -177,13 +181,10 @@ class _LocationAllowScreenState extends State<LocationAllowScreen> with SingleTi
                         }
                       },
                       child: Container(
-                        width: double.infinity,
-                        height: 55,
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color:
-                          const Color(0xFFA54275),
-                          borderRadius:
-                          BorderRadius.circular(30),
+                          color: AppColors.secondary,
+                          borderRadius: BorderRadius.circular(20),
                         ),
                         child: Center(
                           child: Text(
@@ -198,34 +199,31 @@ class _LocationAllowScreenState extends State<LocationAllowScreen> with SingleTi
 
                   const SizedBox(height: 12),
 
-                  /// Skip Button
                   InkWell(
                     onTap: () {
                       Get.to(() =>
                       const OnboardingScreen());
                     },
                     child: Container(
-                      width: double.infinity,
-                      height: 55,
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius:
-                        BorderRadius.circular(30),
-                        border: Border.all(
-                            color: Colors.grey.shade200),
+                        border: Border.all(color: AppColors.secondary,width: 0.3),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       child: Center(
                         child: Text(
                           t["skip"]!,
                           style: const TextStyle(
                             color: Color(0xFFA54275),
-                            fontSize: 16,
+                            fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
                     ),
                   ),
+
 
                   const SizedBox(height: 20),
                 ],

@@ -470,6 +470,7 @@ class _ProfileCardState extends State<_ProfileCard> {
 
 void _showConversationSheet(BuildContext context) {
   final TextEditingController messageController = TextEditingController();
+  bool _superConnect = false;
 
   showModalBottomSheet(
     context: context,
@@ -479,192 +480,218 @@ void _showConversationSheet(BuildContext context) {
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
     builder: (context) {
-      return Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Drag handle
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-
-              // Title
-              const Text(
-                "Start a conversation",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                "Send a message to express your interest.",
-                style: TextStyle(fontSize: 13, color: Colors.black45),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Message text field
-              TextField(
-                controller: messageController,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  hintText: "Write a short message...",
-                  hintStyle: const TextStyle(color: Colors.black38),
-                  contentPadding: const EdgeInsets.all(14),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey.shade300),
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+              child: _superConnect
+                  ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  50.height,
+                  const Text(
+                    "You're one step closer.",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  const SizedBox(height: 4),
+                  const Text(
+                    "Your connection sent.",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide:
-                    const BorderSide(color: Color(0xFFC2185B)),
+                  50.height,
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.check,
+                      color: Colors.white,
+                      size: 36,
+                    ),
                   ),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Choose Message link
-              GestureDetector(
-                onTap: () {
-                  // TODO: open message picker
-                },
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Choose Message",
-                      style: TextStyle(
-                        color: Color(0xFFC2185B),
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
+                  50.height,
+                ],
+              )
+                  : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  const Text(
+                    "Start a conversation",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    "Send a message to express your interest.",
+                    style: TextStyle(fontSize: 13, color: Colors.black45),
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: messageController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      hintText: "Write a short message...",
+                      hintStyle: const TextStyle(color: Colors.black38),
+                      contentPadding: const EdgeInsets.all(14),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide:
+                        const BorderSide(color: Color(0xFFC2185B)),
                       ),
                     ),
-                    SizedBox(width: 4),
-                    Icon(Icons.chevron_right,
-                        color: Color(0xFFC2185B), size: 18),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Action buttons
-              Row(
-                children: [
-                  // Super Connect (filled) with badge
-                  Expanded(
-                    child: Stack(
-                      clipBehavior: Clip.none,
+                  ),
+                  const SizedBox(height: 12),
+                  GestureDetector(
+                    onTap: () {
+                      // TODO: open message picker
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              // TODO: super connect logic
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFC2185B),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 14),
-                            ),
-                            icon: const Icon(Icons.favorite_border,
-                                color: Colors.white, size: 18),
-                            label: const Text(
-                              "Super Connect",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                        Text(
+                          "Choose Message",
+                          style: TextStyle(
+                            color: Color(0xFFC2185B),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
                           ),
                         ),
-                        // Count badge
-                        Positioned(
-                          top: -8,
-                          right: 10,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFC2185B),
-                              shape: BoxShape.circle,
-                              border: Border.fromBorderSide(
-                                BorderSide(
-                                    color: Colors.white, width: 1.5),
-                              ),
-                            ),
-                            child: const Text(
-                              "20",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
+                        SizedBox(width: 4),
+                        Icon(Icons.chevron_right,
+                            color: Color(0xFFC2185B), size: 18),
                       ],
                     ),
                   ),
-
-                  const SizedBox(width: 12),
-
-                  // Connect (outline)
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        // TODO: connect logic
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(
-                            color: Color(0xFFC2185B), width: 1.2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  setState(() {
+                                    _superConnect = true; // ✅ update state
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFC2185B),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                ),
+                                icon: const Icon(Icons.favorite_border,
+                                    color: Colors.white, size: 18),
+                                label: const Text(
+                                  "Super Connect",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: -8,
+                              right: 10,
+                              child: Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFFC2185B),
+                                  shape: BoxShape.circle,
+                                  border: Border.fromBorderSide(
+                                    BorderSide(color: Colors.white, width: 1.5),
+                                  ),
+                                ),
+                                child: const Text(
+                                  "20",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        padding:
-                        const EdgeInsets.symmetric(vertical: 14),
                       ),
-                      icon: const Icon(Icons.favorite_border,
-                          color: Color(0xFFC2185B), size: 18),
-                      label: const Text(
-                        "Connect",
-                        style: TextStyle(
-                          color: Color(0xFFC2185B),
-                          fontWeight: FontWeight.w600,
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              _superConnect = true; // ✅ update state
+                            });
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(
+                                color: Color(0xFFC2185B), width: 1.2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            padding:
+                            const EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          icon: const Icon(Icons.favorite_border,
+                              color: Color(0xFFC2185B), size: 18),
+                          label: const Text(
+                            "Connect",
+                            style: TextStyle(
+                              color: Color(0xFFC2185B),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
+                  const SizedBox(height: 10),
                 ],
               ),
-
-              const SizedBox(height: 10),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       );
     },
   );

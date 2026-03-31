@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:staybea_app/core/constant/App_color.dart';
 import '../../google/translation_service.dart';
 import '../../location/screen/location_allow_screen.dart';
 
@@ -166,10 +167,11 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     ),
                     children: [
                       TextSpan(text: t["desc"]),
+                      WidgetSpan(child: SizedBox(width: 5)),
                       TextSpan(
                         text: t["resend"],
-                        style: const TextStyle(
-                          color: Colors.blue,
+                        style:  TextStyle(
+                          color: AppColors.secondary,
                           fontWeight: FontWeight.w600,
                         ),
                         recognizer: TapGestureRecognizer()

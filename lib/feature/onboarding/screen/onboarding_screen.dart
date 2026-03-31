@@ -7,6 +7,9 @@ import '../../../core/widget/custom_button.dart';
 import '../dat_to_marry/date_to_marry.dart';
 import '../mature_connections/mature_connections.dart';
 
+/// Selected interest from OnboardingScreen
+String selectedInterest = "Date to Marry";
+
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -16,8 +19,8 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  String datingLookingFor = "Looking For >";
-  String matureLookingFor = "Looking For >";
+  String datingLookingFor = "Looking For";
+  String matureLookingFor = "Looking For";
   String _selectedInterest = "Date to Marry";
 
   final items = [
@@ -51,7 +54,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       "dating": await t.translate("Dating"),
       "mature": await t.translate("Mature connections"),
 
-      "lookingFor": await t.translate("Looking For >"),
+      "lookingFor": await t.translate("Looking For"),
 
       "longTerm": await t.translate("Long term"),
       "shortTerm": await t.translate("Short term"),
@@ -178,28 +181,37 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 ),
                               ),
 
-                              if (item["title"] ==
-                                  'Dating')
-                                Text(
-                                  datingLookingFor ==
-                                      "Looking For >"
-                                      ? t["lookingFor"]
-                                      : datingLookingFor,
-                                  style: TextStyle(
-                                      color: AppColors
-                                          .secondary),
+                              if (item["title"] == 'Dating')
+                                Row(
+                                  children: [
+                                    Text(
+                                      datingLookingFor ==
+                                          "Looking For"
+                                          ? t["lookingFor"]
+                                          : datingLookingFor,
+                                      style: TextStyle(
+                                          color: AppColors
+                                              .secondary),
+                                    ),
+                                    Icon(Icons.arrow_forward_ios,color: AppColors.secondary,size: 14,),
+                                  ],
                                 ),
 
-                              if (item["title"] ==
-                                  'Mature connections')
-                                Text(
-                                  matureLookingFor ==
-                                      "Looking For >"
-                                      ? t["lookingFor"]
-                                      : matureLookingFor,
-                                  style: TextStyle(
-                                      color: AppColors
-                                          .secondary),
+                              if (item["title"] == 'Mature connections')
+                                Row(
+                                  children: [
+                                    Text(
+                                      matureLookingFor ==
+                                          "Looking For"
+                                          ? t["lookingFor"]
+                                          : matureLookingFor,
+                                      style: TextStyle(
+                                          color: AppColors
+                                              .secondary),
+                                    ),
+                                    Icon(Icons.arrow_forward_ios,color: AppColors.secondary,size: 14,),
+
+                                  ],
                                 ),
                             ],
                           ),
@@ -215,6 +227,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 CustomButton(
                   isLoading: false,
                   onTap: () {
+                    selectedInterest = _selectedInterest;
                     if (_selectedInterest ==
                         "Date to Marry") {
                       Navigator.push(
@@ -254,60 +267,137 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  /// Dialogs also translated
   Future<String?> _showLookingForDialog(
       Map<String, dynamic> t) {
-    return showDialog<String>(
-      context: context,
-      builder: (context) {
-        String selected = t["longTerm"];
-
-        return Dialog(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ...[
-                t["longTerm"],
-                t["shortTerm"],
-                t["friends"],
-                t["casual"]
-              ].map((title) {
-                return ListTile(
-                  title: Text(title),
-                  onTap: () => Navigator.pop(context, title),
-                );
-              })
-            ],
-          ),
-        );
-      },
+    return _showCustomSelectionDialog(
+      options: [
+        t["longTerm"],
+        t["shortTerm"],
+        t["friends"],
+        t["casual"]
+      ],
+      selectedValue: datingLookingFor,
     );
   }
 
   Future<String?> _showLookingForConnections(
       Map<String, dynamic> t) {
+    return _showCustomSelectionDialog(
+      options: [
+        t["companion"],
+        t["travel"],
+        t["support"],
+        t["friendship"]
+      ],
+      selectedValue: matureLookingFor,
+    );
+  }
+
+  Future<String?> _showCustomSelectionDialog({
+    required List<String> options,
+    required String selectedValue,
+  }) {
     return showDialog<String>(
       context: context,
       builder: (context) {
-        String selected = t["companion"];
+        String selected = selectedValue;
 
-        return Dialog(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ...[
-                t["companion"],
-                t["travel"],
-                t["support"],
-                t["friendship"]
-              ].map((title) {
-                return ListTile(
-                  title: Text(title),
-                  onTap: () => Navigator.pop(context, title),
-                );
-              })
-            ],
-          ),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+
+                    /// 🔙 Back Button
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: InkWell(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: const Icon(Icons.arrow_back),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    /// Options List
+                    ...options.map((title) {
+                      final isSelected = selected == title;
+
+                      return InkWell(
+                        onTap: () {
+                          setState(() => selected = title);
+                          Navigator.pop(context, title);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 14),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  title,
+                                  style:  TextStyle(
+                                    fontSize: 16,
+                                    color: isSelected ? Colors.black :Colors.black54,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+
+                              /// 🔘 Custom Radio UI
+                              Container(
+                                height: 22,
+                                width: 22,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? Colors.pink
+                                        : Colors.grey,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: isSelected
+                                    ? Center(
+                                  child: Container(
+                                    height: 10,
+                                    width: 10,
+                                    decoration:
+                                    const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.pink,
+                                    ),
+                                  ),
+                                )
+                                    : null,
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );

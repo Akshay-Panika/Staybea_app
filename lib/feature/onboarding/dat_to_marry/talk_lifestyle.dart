@@ -25,9 +25,13 @@ class _TalkLifestyleState extends State<TalkLifestyle> {
     "Smoker",
     "Trying to quit",
   ];
+
+  // Track multiple selections
+  final List<String> _selectedDrinks = [];
+  final List<String> _selectedSmokes = [];
+
   @override
   Widget build(BuildContext context) {
-
     AppSize appSize = AppSize(context);
 
     return Padding(
@@ -35,22 +39,30 @@ class _TalkLifestyleState extends State<TalkLifestyle> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           Text(
+          Text(
             "Let’s Talk Lifestyle",
             style: TextStyle(fontSize: appSize.largeText, fontWeight: FontWeight.w700),
           ),
           6.height,
-           Text(
+          Text(
             "Habits meet harmony. You go first.",
             style: TextStyle(fontSize: appSize.mediumText, color: Colors.grey),
           ),
-           SizedBox(height: appSize.height*0.02),
+          SizedBox(height: appSize.height * 0.02),
 
           /// DRINK CARD
           _lifestyleCard(
             icon: "🍾",
             title: "How often do you drink?",
             options: drinkOptions,
+            selectedValues: _selectedDrinks,
+            onSelect: (val) {
+              setState(() {
+                _selectedDrinks.contains(val)
+                    ? _selectedDrinks.remove(val)
+                    : _selectedDrinks.add(val);
+              });
+            },
           ),
 
           const SizedBox(height: 16),
@@ -60,28 +72,40 @@ class _TalkLifestyleState extends State<TalkLifestyle> {
             icon: "🚬",
             title: "How often do you smoke?",
             options: smokeOptions,
+            selectedValues: _selectedSmokes,
+            onSelect: (val) {
+              setState(() {
+                _selectedSmokes.contains(val)
+                    ? _selectedSmokes.remove(val)
+                    : _selectedSmokes.add(val);
+              });
+            },
           ),
         ],
       ),
     );
   }
+
   Widget _lifestyleCard({
     required String icon,
     required String title,
     required List<String> options,
+    required List<String> selectedValues,
+    required Function(String) onSelect,
   }) {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFFF3EDF7),
-                Colors.white,
-              ])
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        gradient: const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFFF3EDF7),
+            Colors.white,
+          ],
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,10 +116,7 @@ class _TalkLifestyleState extends State<TalkLifestyle> {
               const SizedBox(width: 8),
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ],
           ),
@@ -104,30 +125,33 @@ class _TalkLifestyleState extends State<TalkLifestyle> {
           Wrap(
             spacing: 10,
             runSpacing: 10,
-            children: options
-                .map(
-                  (e) => Container(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.grey.shade300),
-                  color: Colors.white,
-                ),
-                child: Text(
-                  e,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+            children: options.map((option) {
+              final isSelected = selectedValues.contains(option);
+              return GestureDetector(
+                onTap: () => onSelect(option),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: isSelected ? Colors.pink : Colors.grey.shade300,
+                    ),
+                    // color: isSelected ? Colors.pink.shade100 : Colors.white,
+                  ),
+                  child: Text(
+                    option,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: isSelected ? Colors.pink.shade800 : Colors.black87,
+                    ),
                   ),
                 ),
-              ),
-            )
-                .toList(),
+              );
+            }).toList(),
           ),
         ],
       ),
     );
   }
 }
-

@@ -8,43 +8,28 @@ class ProfileStep extends StatefulWidget {
   State<ProfileStep> createState() => _ProfileStepState();
 }
 
-class _ProfileStepState extends State<ProfileStep>
-
-    with SingleTickerProviderStateMixin {
+class _ProfileStepState extends State<ProfileStep> with SingleTickerProviderStateMixin {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _dayController = TextEditingController();
   final _monthController = TextEditingController();
   final _yearController = TextEditingController();
 
+  DateTime? _selectedDate;
   String? _selectedHeight;
   String? _selectedGender;
-
-  late AnimationController _animController;
-  late Animation<double> _fadeAnim;
+  bool _showHeightOptions = false;
+  bool _showGenderOptions = false;
 
   final List<String> _heights = [
     'Below 5\'0"', '5\'0"', '5\'1"', '5\'2"', '5\'3"', '5\'4"',
     '5\'5"', '5\'6"', '5\'7"', '5\'8"', '5\'9"', '5\'10"',
     '5\'11"', '6\'0"', '6\'1"', '6\'2"', 'Above 6\'2"',
   ];
-
   final List<String> _genders = ['Male', 'Female', 'Non-binary', 'Prefer not to say'];
 
   @override
-  void initState() {
-    super.initState();
-    _animController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 700),
-    );
-    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
-    _animController.forward();
-  }
-
-  @override
   void dispose() {
-    _animController.dispose();
     _nameController.dispose();
     _emailController.dispose();
     _dayController.dispose();
@@ -80,23 +65,42 @@ class _ProfileStepState extends State<ProfileStep>
           const SizedBox(height: 20),
           _buildDOBField(),
           const SizedBox(height: 20),
-          _buildDropdownField(
+          _buildExpandableField(
             label: 'Height',
             hint: 'Select Height',
-            icon: Icons.straighten_rounded,
             value: _selectedHeight,
+            isOpen: _showHeightOptions,
+            onTap: () {
+              setState(() => _showHeightOptions = !_showHeightOptions);
+            },
             items: _heights,
-            onChanged: (val) => setState(() => _selectedHeight = val),
+            onSelect: (val) {
+              setState(() {
+                _selectedHeight = val;
+                _showHeightOptions = false;
+              });
+            },
           ),
+
           const SizedBox(height: 20),
-          _buildDropdownField(
+          _buildExpandableField(
             label: 'Select Gender',
             hint: 'Your Gender',
-            icon: Icons.wc_rounded,
             value: _selectedGender,
+            isOpen: _showGenderOptions,
+            onTap: () {
+              setState(() => _showGenderOptions = !_showGenderOptions);
+            },
             items: _genders,
-            onChanged: (val) => setState(() => _selectedGender = val),
+            onSelect: (val) {
+              setState(() {
+                _selectedGender = val;
+                _showGenderOptions = false;
+              });
+            },
           ),
+
+
         ],
       ),
     );
@@ -187,6 +191,124 @@ class _ProfileStepState extends State<ProfileStep>
     );
   }
 
+
+  Widget _buildExpandableField({
+    required String label,
+    required String hint,
+    required String? value,
+    required bool isOpen,
+    required VoidCallback onTap,
+    required List<String> items,
+    required Function(String) onSelect,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        /// 🔹 Main Box
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFB3B3B3), width: 0.6),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    value ?? hint,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: value == null
+                          ? Colors.grey.shade400
+                          : Colors.black,
+                    ),
+                  ),
+                ),
+                Icon(
+                  isOpen
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
+                  color: Colors.grey,
+                )
+              ],
+            ),
+          ),
+        ),
+
+        /// 🔽 Expand Options
+        if (isOpen)
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFB3B3B3), width: 0.6),
+            ),
+            child: Column(
+              children: items.map((item) {
+                final isSelected = value == item;
+
+                return InkWell(
+                  onTap: () => onSelect(item),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(item,
+                            style:  TextStyle(fontSize: 16, color: isSelected ? Colors.black : Colors.black54),
+                          ),
+                        ),
+
+                        /// 🔘 Radio UI
+                        Container(
+                          height: 20,
+                          width: 20,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isSelected
+                                  ? Colors.pink
+                                  : Colors.grey,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: isSelected
+                              ? Center(
+                            child: Container(
+                              height: 10,
+                              width: 10,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.pink,
+                              ),
+                            ),
+                          )
+                              : null,
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+      ],
+    );
+  }
+
   Widget _buildDOBField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,146 +321,57 @@ class _ProfileStepState extends State<ProfileStep>
           ),
         ),
         const SizedBox(height: 8),
-        Row(
-          children: [
-            _buildDateBox(controller: _dayController, hint: 'DD', maxLength: 2),
-            const SizedBox(width: 10),
-            _buildDateBox(controller: _monthController, hint: 'MM', maxLength: 2),
-            const SizedBox(width: 10),
-            Expanded(
-              flex: 2,
-              child: _buildDateBox(
-                controller: _yearController,
-                hint: 'YYYY',
-                maxLength: 4,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
 
-  Widget _buildDateBox({
-    required TextEditingController controller,
-    required String hint,
-    required int maxLength,
-  }) {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFB3B3B3), width: 0.6),
-          // border: Border.all(color: const Color(0xFFE8E8E8), width: 1.5),
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Colors.black.withOpacity(0.04),
-          //     blurRadius: 8,
-          //     offset: const Offset(0, 2),
-          //   ),
-          // ],
-        ),
-        child: TextField(
-          controller: controller,
-          keyboardType: TextInputType.number,
-          textAlign: TextAlign.center,
-          maxLength: maxLength,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87
-          ),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade400,
-            ),
-            counterText: '',
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          ),
-        ),
-      ),
-    );
-  }
+        GestureDetector(
+          onTap: () async {
+            DateTime now = DateTime.now();
 
-  Widget _buildDropdownField({
-    required String label,
-    required String hint,
-    required IconData icon,
-    required String? value,
-    required List<String> items,
-    required ValueChanged<String?> onChanged,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87
-          ),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFFB3B3B3), width: 0.6),
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: Colors.black.withOpacity(0.04),
-            //     blurRadius: 8,
-            //     offset: const Offset(0, 2),
-            //   ),
-            // ],
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: value,
-              hint: Row(
-                children: [
-                  Icon(icon, color: Colors.grey.shade400, size: 20),
-                  const SizedBox(width: 10),
-                  Text(
-                    hint,
+            DateTime? pickedDate = await showDatePicker(
+              context: context,
+              initialDate: DateTime(now.year - 18), // default 18 age
+              firstDate: DateTime(1950),
+              lastDate: DateTime(now.year - 18),
+            );
+
+            if (pickedDate != null) {
+              setState(() {
+                _selectedDate = pickedDate;
+
+                // optional: fill controllers if you still want values
+                _dayController.text =
+                    pickedDate.day.toString().padLeft(2, '0');
+                _monthController.text =
+                    pickedDate.month.toString().padLeft(2, '0');
+                _yearController.text = pickedDate.year.toString();
+              });
+            }
+          },
+
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFB3B3B3), width: 0.6),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    _selectedDate == null
+                        ? "Select your DOB"
+                        : "${_selectedDate!.day.toString().padLeft(2, '0')}/"
+                        "${_selectedDate!.month.toString().padLeft(2, '0')}/"
+                        "${_selectedDate!.year}",
                     style: TextStyle(
                       fontSize: 15,
-                      color: Colors.grey.shade400,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-              isExpanded: true,
-              icon: Icon(
-                Icons.keyboard_arrow_down_rounded,
-                color: Colors.grey.shade400,
-              ),
-              borderRadius: BorderRadius.circular(14),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              items: items
-                  .map(
-                    (item) => DropdownMenuItem(
-                  value: item,
-                  child: Text(
-                    item,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF1A1A2E),
+                      color: _selectedDate == null
+                          ? Colors.grey.shade400
+                          : Colors.black,
                     ),
                   ),
                 ),
-              )
-                  .toList(),
-              onChanged: onChanged,
+                const Icon(Icons.calendar_today, size: 18, color: Colors.grey)
+              ],
             ),
           ),
         ),

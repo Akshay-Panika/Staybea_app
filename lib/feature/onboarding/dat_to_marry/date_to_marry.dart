@@ -10,6 +10,10 @@ import 'package:staybea_app/feature/onboarding/dat_to_marry/you_matters.dart';
 
 import '../../../core/constant/App_color.dart';
 import '../../verification/user_details_stape/profile_step_widget.dart';
+import '../mature_connections/about_yourself.dart';
+import '../mature_connections/location.dart';
+import '../mature_connections/religion.dart';
+import '../mature_connections/your_education.dart';
 import 'about_yourself.dart';
 import 'latest_photos.dart';
 
@@ -26,7 +30,10 @@ class _DateToMarryState extends State<DateToMarry> {
 
   List<Widget> get _steps => [
     ProfileStep(),
-    SeeingForADate(),
+    Religion(),
+    Location(),
+    MoreAboutYourself(),
+    YourEducation(),
     TalkLifestyle(),
     YouMatters(),
     YouLove(),
