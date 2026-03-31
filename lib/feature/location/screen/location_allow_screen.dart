@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../google/translation_service.dart';
-import '../../location/controller/location_controller.dart';
+import '../controller/location_controller.dart';
 import '../../onboarding/screen/onboarding_screen.dart';
 
 class LocationAllowScreen extends StatefulWidget {
@@ -12,8 +12,7 @@ class LocationAllowScreen extends StatefulWidget {
       _LocationAllowScreenState();
 }
 
-class _LocationAllowScreenState extends State<LocationAllowScreen>
-    with SingleTickerProviderStateMixin {
+class _LocationAllowScreenState extends State<LocationAllowScreen> with SingleTickerProviderStateMixin {
 
   final LocationController controller = Get.put(LocationController());
 

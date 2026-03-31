@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../google/translation_service.dart';
 import 'otp_verify_screen.dart';
 
-class MobileNumberVerifyScreen extends StatelessWidget {
-  const MobileNumberVerifyScreen({super.key});
+class NumberVerifyScreen extends StatelessWidget {
+  const NumberVerifyScreen({super.key});
 
   Future<Map<String, String>> getTranslations() async {
     final t = TranslationService();

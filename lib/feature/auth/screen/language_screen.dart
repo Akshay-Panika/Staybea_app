@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/constant/App_color.dart';
 import '../../google/translation_service.dart';
-import 'mobile_number_verify_screen.dart';
+import 'auth_screen.dart';
 
-class SelectLanguageScreen extends StatefulWidget {
-  const SelectLanguageScreen({super.key});
+class LanguageScreen extends StatefulWidget {
+  const LanguageScreen({super.key});
 
   @override
-  State<SelectLanguageScreen> createState() =>
-      _SelectLanguageScreenState();
+  State<LanguageScreen> createState() =>
+      _LanguageScreenState();
 }
 
-class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
+class _LanguageScreenState extends State<LanguageScreen> {
 
   int selectedIndex = 0;
   String searchText = "";
@@ -114,7 +114,7 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => const MobileNumberVerifyScreen(),
+        builder: (_) => const AuthScreen(),
       ),
     );
   }

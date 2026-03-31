@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../verification/screen/select_language_screen.dart';
+import 'package:lottie/lottie.dart';
+import 'package:staybea_app/core/constant/App_color.dart';
+import 'language_screen.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
@@ -14,24 +16,21 @@ class _IntroScreenState extends State<IntroScreen>
   final PageController _controller = PageController();
   int currentIndex = 0;
 
-  static const Color primaryColor = Color(0xFFA54275);
-  static const Color bgColor = Color(0xFFFFF5F5);
-
   final List<Map<String, dynamic>> pages = [
     {
-      "img": "assets/intro/intro1.gif",
+      "img": "assets/intro/intro1.json",
       "title": "Date to Marry",
       "description":
       "Find your true life partner. Every step is genuine, verified, and built on trust — because forever starts here.",
     },
     {
-      "img": "assets/intro/intro2.gif",
+      "img": "assets/intro/intro2.json",
       "title": "Meaningful Connections",
       "description":
       "Explore genuine connections at your own pace. Meet real people, spark chemistry, and enjoy the journey of love.",
     },
     {
-      "img": "assets/intro/intro3.gif",
+      "img": "assets/intro/Intro3.json",
       "title": "Your Perfect Match Awaits",
       "description":
       "Deep, experienced companionship for life's next chapter. Build heartfelt bonds that stand the test of time.",
@@ -54,7 +53,7 @@ class _IntroScreenState extends State<IntroScreen>
   void goToVerification() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => const SelectLanguageScreen()),
+      MaterialPageRoute(builder: (_) => const LanguageScreen()),
     );
   }
 
@@ -75,6 +74,7 @@ class _IntroScreenState extends State<IntroScreen>
               itemBuilder: (context, index) {
                 final data = pages[index];
                 return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     // ── Illustration Area ──────────────────────
                     Container(
@@ -87,13 +87,13 @@ class _IntroScreenState extends State<IntroScreen>
                         ),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Image.asset(
+                        padding:  EdgeInsets.all(24),
+                        child: Lottie.asset(
                           data['img'] as String,
                           fit: BoxFit.contain,
-                          errorBuilder: (_, __, ___) => const Center(
+                          errorBuilder: (_, __, ___) =>  Center(
                             child: Icon(Icons.favorite_rounded,
-                                size: 100, color: primaryColor),
+                                size: 100, color: AppColors.secondary),
                           ),
                         ),
                       ),
@@ -103,14 +103,14 @@ class _IntroScreenState extends State<IntroScreen>
 
                     // ── Title ──────────────────────────────────
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      padding:  EdgeInsets.symmetric(horizontal: 32),
                       child: Text(
                         data['title'] as String,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.playfairDisplay(
                           fontSize: 30,
                           fontWeight: FontWeight.w700,
-                          color: primaryColor,
+                          color: AppColors.secondary,
                           height: 1.2,
                         ),
                       ),
@@ -125,8 +125,8 @@ class _IntroScreenState extends State<IntroScreen>
                         data['description'] as String,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.lato(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
                           color: Colors.grey.shade600,
                           height: 1.6,
                         ),
@@ -148,7 +148,7 @@ class _IntroScreenState extends State<IntroScreen>
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 8),
                     decoration: BoxDecoration(
-                      color: primaryColor,
+                      color: AppColors.secondary,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -184,8 +184,8 @@ class _IntroScreenState extends State<IntroScreen>
                           width: currentIndex == i ? 24 : 8,
                           decoration: BoxDecoration(
                             color: currentIndex == i
-                                ? primaryColor
-                                : primaryColor.withOpacity(0.25),
+                                ? AppColors.secondary
+                                : AppColors.secondary.withOpacity(0.25),
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
@@ -200,11 +200,11 @@ class _IntroScreenState extends State<IntroScreen>
                         height: 52,
                         width: isLast ? 130 : 52,
                         decoration: BoxDecoration(
-                          color: primaryColor,
+                          color: AppColors.secondary,
                           borderRadius: BorderRadius.circular(26),
                           boxShadow: [
                             BoxShadow(
-                              color: primaryColor.withOpacity(0.35),
+                              color: AppColors.secondary.withOpacity(0.35),
                               blurRadius: 16,
                               offset: const Offset(0, 6),
                             ),
