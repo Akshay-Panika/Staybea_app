@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/constant/App_color.dart';
-import '../../../core/constant/app_icon.dart';
+import '../../google/translation_service.dart';
 import 'mobile_number_verify_screen.dart';
 
 class SelectLanguageScreen extends StatefulWidget {
@@ -14,136 +14,204 @@ class SelectLanguageScreen extends StatefulWidget {
 class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
 
   int selectedIndex = 0;
+  String searchText = "";
 
   final List<Map<String, String>> languages = [
-    {"title": "English", "subtitle": "English"},
-    {"title": "Hindi", "subtitle": "हिंदी"},
-    {"title": "Marathi", "subtitle": "मराठी"},
-    {"title": "Gujarati", "subtitle": "ગુજરાતી"},
-    {"title": "Tamil", "subtitle": "தமிழ்"},
-    {"title": "Urdu", "subtitle": "اردو"},
-    {"title": "Malayalam", "subtitle": "മലയാളം"},
+    {"title": "English", "code": "en"},
+    {"title": "Hindi", "code": "hi"},
+    {"title": "Gujarati", "code": "gu"},
+    {"title": "Marathi", "code": "mr"},
+    {"title": "Bengali", "code": "bn"},
+    {"title": "Punjabi", "code": "pa"},
+    {"title": "Tamil", "code": "ta"},
+    {"title": "Telugu", "code": "te"},
+    {"title": "Kannada", "code": "kn"},
+    {"title": "Malayalam", "code": "ml"},
+    {"title": "Kashmiri", "code": "ks"},
+    {"title": "Urdu", "code": "ur"},
   ];
 
-  Widget languageTile(int index) {
-    final lang = languages[index];
-    final isSelected = selectedIndex == index;
+  List<Map<String, String>> get filteredLanguages {
+    if (searchText.isEmpty) return languages;
+    return languages
+        .where((lang) => lang["title"]!
+        .toLowerCase()
+        .contains(searchText.toLowerCase()))
+        .toList();
+  }
+
+  Widget languageCard(int index, List list) {
+    final lang = list[index];
+    final originalIndex = languages.indexOf(lang);
+    final isSelected = selectedIndex == originalIndex;
 
     return GestureDetector(
       onTap: () {
         setState(() {
-          selectedIndex = index;
+          selectedIndex = originalIndex;
         });
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        padding:
-        const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
         decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: isSelected
-                ? AppColors.secondary
-                : Colors.grey.shade300,
+            color: isSelected ? AppColors.secondary : Colors.grey.shade300,
             width: 1.2,
           ),
-          borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
-          mainAxisAlignment:
-          MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              lang["title"]!,
-              style: const TextStyle(fontSize: 16),
+            /// Radio
+            Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected ? AppColors.secondary : Colors.grey,
+                  width: 2,
+                ),
+              ),
+              child: isSelected
+                  ? Center(
+                child: Container(
+                  width: 10,
+                  height: 10,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.secondary,
+                  ),
+                ),
+              )
+                  : null,
             ),
-            Text(
-              lang["subtitle"]!,
-              style: const TextStyle(fontSize: 16),
+
+            const SizedBox(width: 10),
+
+            Expanded(
+              child: Text(
+                lang["title"]!,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void onNext() {
+    final langCode = languages[selectedIndex]["code"]!;
+
+    /// 🌍 Global set
+    TranslationService().currentLang = langCode;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const MobileNumberVerifyScreen(),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final list = filteredLanguages;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding:
-          const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
-            crossAxisAlignment:
-            CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
-              const Text(
-                "Please select a language to proceed.",
+              /// Title
+              Text(
+                "Help us know you",
                 style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                    color: Colors.grey.shade700,
+                    fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                "Your preferred\nlanguage is?",
+                style: TextStyle(
+                    fontSize: 26, fontWeight: FontWeight.bold),
+              ),
+
+              const SizedBox(height: 16),
+
+              /// 🔍 Search
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    searchText = value;
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: "Search language...",
+                  prefixIcon: const Icon(Icons.search),
+                  filled: true,
+                  fillColor: Colors.grey.shade100,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
-              const SizedBox(height: 20),
 
-              // Dynamic List
-              ...List.generate(
-                  languages.length,
-                      (index) => languageTile(index)),
+              const SizedBox(height: 16),
 
-              const Spacer(),
-
-              _socialButton(
-                iconPath: AppIcon.phone,
-                text: "Next",
-                onTap: () {
-                  print("Selected: ${languages[selectedIndex]["title"]}");
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          MobileNumberVerifyScreen(),
-                    ),
-                  );
-                },
+              /// Grid
+              Expanded(
+                child: list.isEmpty
+                    ? const Center(child: Text("No language found"))
+                    : GridView.builder(
+                  itemCount: list.length,
+                  gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    childAspectRatio: 3.5,
+                  ),
+                  itemBuilder: (context, index) {
+                    return languageCard(index, list);
+                  },
+                ),
               ),
-              const SizedBox(height: 50),
+
+              /// Button
+              SizedBox(
+                width: double.infinity,
+                height: 55,
+                child: ElevatedButton(
+                  onPressed: onNext,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.secondary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    "NEXT",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _socialButton({
-    required String iconPath,
-    required String text,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 56,
-        decoration: BoxDecoration(
-          color: const Color(0xFFA54275),
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: AppColors.primary),
-        ),
-        child: Row(
-          mainAxisAlignment:
-          MainAxisAlignment.center,
-          children: [
-            Text(
-              text,
-              style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white),
-            ),
-          ],
         ),
       ),
     );

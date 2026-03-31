@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/utils/app_size.dart';
+import '../../google/translation_service.dart';
 
 import '../../../core/constant/App_color.dart';
 import '../../../core/widget/custom_button.dart';
@@ -10,7 +11,8 @@ class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  State<OnboardingScreen> createState() =>
+      _OnboardingScreenState();
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
@@ -36,18 +38,46 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     },
   ];
 
-  Future<void> _handleSelection(String title) async {
+  /// 🔥 Translation Future
+  Future<Map<String, dynamic>> getTranslations() async {
+    final t = TranslationService();
+
+    return {
+      "title": await t.translate(
+          "What type of connection are you looking for?"),
+      "continue": await t.translate("Continue"),
+
+      "dateToMarry": await t.translate("Date to Marry"),
+      "dating": await t.translate("Dating"),
+      "mature": await t.translate("Mature connections"),
+
+      "lookingFor": await t.translate("Looking For >"),
+
+      "longTerm": await t.translate("Long term"),
+      "shortTerm": await t.translate("Short term"),
+      "friends": await t.translate("New friends"),
+      "casual": await t.translate("Casual"),
+
+      "companion": await t.translate("Companionship"),
+      "travel": await t.translate("Travel partner"),
+      "support": await t.translate("Emotional support"),
+      "friendship": await t.translate("Friendship first"),
+    };
+  }
+
+  Future<void> _handleSelection(
+      String title, Map<String, dynamic> t) async {
     setState(() => _selectedInterest = title);
 
     String? result;
 
     if (title == "Dating") {
-      result = await _showLookingForDialog();
+      result = await _showLookingForDialog(t);
       if (result != null) datingLookingFor = result;
     }
 
     if (title == "Mature connections") {
-      result = await _showLookingForConnections();
+      result = await _showLookingForConnections(t);
       if (result != null) matureLookingFor = result;
     }
 
@@ -58,257 +88,228 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     AppSize appSize = AppSize(context);
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: appSize.height * 0.1),
+    return FutureBuilder<Map<String, dynamic>>(
+      future: getTranslations(),
+      builder: (context, snapshot) {
 
-            Text(
-              "What type of connection are you looking for?",
-              style: TextStyle(
-                fontSize: appSize.largeText,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
+        if (!snapshot.hasData) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-            SizedBox(height: appSize.height * 0.05),
+        final t = snapshot.data!;
 
-            ...items.map((item) {
-              final isSelected = _selectedInterest == item["title"];
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: Padding(
+            padding:
+            const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment:
+              CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: appSize.height * 0.1),
 
-              return GestureDetector(
-                onTap: () =>
-                    _handleSelection(item["title"] as String),
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  height: appSize.height * 0.11,
-                  decoration: BoxDecoration(
-                    color: item["color"] as Color,
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(
-                      color: isSelected
-                          ? AppColors.secondary
-                          : Colors.transparent,
-                    ),
+                /// Title
+                Text(
+                  t["title"],
+                  style: TextStyle(
+                    fontSize: appSize.largeText,
+                    fontWeight: FontWeight.w700,
                   ),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        item["image"] as String,
-                        height: 90,
+                ),
+
+                SizedBox(height: appSize.height * 0.05),
+
+                ...items.map((item) {
+                  final isSelected =
+                      _selectedInterest == item["title"];
+
+                  String translatedTitle =
+                  item["title"] == "Date to Marry"
+                      ? t["dateToMarry"]
+                      : item["title"] == "Dating"
+                      ? t["dating"]
+                      : t["mature"];
+
+                  return GestureDetector(
+                    onTap: () => _handleSelection(
+                        item["title"] as String, t),
+                    child: Container(
+                      margin:
+                      const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16),
+                      height: appSize.height * 0.11,
+                      decoration: BoxDecoration(
+                        color: item["color"] as Color,
+                        borderRadius:
+                        BorderRadius.circular(18),
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColors.secondary
+                              : Colors.transparent,
+                        ),
                       ),
-                      const Spacer(),
-
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                      child: Row(
                         children: [
-                          Text(
-                            item["title"] as String,
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: isSelected
-                                  ? AppColors.primary
-                                  : Colors.black,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          Image.asset(
+                            item["image"] as String,
+                            height: 90,
                           ),
+                          const Spacer(),
 
-                          if (item["title"] == 'Dating')
-                            Text(
-                              datingLookingFor,
-                              style:
-                              TextStyle(color: AppColors.secondary),
-                            ),
+                          Column(
+                            mainAxisAlignment:
+                            MainAxisAlignment.center,
+                            crossAxisAlignment:
+                            CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                translatedTitle,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: isSelected
+                                      ? AppColors.primary
+                                      : Colors.black,
+                                  fontWeight:
+                                  FontWeight.w600,
+                                ),
+                              ),
 
-                          if (item["title"] == 'Mature connections')
-                            Text(
-                              matureLookingFor,
-                              style:
-                              TextStyle(color: AppColors.secondary),
-                            ),
+                              if (item["title"] ==
+                                  'Dating')
+                                Text(
+                                  datingLookingFor ==
+                                      "Looking For >"
+                                      ? t["lookingFor"]
+                                      : datingLookingFor,
+                                  style: TextStyle(
+                                      color: AppColors
+                                          .secondary),
+                                ),
+
+                              if (item["title"] ==
+                                  'Mature connections')
+                                Text(
+                                  matureLookingFor ==
+                                      "Looking For >"
+                                      ? t["lookingFor"]
+                                      : matureLookingFor,
+                                  style: TextStyle(
+                                      color: AppColors
+                                          .secondary),
+                                ),
+                            ],
+                          ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-              );
-            }).toList(),
-
-            const Spacer(),
-
-            CustomButton(
-              isLoading: false,
-              onTap: () {
-                if (_selectedInterest == "Date to Marry") {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => DateToMarry()),
-                  );
-                } else if (_selectedInterest == "Dating") {
-                  // agar dating ka alag screen hai to yaha bhejo
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => DateToMarry()), // temporary
-                  );
-                } else if (_selectedInterest == "Mature connections") {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => MatureConnections()),
-                  );
-                }
-              },
-              text: "Continue",
-              bColor: AppColors.secondary,
-              tColor: Colors.white,
-            ),
-
-            SizedBox(height: appSize.height * 0.05),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<String?> _showLookingForDialog() {
-    return showDialog<String>(
-      context: context,
-      builder: (context) {
-        String selected = "Long term";
-
-        return StatefulBuilder(
-          builder: (context, setStateDialog) {
-            return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.grey.shade200,
-                        child: IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ),
                     ),
+                  );
+                }).toList(),
 
-                    const SizedBox(height: 10),
+                const Spacer(),
 
-                    ...["Long term", "Short term", "New friends", "Casual"]
-                        .map((title) {
-                      return InkWell(
-                        onTap: () {
-                          setStateDialog(() => selected = title);
-                          Navigator.pop(context, selected);
-                        },
-                        child: _buildOption(title, selected),
+                /// Button
+                CustomButton(
+                  isLoading: false,
+                  onTap: () {
+                    if (_selectedInterest ==
+                        "Date to Marry") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) =>
+                                DateToMarry()),
                       );
-                    }).toList(),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Future<String?> _showLookingForConnections() {
-    return showDialog<String>(
-      context: context,
-      builder: (context) {
-        String selected = "Companionship";
-
-        return StatefulBuilder(
-          builder: (context, setStateDialog) {
-            return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.grey.shade200,
-                        child: IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    ...[
-                      "Companionship",
-                      "Travel partner",
-                      "Emotional support",
-                      "Friendship first"
-                    ].map((title) {
-                      return InkWell(
-                        onTap: () {
-                          setStateDialog(() => selected = title);
-                          Navigator.pop(context, selected);
-                        },
-                        child: _buildOption(title, selected),
+                    } else if (_selectedInterest ==
+                        "Dating") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) =>
+                                DateToMarry()),
                       );
-                    }).toList(),
-                  ],
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) =>
+                                MatureConnections()),
+                      );
+                    }
+                  },
+                  text: t["continue"],
+                  bColor: AppColors.secondary,
+                  tColor: Colors.white,
                 ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
 
-  Widget _buildOption(String title, String selected) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(title, style: const TextStyle(fontSize: 18)),
-
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.grey),
+                SizedBox(height: appSize.height * 0.05),
+              ],
             ),
-            child: selected == title
-                ? Center(
-              child: Container(
-                width: 10,
-                height: 10,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFA54275),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            )
-                : null,
           ),
-        ],
-      ),
+        );
+      },
+    );
+  }
+
+  /// Dialogs also translated
+  Future<String?> _showLookingForDialog(
+      Map<String, dynamic> t) {
+    return showDialog<String>(
+      context: context,
+      builder: (context) {
+        String selected = t["longTerm"];
+
+        return Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ...[
+                t["longTerm"],
+                t["shortTerm"],
+                t["friends"],
+                t["casual"]
+              ].map((title) {
+                return ListTile(
+                  title: Text(title),
+                  onTap: () => Navigator.pop(context, title),
+                );
+              })
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<String?> _showLookingForConnections(
+      Map<String, dynamic> t) {
+    return showDialog<String>(
+      context: context,
+      builder: (context) {
+        String selected = t["companion"];
+
+        return Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ...[
+                t["companion"],
+                t["travel"],
+                t["support"],
+                t["friendship"]
+              ].map((title) {
+                return ListTile(
+                  title: Text(title),
+                  onTap: () => Navigator.pop(context, title),
+                );
+              })
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:staybea_app/feature/verification/screen/user_details_screen.dart';
-
+import 'package:get/get.dart';
+import '../../google/translation_service.dart';
 import '../../location/controller/location_controller.dart';
 import '../../onboarding/screen/onboarding_screen.dart';
 
 class LocationAllowScreen extends StatefulWidget {
-   LocationAllowScreen({super.key});
+  const LocationAllowScreen({super.key});
 
   @override
-  State<LocationAllowScreen> createState() => _LocationAllowScreenState();
+  State<LocationAllowScreen> createState() =>
+      _LocationAllowScreenState();
 }
 
 class _LocationAllowScreenState extends State<LocationAllowScreen>
@@ -43,170 +40,220 @@ class _LocationAllowScreenState extends State<LocationAllowScreen>
     super.dispose();
   }
 
+  /// 🔥 Translation Future
+  Future<Map<String, String>> getTranslations() async {
+    final t = TranslationService();
+
+    return {
+      "title": await t.translate(
+          "Allow your location to help find people near you. Where are you from?"),
+      "subtitle": await t.translate(
+          "Set your real-time location to see who’s in your area or beyond"),
+      "allow": await t.translate("Allow"),
+      "skip": await t.translate("Skip"),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
+    return FutureBuilder<Map<String, String>>(
+      future: getTranslations(),
+      builder: (context, snapshot) {
 
-              const SizedBox(height: 50),
+        /// 🔄 Loader (no glitch)
+        if (!snapshot.hasData) {
+          return const Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
+        final t = snapshot.data!;
 
-              const Text(
-                "Allow Your Location To Help the partner So, Where are you from ?",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: Padding(
+              padding:
+              const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  const SizedBox(height: 50),
 
-              const SizedBox(height: 16),
+                  /// Title
+                  Text(
+                    t["title"]!,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
 
-              const Text(
-                "set up your real time location to see who’s in your area or beyond",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+                  const SizedBox(height: 16),
 
-              Expanded(
-                child: Center(
-                  child: SizedBox(
-                    width: 300,
-                    height: 300,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
+                  /// Subtitle
+                  Text(
+                    t["subtitle"]!,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
 
-                        /// 🔥 ONLY CIRCLES ANIMATION
-                        AnimatedBuilder(
-                          animation: _scaleAnimation,
-                          builder: (context, child) {
-                            return Transform.scale(
-                              scale: _scaleAnimation.value,
-                              child: child,
-                            );
-                          },
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
+                  Expanded(
+                    child: Center(
+                      child: SizedBox(
+                        width: 300,
+                        height: 300,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
 
-                              Container(
-                                width: 260,
-                                height: 260,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: const Color(0xFFEED6E0).withOpacity(.3),
-                                ),
+                            /// 🔥 Animated circles
+                            AnimatedBuilder(
+                              animation: _scaleAnimation,
+                              builder: (context, child) {
+                                return Transform.scale(
+                                  scale: _scaleAnimation.value,
+                                  child: child,
+                                );
+                              },
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  circle(260, 0.3),
+                                  circle(200, 0.5),
+                                  circle(140, 1),
+                                  const Icon(
+                                    Icons.location_on_outlined,
+                                    size: 40,
+                                    color: Colors.grey,
+                                  ),
+                                ],
                               ),
+                            ),
 
-                              Container(
-                                width: 200,
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: const Color(0xFFEED6E0).withOpacity(.5),
-                                ),
-                              ),
+                            /// Avatars
+                            positionedAvatar(
+                                "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+                                -90,
+                                -70),
+                            positionedAvatar(
+                                "https://images.unsplash.com/photo-1438761681033-6461ffad8d80",
+                                80,
+                                -60),
+                            positionedAvatar(
+                                "https://images.unsplash.com/photo-1544005313-94ddf0286df2",
+                                -90,
+                                60),
+                            positionedAvatar(
+                                "https://images.unsplash.com/photo-1524504388940-b1c1722653e1",
+                                80,
+                                70),
+                            positionedAvatar(
+                                "https://images.unsplash.com/photo-1517841905240-472988babdf9",
+                                0,
+                                110),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
 
-                              Container(
-                                width: 140,
-                                height: 140,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: const Color(0xFFEED6E0),
-                                ),
-                              ),
+                  /// Allow Button
+                  Obx(() {
+                    return controller.isLoading.value
+                        ? const CircularProgressIndicator()
+                        : InkWell(
+                      onTap: () async {
+                        await controller.fetchLocation();
 
-                              const Icon(Icons.location_on_outlined,
-                                  size: 40, color: Colors.grey),
-                            ],
+                        if (controller
+                            .isLocationLoaded.value) {
+                          Get.to(() =>
+                          const OnboardingScreen());
+                        }
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        height: 55,
+                        decoration: BoxDecoration(
+                          color:
+                          const Color(0xFFA54275),
+                          borderRadius:
+                          BorderRadius.circular(30),
+                        ),
+                        child: Center(
+                          child: Text(
+                            t["allow"]!,
+                            style: const TextStyle(
+                                color: Colors.white),
                           ),
                         ),
+                      ),
+                    );
+                  }),
 
-                        /// ❌ AVATARS (STATIC - NO ANIMATION)
-                        positionedAvatar("https://images.unsplash.com/photo-1494790108377-be9c29b29330", -90, -70),
-                        positionedAvatar("https://images.unsplash.com/photo-1438761681033-6461ffad8d80", 80, -60),
-                        positionedAvatar("https://images.unsplash.com/photo-1544005313-94ddf0286df2", -90, 60),
-                        positionedAvatar("https://images.unsplash.com/photo-1524504388940-b1c1722653e1", 80, 70),
-                        positionedAvatar("https://images.unsplash.com/photo-1517841905240-472988babdf9", 0, 110),
-                      ],
+                  const SizedBox(height: 12),
+
+                  /// Skip Button
+                  InkWell(
+                    onTap: () {
+                      Get.to(() =>
+                      const OnboardingScreen());
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 55,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                        BorderRadius.circular(30),
+                        border: Border.all(
+                            color: Colors.grey.shade200),
+                      ),
+                      child: Center(
+                        child: Text(
+                          t["skip"]!,
+                          style: const TextStyle(
+                            color: Color(0xFFA54275),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+
+                  const SizedBox(height: 20),
+                ],
               ),
-
-              Obx(() {
-              return controller.isLoading.value
-                  ? const CircularProgressIndicator()
-                  : InkWell(
-                onTap: () async {
-                  await controller.fetchLocation();
-
-                  if (controller.isLocationLoaded.value) {
-                    Get.to(() => OnboardingScreen());
-                  }
-                },
-                child: Container(
-                  width: double.infinity,
-                  height: 55,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFA54275),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Allow",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-              );
-            }),
-
-              const SizedBox(height: 12),
-
-              InkWell(
-                child: Container(
-                  width: double.infinity,
-                  height: 55,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Skip",
-                      style: TextStyle(
-                          color: Color(0xFFA54275),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => OnboardingScreen(),));
-                },
-              ),
-
-              const SizedBox(height: 20),
-            ],
+            ),
           ),
-        ),
+        );
+      },
+    );
+  }
+
+  /// 🔵 Circle UI
+  Widget circle(double size, double opacity) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color:
+        const Color(0xFFEED6E0).withOpacity(opacity),
       ),
     );
   }
 
-  Widget positionedAvatar(String image, double x, double y) {
+  /// 👤 Avatar
+  Widget positionedAvatar(
+      String image, double x, double y) {
     return Positioned(
       left: 130 + x,
       top: 130 + y,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-
+import '../../google/translation_service.dart';
 import 'location_allow_screen.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
@@ -29,6 +29,20 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     super.dispose();
   }
 
+  /// 🔥 Translation Future
+  Future<Map<String, String>> getTranslations() async {
+    final t = TranslationService();
+
+    return {
+      "back": await t.translate("Back"),
+      "title": await t.translate("Enter Your Verification Code"),
+      "desc": await t.translate(
+          "Still not get verification code? No worries, let’s try again "),
+      "resend": await t.translate("Resend"),
+      "btn": await t.translate("Verify OTP"),
+    };
+  }
+
   Widget otpBox(int index) {
     return SizedBox(
       width: 45,
@@ -41,20 +55,20 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         decoration: const InputDecoration(
           counterText: "",
           border: OutlineInputBorder(),
-          contentPadding: EdgeInsets.zero, // spacing 0
+          contentPadding: EdgeInsets.zero,
         ),
         onChanged: (value) {
           if (value.isNotEmpty) {
-            // next field
             if (index < 5) {
-              FocusScope.of(context).requestFocus(focusNodes[index + 1]);
+              FocusScope.of(context)
+                  .requestFocus(focusNodes[index + 1]);
             } else {
               focusNodes[index].unfocus();
             }
           } else {
-            // back field on delete
             if (index > 0) {
-              FocusScope.of(context).requestFocus(focusNodes[index - 1]);
+              FocusScope.of(context)
+                  .requestFocus(focusNodes[index - 1]);
             }
           }
         },
@@ -64,17 +78,30 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 50),
+    return FutureBuilder<Map<String, String>>(
+      future: getTranslations(),
+      builder: (context, snapshot) {
 
-            Row(
+        /// 🔄 Loader (no glitch)
+        if (!snapshot.hasData) {
+          return const Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final t = snapshot.data!;
+
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 50),
+
+                /// 🔙 Back
                 InkWell(
                   onTap: () => Navigator.pop(context),
                   child: Container(
@@ -83,13 +110,14 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: Colors.grey),
                     ),
-                    child: const Row(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.arrow_back),
-                        SizedBox(width: 10),
+                        const Icon(Icons.arrow_back),
+                        const SizedBox(width: 10),
                         Text(
-                          'Back',
-                          style: TextStyle(
+                          t["back"]!,
+                          style: const TextStyle(
                               fontSize: 18,
                               color: Colors.grey,
                               fontWeight: FontWeight.w500),
@@ -98,89 +126,98 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     ),
                   ),
                 ),
+
+                const SizedBox(height: 20),
+
+                /// Title
+                Text(
+                  t["title"]!,
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.w700),
+                ),
+
+                const Text(
+                  '+91 898207770',
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey),
+                ),
+
+                const SizedBox(height: 40),
+
+                /// OTP Boxes
+                Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween,
+                  children:
+                  List.generate(6, (index) => otpBox(index)),
+                ),
+
+                const SizedBox(height: 40),
+
+                /// Resend Text
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    children: [
+                      TextSpan(text: t["desc"]),
+                      TextSpan(
+                        text: t["resend"],
+                        style: const TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            // resend logic
+                          },
+                      ),
+                    ],
+                  ),
+                ),
+
+                const Spacer(),
+
+                /// Button
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                         LocationAllowScreen(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFA54275),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Center(
+                      child: Text(
+                        t["btn"]!,
+                        style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
               ],
             ),
-
-            const SizedBox(height: 20),
-
-            const Text(
-              'Enter Your Verification Code',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
-            ),
-
-            const Text(
-              '+91 898207770',
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey),
-            ),
-
-            const SizedBox(height: 40),
-
-            /// 🔥 OTP BOXES
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(6, (index) => otpBox(index)),
-            ),
-
-            const SizedBox(height: 40),
-
-            RichText(
-              text: TextSpan(
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w500,
-                ),
-                children: [
-                  const TextSpan(
-                    text:
-                    "Still not get verification code? No worries, let’s try again ",
-                  ),
-                  TextSpan(
-                    text: "Resend",
-                    style: const TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        // resend logic
-                      },
-                  ),
-                ],
-              ),
-            ),
-
-            const Spacer(),
-
-            InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => LocationAllowScreen(),));
-              },
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFA54275),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Center(
-                  child: Text(
-                    'Verify OTP',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

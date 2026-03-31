@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:staybea_app/core/constant/App_color.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../verification/screen/select_language_screen.dart';
-import '../../verification/screen/verification_screen.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
@@ -12,38 +9,39 @@ class IntroScreen extends StatefulWidget {
   State<IntroScreen> createState() => _IntroScreenState();
 }
 
-class _IntroScreenState extends State<IntroScreen> {
+class _IntroScreenState extends State<IntroScreen>
+    with SingleTickerProviderStateMixin {
   final PageController _controller = PageController();
   int currentIndex = 0;
 
-  final  titles = [
+  static const Color primaryColor = Color(0xFFA54275);
+  static const Color bgColor = Color(0xFFFFF5F5);
+
+  final List<Map<String, dynamic>> pages = [
     {
       "img": "assets/intro/intro1.gif",
-      "title": "Welcome to Staybea",
-      "description": "find your true life partner , follow our rules to make every step genuine ",
+      "title": "Date to Marry",
+      "description":
+      "Find your true life partner. Every step is genuine, verified, and built on trust — because forever starts here.",
     },
     {
       "img": "assets/intro/intro2.gif",
-      "title": "Strat Your Love Life Journey Today",
-      "description": "felling alone don't just charge your phone use it make your love connection   ",
+      "title": "Meaningful Connections",
+      "description":
+      "Explore genuine connections at your own pace. Meet real people, spark chemistry, and enjoy the journey of love.",
     },
     {
       "img": "assets/intro/intro3.gif",
-      "title": "Date and make your love moments",
-      "description": "start dating with trusted and genuine person , make your love moments ",
+      "title": "Your Perfect Match Awaits",
+      "description":
+      "Deep, experienced companionship for life's next chapter. Build heartfelt bonds that stand the test of time.",
     },
-    {
-      "img": "assets/intro/intro4.gif",
-      "title": "build your happy relationship heartline",
-      "description": "make your life long relationship heartline that stay with you",
-    },
-
   ];
 
   void nextPage() {
-    if (currentIndex < titles.length - 1) {
+    if (currentIndex < pages.length - 1) {
       _controller.nextPage(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
       );
     } else {
@@ -51,10 +49,7 @@ class _IntroScreenState extends State<IntroScreen> {
     }
   }
 
-
-  void skip() {
-    goToVerification();
-  }
+  void skip() => goToVerification();
 
   void goToVerification() {
     Navigator.pushReplacement(
@@ -63,174 +58,178 @@ class _IntroScreenState extends State<IntroScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isLast = currentIndex == pages.length - 1;
+
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-            Color(0xFFFFEAFF),
-            Color(0xFFFFFFFF)
-          ])
-        ),
-        child: Column(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Stack(
           children: [
-            Container(
-              height: 400,
-              padding: EdgeInsets.only(top: 60),
-              child:  Column(
-                children: [
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.all(40),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        image: DecorationImage(
-                          image: AssetImage(
-                            titles[currentIndex]['img'].toString(),
+            PageView.builder(
+              controller: _controller,
+              itemCount: pages.length,
+              onPageChanged: (i) => setState(() => currentIndex = i),
+              itemBuilder: (context, index) {
+                final data = pages[index];
+                return Column(
+                  children: [
+                    // ── Illustration Area ──────────────────────
+                    Container(
+                      height: size.height * 0.50,
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(40),
+                          bottomRight: Radius.circular(40),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Image.asset(
+                          data['img'] as String,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => const Center(
+                            child: Icon(Icons.favorite_rounded,
+                                size: 100, color: primaryColor),
                           ),
-                          fit: BoxFit.fill,
                         ),
                       ),
                     ),
-                  )
-                ],
-              ),
-            ),
 
-            Expanded(
-              child: PageView.builder(
-                controller: _controller,
-                itemCount: titles.length,
-                onPageChanged: (index) {
-                  setState(() => currentIndex = index);
-                },
-                itemBuilder: (context, index) {
-                  final introData =  titles[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:20.0),
-                    child: Column(
-                      spacing: 10,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding:  EdgeInsets.symmetric(horizontal: 25),
-                          child: Text(
-                            introData['title'].toString(),
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.playfairDisplay(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black,
-                            ),
-                            // style: const TextStyle(
-                            //   fontSize: 20,
-                            //   fontWeight: FontWeight.w700,
-                            //   color: Colors.black,
-                            // ),
-                          ),
+                    const SizedBox(height: 36),
+
+                    // ── Title ──────────────────────────────────
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      child: Text(
+                        data['title'] as String,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.playfairDisplay(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w700,
+                          color: primaryColor,
+                          height: 1.2,
                         ),
-                        Text(introData['description'].toString(),
-                          style: TextStyle(color: Colors.grey.shade700,fontWeight: FontWeight.w500,fontSize: 16),textAlign: TextAlign.center,),
-                        SizedBox(height: 30,),
-                        if(index  == 0)
-                        Column(
-                          spacing: 30,
-                          children: [
-                            Column(
-                              spacing: 10,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-
-                                Text('Verification',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w700),),
-                                Text('verify all necessary document that insured your trust and genuine presence while finding an match',
-                                style: TextStyle(fontSize: 14,color: Colors.grey,fontWeight: FontWeight.w600),)
-                              ],
-                            ),
-                            Column(
-                              spacing: 10,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-
-                                Text('Genuine',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w700),),
-                                Text('be genuine while finding your life partner match Respect others.',
-                                  style: TextStyle(fontSize: 14,color: Colors.grey,fontWeight: FontWeight.w600),)
-                              ],
-                            )
-                          ],
-                        )
-
-                      ],
+                      ),
                     ),
-                  );
-                },
-              ),
+
+                    const SizedBox(height: 14),
+
+                    // ── Description ────────────────────────────
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 36),
+                      child: Text(
+                        data['description'] as String,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.lato(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey.shade600,
+                          height: 1.6,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
 
-            const SizedBox(height: 30),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                titles.length,
-                    (index) => AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  height: 4,
-                  width: currentIndex == index ? 50 : 30,
-                  decoration: BoxDecoration(
-                    color:currentIndex == index ? Color(0xFFA54275):Colors.grey,
-                    borderRadius: BorderRadius.circular(10),
+            // ── Skip button (top-right) ─────────────────────────
+            if (currentIndex < pages.length - 1)
+              Positioned(
+                top: 12,
+                right: 20,
+                child: GestureDetector(
+                  onTap: skip,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      "Skip",
+                      style: GoogleFonts.lato(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 20,),
 
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                spacing: 10,
-                children: [
-
-                  if (currentIndex > 0)
-                    GestureDetector(
-                    onTap: skip,
-                    child: Container(
-                        height: 55,
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        decoration:  BoxDecoration(
-                            color: Color(0xFFA54275),
-                            borderRadius: BorderRadius.circular(20)
+            // ── Bottom Controls ──────────────────────────────────
+            Positioned(
+              bottom: 36,
+              left: 0,
+              right: 0,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Dot Indicators
+                    Row(
+                      children: List.generate(
+                        pages.length,
+                            (i) => AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          height: 8,
+                          width: currentIndex == i ? 24 : 8,
+                          decoration: BoxDecoration(
+                            color: currentIndex == i
+                                ? primaryColor
+                                : primaryColor.withOpacity(0.25),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
-                        child: Center(child: Text("Skip", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600,color: Colors.white),))
-                    ),
-                  ),
-
-
-
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: nextPage,
-                      child: Container(
-                        height: 55,
-                        decoration:  BoxDecoration(
-                          color: Color(0xFFA54275),
-                         borderRadius: BorderRadius.circular(20)
-                        ),
-                        child: Center(child: Text(
-                          currentIndex > 0 ? "Next" : "I Agree",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600,color: Colors.white),))
                       ),
                     ),
-                  ),
-                ],
+
+                    // Arrow / Done button
+                    GestureDetector(
+                      onTap: nextPage,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        height: 52,
+                        width: isLast ? 130 : 52,
+                        decoration: BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.circular(26),
+                          boxShadow: [
+                            BoxShadow(
+                              color: primaryColor.withOpacity(0.35),
+                              blurRadius: 16,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: isLast
+                              ? Text(
+                            "Done",
+                            style: GoogleFonts.lato(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          )
+                              : const Icon(
+                            Icons.arrow_forward_rounded,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
