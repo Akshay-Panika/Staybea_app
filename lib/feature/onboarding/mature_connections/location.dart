@@ -55,7 +55,7 @@ class _LocationState extends State<Location> {
           SizedBox(height: appSize.height * 0.02),
 
           Text(
-            "Location",
+            "Your Location",
             style: TextStyle(
               fontSize: appSize.largeText,
               fontWeight: FontWeight.w700,
@@ -82,6 +82,7 @@ class _LocationState extends State<Location> {
               });
             },
             items: _countries,
+            appSize: appSize,
             onSelect: (val) {
               setState(() {
                 _selectedCountry = val;
@@ -100,6 +101,7 @@ class _LocationState extends State<Location> {
             hint: "Select State",
             value: _selectedState,
             isOpen: _showState,
+            appSize: appSize,
             enabled: _selectedCountry != null,
             onTap: () {
               if (_selectedCountry == null) return;
@@ -132,6 +134,7 @@ class _LocationState extends State<Location> {
             hint: "Select City",
             value: _selectedCity,
             isOpen: _showCity,
+            appSize: appSize,
             enabled: _selectedState != null,
             onTap: () {
               if (_selectedState == null) return;
@@ -169,6 +172,7 @@ class _LocationState extends State<Location> {
     required List<String> items,
     required Function(String) onSelect,
     bool enabled = true,
+  required AppSize appSize,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,8 +180,8 @@ class _LocationState extends State<Location> {
 
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
+          style:  TextStyle(
+            fontSize: appSize.mediumText,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -200,7 +204,7 @@ class _LocationState extends State<Location> {
                   child: Text(
                     value ?? hint,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: appSize.mediumText,
                       color: value != null
                           ? Colors.black87
                           : Colors.grey.shade400,
@@ -239,7 +243,7 @@ class _LocationState extends State<Location> {
                         horizontal: 16, vertical: 14),
                     child: Row(
                       children: [
-                        Expanded(child: Text(item, style: TextStyle(color: isSelected ? Colors.black : Colors.black54),)),
+                        Expanded(child: Text(item, style: TextStyle(color: isSelected ? Colors.black : Colors.black54,fontSize: appSize.mediumText),)),
 
                         /// Radio UI
                         Container(

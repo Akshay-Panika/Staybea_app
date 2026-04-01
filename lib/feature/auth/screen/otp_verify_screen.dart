@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:staybea_app/core/constant/App_color.dart';
+import 'package:staybea_app/core/utils/app_size.dart';
+import '../../../core/widget/custom_button.dart';
 import '../../google/translation_service.dart';
 import '../../location/screen/location_allow_screen.dart';
 
@@ -79,6 +81,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    AppSize appSize = AppSize(context);
     return FutureBuilder<Map<String, String>>(
       future: getTranslations(),
       builder: (context, snapshot) {
@@ -102,7 +105,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
               children: [
                 const SizedBox(height: 50),
 
-                /// 🔙 Back
                 InkWell(
                   onTap: () => Navigator.pop(context),
                   child: Container(
@@ -114,15 +116,16 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.arrow_back),
-                        const SizedBox(width: 10),
+                        Icon(Icons.arrow_back_ios,size: appSize.mediumText,color: Colors.grey,),
+                        // const SizedBox(width: 10),
                         Text(
                           t["back"]!,
-                          style: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w500),
-                        )
+                          style:  TextStyle(
+                            fontSize: appSize.mediumText,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -133,14 +136,14 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 /// Title
                 Text(
                   t["title"]!,
-                  style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.w700),
+                  style:  TextStyle(
+                      fontSize: appSize.largeText, fontWeight: FontWeight.w700),
                 ),
 
-                const Text(
+                 Text(
                   '+91 898207770',
                   style: TextStyle(
-                      fontSize: 18,
+                      fontSize: appSize.mediumText,
                       fontWeight: FontWeight.w500,
                       color: Colors.grey),
                 ),
@@ -160,8 +163,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 /// Resend Text
                 RichText(
                   text: TextSpan(
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style:  TextStyle(
+                      fontSize: appSize.smallText,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
                     ),
@@ -186,32 +189,19 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 const Spacer(),
 
                 /// Button
-                InkWell(
+                CustomButton(
+                  text: t["btn"]!,
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (_) =>
-                         LocationAllowScreen(),
+                            LocationAllowScreen(),
                       ),
                     );
                   },
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFA54275),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Text(
-                        t["btn"]!,
-                        style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                  ),
+                  bColor: AppColors.secondary,
+                  tColor: Colors.white,
                 ),
 
                 const SizedBox(height: 20),

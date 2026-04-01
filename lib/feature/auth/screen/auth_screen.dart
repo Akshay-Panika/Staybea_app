@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:staybea_app/core/constant/App_color.dart';
 import 'package:staybea_app/core/constant/app_icon.dart';
 import 'package:staybea_app/core/utils/app_logo.dart';
+import 'package:staybea_app/core/utils/app_size.dart';
 import '../../google/translation_service.dart';
 import 'number_verify_screen.dart';
 
@@ -21,6 +22,7 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppSize appSize = AppSize(context);
     return FutureBuilder<Map<String, String>>(
       future: getTranslations(),
       builder: (context, snapshot) {
@@ -43,7 +45,6 @@ class AuthScreen extends StatelessWidget {
               child: Column(
                 children: [
 
-                  /// 🔥 Image Grid
                   Expanded(
                     child: Row(
                       children: [
@@ -93,8 +94,8 @@ class AuthScreen extends StatelessWidget {
                   Text(
                     t["terms"]!,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        fontSize: 16,
+                    style:  TextStyle(
+                        fontSize: appSize.mediumText,
                         color: Colors.black87),
                   ),
 
@@ -104,6 +105,7 @@ class AuthScreen extends StatelessWidget {
                   _socialButton(
                     iconPath: AppIcon.phone,
                     text: t["phoneBtn"]!,
+                    appSize: appSize,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -143,11 +145,12 @@ class AuthScreen extends StatelessWidget {
     required String iconPath,
     required String text,
     required VoidCallback onTap,
+    required AppSize  appSize,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 56,
+        height: appSize.height*0.05,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(28),
@@ -161,8 +164,8 @@ class AuthScreen extends StatelessWidget {
             const SizedBox(width: 10),
             Text(
               text,
-              style: const TextStyle(
-                fontSize: 16,
+              style:  TextStyle(
+                fontSize: appSize.mediumText,
                 fontWeight: FontWeight.w600,
               ),
             ),

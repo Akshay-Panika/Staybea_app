@@ -72,6 +72,7 @@ class _LifestyleState extends State<Lifestyle> {
             label: "Do you smoke?",
             value: _selectedSmoke,
             isOpen: _showSmoke,
+            appSize: appSize,
             onTap: () {
               setState(() {
                 _showSmoke = !_showSmoke;
@@ -95,6 +96,7 @@ class _LifestyleState extends State<Lifestyle> {
             label: "Do you drink?",
             value: _selectedDrink,
             isOpen: _showDrink,
+            appSize: appSize,
             onTap: () {
               setState(() {
                 _showDrink = !_showDrink;
@@ -118,6 +120,7 @@ class _LifestyleState extends State<Lifestyle> {
             label: "Diet",
             value: _selectedDiet,
             isOpen: _showDiet,
+            appSize: appSize,
             onTap: () {
               setState(() {
                 _showDiet = !_showDiet;
@@ -146,6 +149,7 @@ class _LifestyleState extends State<Lifestyle> {
     required bool isOpen,
     required VoidCallback? onTap,
     required List<String> items,
+    required AppSize appSize,
     required Function(String) onSelect,
     bool enabled = true,
   }) {
@@ -154,8 +158,8 @@ class _LifestyleState extends State<Lifestyle> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
+          style:  TextStyle(
+            fontSize: appSize.mediumText,
             fontWeight: FontWeight.w500,
             color: Colors.black87,
           ),
@@ -176,7 +180,7 @@ class _LifestyleState extends State<Lifestyle> {
                   child: Text(
                     value ?? "Select $label",
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: appSize.mediumText,
                       color:
                       value != null ? Colors.black87 : Colors.grey.shade400,
                     ),
@@ -211,6 +215,7 @@ class _LifestyleState extends State<Lifestyle> {
                           child: Text(
                             item,
                             style: TextStyle(
+                               fontSize: appSize.mediumText,
                               color: isSelected ? Colors.black : Colors.black54,
                             ),
                           ),

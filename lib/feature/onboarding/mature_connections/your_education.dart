@@ -59,6 +59,7 @@ class _YourEducationState extends State<YourEducation> {
             label: "Your highest education",
             value: _selectedEducation,
             isOpen: _showEducation,
+            appSize: appSize,
             onTap: () {
               setState(() {
                 _showEducation = !_showEducation;
@@ -76,10 +77,10 @@ class _YourEducationState extends State<YourEducation> {
           const SizedBox(height: 20),
 
           // College text field
-          const Text(
+           Text(
             "College",
             style: TextStyle(
-              fontSize: 14,
+              fontSize: appSize.mediumText,
               fontWeight: FontWeight.w500,
               color: Colors.black87,
             ),
@@ -87,11 +88,11 @@ class _YourEducationState extends State<YourEducation> {
           const SizedBox(height: 8),
           TextField(
             controller: _collegeController,
-            style: const TextStyle(fontSize: 14, color: Colors.black87),
+            style:  TextStyle(fontSize: appSize.mediumText, color: Colors.black87),
             decoration: InputDecoration(
               hintText: "College you attended",
               hintStyle: TextStyle(
-                fontSize: 14,
+                fontSize: appSize.mediumText,
                 color: Colors.grey.shade400,
               ),
               contentPadding:
@@ -122,6 +123,7 @@ class _YourEducationState extends State<YourEducation> {
     required bool isOpen,
     required VoidCallback? onTap,
     required List<String> items,
+    required AppSize appSize,
     required Function(String) onSelect,
     bool enabled = true,
   }) {
@@ -130,8 +132,8 @@ class _YourEducationState extends State<YourEducation> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
+          style:  TextStyle(
+            fontSize: appSize.mediumText,
             fontWeight: FontWeight.w500,
             color: Colors.black87,
           ),
@@ -152,7 +154,7 @@ class _YourEducationState extends State<YourEducation> {
                   child: Text(
                     value ?? "Select $label",
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: appSize.mediumText,
                       color:
                       value != null ? Colors.black87 : Colors.grey.shade400,
                     ),
@@ -187,6 +189,7 @@ class _YourEducationState extends State<YourEducation> {
                           child: Text(
                             item,
                             style: TextStyle(
+                               fontSize: appSize.mediumText,
                                 color: isSelected ? Colors.black : Colors.black54),
                           ),
                         ),

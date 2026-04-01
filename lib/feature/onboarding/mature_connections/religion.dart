@@ -69,10 +69,10 @@ class _ReligionState extends State<Religion> {
           SizedBox(height: appSize.height * 0.02),
 
           Text(
-            "Religion",
+            "Your Religion",
             style: TextStyle(
               fontSize: appSize.largeText,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w500,
               color: Colors.black,
             ),
           ),
@@ -91,6 +91,7 @@ class _ReligionState extends State<Religion> {
               });
             },
             items: _religions,
+            appSize: appSize,
             onSelect: (val) {
               setState(() {
                 _selectedReligion = val;
@@ -109,6 +110,7 @@ class _ReligionState extends State<Religion> {
             value: _selectedCommunity,
             isOpen: _showCommunity,
             enabled: _selectedReligion != null,
+            appSize: appSize,
             onTap: () {
               if (_selectedReligion != null) {
                 setState(() {
@@ -139,14 +141,15 @@ class _ReligionState extends State<Religion> {
     required List<String> items,
     required Function(String) onSelect,
     bool enabled = true,
+  required AppSize appSize,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
+          style:  TextStyle(
+            fontSize: appSize.mediumText,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -168,7 +171,7 @@ class _ReligionState extends State<Religion> {
                   child: Text(
                     value ?? hint,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: appSize.mediumText,
                       color: value != null
                           ? Colors.black87
                           : Colors.grey.shade400,
@@ -210,7 +213,7 @@ class _ReligionState extends State<Religion> {
                         Expanded(
                           child: Text(
                             item,
-                            style:  TextStyle(fontSize: 14,color: isSelected ? Colors.black:Colors.black54),
+                            style:  TextStyle(fontSize: appSize.mediumText,color: isSelected ? Colors.black:Colors.black54),
                           ),
                         ),
 

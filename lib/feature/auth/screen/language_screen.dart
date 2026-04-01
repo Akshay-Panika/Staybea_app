@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/constant/App_color.dart';
+import 'package:staybea_app/core/utils/app_size.dart';
+import '../../../core/widget/custom_button.dart';
 import '../../google/translation_service.dart';
 import 'auth_screen.dart';
 
@@ -121,8 +123,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    AppSize appSize = AppSize(context);
     final list = filteredLanguages;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -135,15 +137,15 @@ class _LanguageScreenState extends State<LanguageScreen> {
               Text(
                 "Help us know you",
                 style: TextStyle(
-                    fontSize: 14,
+                    fontSize: appSize.mediumText,
                     color: Colors.grey.shade700,
                     fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 6),
-              const Text(
-                "Your preferred\nlanguage is?",
+               Text(
+                "Your preferred language is?",
                 style: TextStyle(
-                    fontSize: 26, fontWeight: FontWeight.bold),
+                    fontSize: appSize.largeText, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 16),
@@ -172,7 +174,23 @@ class _LanguageScreenState extends State<LanguageScreen> {
               /// Grid
               Expanded(
                 child: list.isEmpty
-                    ? const Center(child: Text("No language found"))
+                    ? Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.language_outlined, size: 48, color: Colors.grey.shade300),
+                      const SizedBox(height: 12),
+                      Text(
+                        'No language found',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.grey.shade400,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
                     : GridView.builder(
                   itemCount: list.length,
                   gridDelegate:
@@ -189,26 +207,11 @@ class _LanguageScreenState extends State<LanguageScreen> {
               ),
 
               /// Button
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: onNext,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.secondary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    "NEXT",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+              CustomButton(
+                text:"NEXT",
+                onTap: onNext,
+                bColor: AppColors.secondary,
+                tColor: Colors.white,
               ),
             ],
           ),

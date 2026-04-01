@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:staybea_app/core/utils/app_size.dart';
 import 'package:staybea_app/core/widget/custom_button.dart';
 import 'package:staybea_app/feature/dashboard/screen/dashboard_screen.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/profile_stape.dart';
@@ -55,6 +56,7 @@ class _DateToMarryState extends State<DateToMarry> {
 
   @override
   Widget build(BuildContext context) {
+    AppSize appSize = AppSize(context);
     return Scaffold(
       backgroundColor: Colors.white,
       // backgroundColor: Color(0xffF7F8FA),
@@ -126,15 +128,16 @@ class _DateToMarryState extends State<DateToMarry> {
                         }
                       },
                       child: Container(
-                        padding: const EdgeInsets.all(8),
+                        padding:  EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: Colors.grey),
                         ),
-                        child: const Row(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.arrow_back),
-                            SizedBox(width: 8),
+                            Icon(Icons.arrow_back_ios,size: appSize.mediumText,color: Colors.grey,),
+                            // const SizedBox(width: 10),
                             Text(
                               'Back',
                               style: TextStyle(
@@ -146,6 +149,7 @@ class _DateToMarryState extends State<DateToMarry> {
                         ),
                       ),
                     ),
+
                   ],
                 ),
               ),

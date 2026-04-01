@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:staybea_app/core/constant/App_color.dart';
+import 'package:staybea_app/core/utils/app_size.dart';
 import 'language_screen.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -59,7 +60,7 @@ class _IntroScreenState extends State<IntroScreen>
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    AppSize appSize = AppSize(context);
     final isLast = currentIndex == pages.length - 1;
 
     return Scaffold(
@@ -78,7 +79,7 @@ class _IntroScreenState extends State<IntroScreen>
                   children: [
                     // ── Illustration Area ──────────────────────
                     Container(
-                      height: size.height * 0.50,
+                      height: appSize.height * 0.50,
                       width: double.infinity,
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
@@ -108,15 +109,15 @@ class _IntroScreenState extends State<IntroScreen>
                         data['title'] as String,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.playfairDisplay(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w700,
+                          fontSize: appSize.extraLargeText,
+                          fontWeight: FontWeight.bold,
                           color: AppColors.secondary,
                           height: 1.2,
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 14),
+                   14.height,
 
                     // ── Description ────────────────────────────
                     Padding(
@@ -125,8 +126,8 @@ class _IntroScreenState extends State<IntroScreen>
                         data['description'] as String,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.lato(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                          fontSize: appSize.mediumText,
+                          fontWeight: FontWeight.w600,
                           color: Colors.grey.shade600,
                           height: 1.6,
                         ),

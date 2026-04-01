@@ -83,6 +83,7 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
             label: "Marital Status",
             value: _selectedMaritalStatus,
             isOpen: _showMaritalStatus,
+            appSize: appSize,
             onTap: () {
               setState(() {
                 _showMaritalStatus = !_showMaritalStatus;
@@ -108,6 +109,7 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
             label: "Do you have child?",
             value: _selectedHaveChild,
             isOpen: _showHaveChild,
+            appSize: appSize,
             onTap: () {
               setState(() {
                 _showHaveChild = !_showHaveChild;
@@ -138,6 +140,7 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
             value: _selectedNumberOfChild,
             isOpen: _showNumberOfChild,
             enabled: _hasChildren,
+            appSize: appSize,
             onTap: _hasChildren
                 ? () {
               setState(() {
@@ -166,6 +169,7 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
             value: _selectedLiveWithYou,
             isOpen: _showLiveWithYou,
             enabled: _hasChildren,
+            appSize: appSize,
             onTap: _hasChildren
                 ? () {
               setState(() {
@@ -193,6 +197,7 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
             label: "Where do you currently live?",
             value: _selectedCurrentlyLive,
             isOpen: _showCurrentlyLive,
+            appSize: appSize,
             onTap: () {
               setState(() {
                 _showCurrentlyLive = !_showCurrentlyLive;
@@ -223,6 +228,7 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
     required bool isOpen,
     required VoidCallback? onTap,
     required List<String> items,
+    required AppSize appSize,
     required Function(String) onSelect,
     bool enabled = true,
   }) {
@@ -231,8 +237,8 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
+          style:  TextStyle(
+            fontSize: appSize.mediumText,
             fontWeight: FontWeight.w500,
             color: Colors.black87,
           ),
@@ -253,7 +259,7 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
                   child: Text(
                     value ?? "Select $label",
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: appSize.mediumText,
                       color: value != null
                           ? Colors.black87
                           : Colors.grey.shade400,
@@ -289,6 +295,7 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
                           child: Text(
                             item,
                             style: TextStyle(
+                                fontSize: appSize.mediumText,
                                 color: isSelected ? Colors.black : Colors.black54),
                           ),
                         ),

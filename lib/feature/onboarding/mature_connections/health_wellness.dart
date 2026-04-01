@@ -87,6 +87,7 @@ class _HealthAndWellnessState extends State<HealthAndWellness> {
             label: "Do you exercise?",
             value: _selectedExercise,
             isOpen: _showExercise,
+            appSize: appSize,
             onTap: () {
               setState(() {
                 _showExercise = !_showExercise;
@@ -110,6 +111,7 @@ class _HealthAndWellnessState extends State<HealthAndWellness> {
             label: "Any health conditions?",
             value: _selectedHealthCondition,
             isOpen: _showHealthCondition,
+            appSize: appSize,
             onTap: () {
               setState(() {
                 _showHealthCondition = !_showHealthCondition;
@@ -135,6 +137,7 @@ class _HealthAndWellnessState extends State<HealthAndWellness> {
             value: _selectedConditionType,
             isOpen: _showConditionType,
             enabled: _hasCondition,
+            appSize: appSize,
             onTap: _hasCondition
                 ? () {
               setState(() {
@@ -165,6 +168,7 @@ class _HealthAndWellnessState extends State<HealthAndWellness> {
     required bool isOpen,
     required VoidCallback? onTap,
     required List<String> items,
+    required AppSize appSize,
     required Function(String) onSelect,
     bool enabled = true,
   }) {
@@ -173,8 +177,8 @@ class _HealthAndWellnessState extends State<HealthAndWellness> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
+          style:  TextStyle(
+            fontSize: appSize.mediumText,
             fontWeight: FontWeight.w500,
             color: Colors.black87,
           ),
@@ -195,7 +199,7 @@ class _HealthAndWellnessState extends State<HealthAndWellness> {
                   child: Text(
                     value ?? "Select $label",
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: appSize.mediumText,
                       color:
                       value != null ? Colors.black87 : Colors.grey.shade400,
                     ),
@@ -230,6 +234,7 @@ class _HealthAndWellnessState extends State<HealthAndWellness> {
                           child: Text(
                             item,
                             style: TextStyle(
+                              fontSize: appSize.mediumText,
                               color: isSelected ? Colors.black : Colors.black54,
                             ),
                           ),

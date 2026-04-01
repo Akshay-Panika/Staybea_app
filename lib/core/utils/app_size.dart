@@ -16,8 +16,7 @@ class AppSize {
   AppSize(BuildContext context)
       : width = MediaQuery.of(context).size.width,
         height = MediaQuery.of(context).size.height,
-        isLandscape =
-            MediaQuery.of(context).orientation == Orientation.landscape,
+        isLandscape =MediaQuery.of(context).orientation == Orientation.landscape,
 
   // 📱 Responsive text sizes (based on screen width)
         smallText = MediaQuery.of(context).size.width * 0.03,

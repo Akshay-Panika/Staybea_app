@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:staybea_app/core/utils/app_size.dart';
+import '../../../core/constant/App_color.dart';
+import '../../../core/widget/custom_button.dart';
 import '../../google/translation_service.dart';
 import 'otp_verify_screen.dart';
 
@@ -21,6 +24,7 @@ class NumberVerifyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppSize appSize = AppSize(context);
     return FutureBuilder<Map<String, String>>(
       future: getTranslations(),
       builder: (context, snapshot) {
@@ -56,12 +60,12 @@ class NumberVerifyScreen extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.arrow_back),
-                        const SizedBox(width: 10),
+                         Icon(Icons.arrow_back_ios,size: appSize.mediumText,color: Colors.grey,),
+                        // const SizedBox(width: 10),
                         Text(
                           t["back"]!,
-                          style: const TextStyle(
-                            fontSize: 18,
+                          style:  TextStyle(
+                            fontSize: appSize.mediumText,
                             color: Colors.grey,
                             fontWeight: FontWeight.w500,
                           ),
@@ -76,8 +80,8 @@ class NumberVerifyScreen extends StatelessWidget {
                 /// Title
                 Text(
                   t["title"]!,
-                  style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.w700),
+                  style:  TextStyle(
+                      fontSize: appSize.largeText, fontWeight: FontWeight.w700),
                 ),
 
                 const SizedBox(height: 40),
@@ -87,10 +91,10 @@ class NumberVerifyScreen extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        const Text(
+                         Text(
                           '+91',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: appSize.mediumText,
                             fontWeight: FontWeight.w500,
                             color: Colors.grey,
                           ),
@@ -132,8 +136,8 @@ class NumberVerifyScreen extends StatelessWidget {
                 /// Description
                 Text(
                   t["desc"]!,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style:  TextStyle(
+                    fontSize: appSize.mediumText,
                     color: Colors.grey,
                     fontWeight: FontWeight.w500,
                   ),
@@ -142,7 +146,8 @@ class NumberVerifyScreen extends StatelessWidget {
                 const Spacer(),
 
                 /// Button
-                InkWell(
+                CustomButton(
+                  text:t["btn"]!,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -151,23 +156,8 @@ class NumberVerifyScreen extends StatelessWidget {
                       ),
                     );
                   },
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFA54275),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Text(
-                        t["btn"]!,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
+                  bColor: AppColors.secondary,
+                  tColor: Colors.white,
                 ),
 
                 const SizedBox(height: 20),

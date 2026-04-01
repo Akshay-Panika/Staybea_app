@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:staybea_app/core/constant/app_color.dart';
+import 'package:staybea_app/core/widget/custom_button.dart';
 import '../../google/translation_service.dart';
 import '../controller/location_controller.dart';
 import '../../onboarding/screen/onboarding_screen.dart';
@@ -170,7 +171,8 @@ class _LocationAllowScreenState extends State<LocationAllowScreen> with SingleTi
                   Obx(() {
                     return controller.isLoading.value
                         ? const CircularProgressIndicator(color: AppColors.secondary,)
-                        : InkWell(
+                        : CustomButton(
+                      text: t["allow"]!,
                       onTap: () async {
                         await controller.fetchLocation();
 
@@ -180,48 +182,21 @@ class _LocationAllowScreenState extends State<LocationAllowScreen> with SingleTi
                           const OnboardingScreen());
                         }
                       },
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: AppColors.secondary,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Center(
-                          child: Text(
-                            t["allow"]!,
-                            style: const TextStyle(
-                                color: Colors.white),
-                          ),
-                        ),
-                      ),
+                      bColor: AppColors.secondary,
+                      tColor: Colors.white,
                     );
                   }),
 
                   const SizedBox(height: 12),
 
-                  InkWell(
+                  CustomButton(
+                    text: t["skip"]!,
                     onTap: () {
                       Get.to(() =>
                       const OnboardingScreen());
                     },
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: AppColors.secondary,width: 0.3),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Center(
-                        child: Text(
-                          t["skip"]!,
-                          style: const TextStyle(
-                            color: Color(0xFFA54275),
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
+                    // bColor: AppColors.secondary,
+                    // tColor: Colors.white,
                   ),
 
 
