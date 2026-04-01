@@ -102,7 +102,7 @@ class _InterestsAndHobbiesState extends State<InterestsAndHobbies> {
                       color: isSelected
                           ? Colors.pink.shade300
                           : Colors.grey.shade200,
-                      width: isSelected ? 2 : 1,
+                      width: isSelected ? 1 : 1,
                     ),
                     boxShadow: [
                       BoxShadow(

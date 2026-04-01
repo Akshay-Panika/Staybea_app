@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'feature/auth/screen/splash_screen.dart';
+import 'feature/onboarding/screen/date_to_marry_screen.dart';
 
 void main() {
   runApp(const MyApp());

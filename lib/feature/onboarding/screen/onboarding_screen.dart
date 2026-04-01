@@ -6,6 +6,7 @@ import '../../../core/constant/App_color.dart';
 import '../../../core/widget/custom_button.dart';
 import '../dat_to_marry/date_to_marry.dart';
 import '../mature_connections/mature_connections.dart';
+import '../dating/dating.dart';
 
 /// Selected interest from OnboardingScreen
 String selectedInterest = "Date to Marry";
@@ -228,21 +229,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   isLoading: false,
                   onTap: () {
                     selectedInterest = _selectedInterest;
-                    if (_selectedInterest ==
-                        "Date to Marry") {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) =>
-                                DateToMarry()),
-                      );
-                    } else if (_selectedInterest ==
-                        "Dating") {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) =>
-                                DateToMarry()),
+                    if (_selectedInterest == "Date to Marry") {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => DateToMarry()));
+                    } else if (_selectedInterest == "Dating") {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => Dating()),
                       );
                     } else {
                       Navigator.push(

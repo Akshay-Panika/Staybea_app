@@ -13,6 +13,10 @@ class _LifestyleState extends State<Lifestyle> {
   String? _selectedDrink;
   String? _selectedDiet;
 
+  bool _showSmoke = false;
+  bool _showDrink = false;
+  bool _showDiet = false;
+
   final List<String> _smokeOptions = [
     'Non Smoker',
     'Light Smoker',
@@ -40,122 +44,19 @@ class _LifestyleState extends State<Lifestyle> {
     'Other',
   ];
 
-  void _showBottomSheet({
-    required BuildContext context,
-    required String title,
-    required List<String> options,
-    required String? selected,
-    required ValueChanged<String> onSelected,
-  }) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 12, bottom: 8),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Navigator.pop(ctx),
-                      child: const Icon(Icons.close,
-                          size: 20, color: Colors.black54),
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(height: 1),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.4,
-                ),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: options.length,
-                  itemBuilder: (_, index) {
-                    final option = options[index];
-                    final isSelected = option == selected;
-                    return InkWell(
-                      onTap: () {
-                        onSelected(option);
-                        Navigator.pop(ctx);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 14),
-                        color: isSelected
-                            ? Colors.grey.shade100
-                            : Colors.white,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              option,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: isSelected
-                                    ? FontWeight.w600
-                                    : FontWeight.w500,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            if (isSelected)
-                              const Icon(
-                                Icons.check_circle_rounded,
-                                size: 18,
-                                color: Colors.black87,
-                              ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 12),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     AppSize appSize = AppSize(context);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           SizedBox(height: appSize.height*0.02),
+          SizedBox(height: appSize.height * 0.02),
 
           // Title
-           Text(
+          Text(
             "Lifestyle",
             style: TextStyle(
               fontSize: appSize.largeText,
@@ -164,55 +65,73 @@ class _LifestyleState extends State<Lifestyle> {
             ),
           ),
 
-          SizedBox(height: appSize.height*0.02),
+          SizedBox(height: appSize.height * 0.02),
 
-          // Do you smoke?
-          _buildLabel("Do you smoke?"),
-          const SizedBox(height: 8),
-          _buildDropdownField(
-            hint: "Do you smoke?",
-            selected: _selectedSmoke,
-            onTap: () => _showBottomSheet(
-              context: context,
-              title: "Do you smoke?",
-              options: _smokeOptions,
-              selected: _selectedSmoke,
-              onSelected: (val) => setState(() => _selectedSmoke = val),
-            ),
+          // Smoke
+          _buildExpandableField(
+            label: "Do you smoke?",
+            value: _selectedSmoke,
+            isOpen: _showSmoke,
+            onTap: () {
+              setState(() {
+                _showSmoke = !_showSmoke;
+                _showDrink = false;
+                _showDiet = false;
+              });
+            },
+            items: _smokeOptions,
+            onSelect: (val) {
+              setState(() {
+                _selectedSmoke = val;
+                _showSmoke = false;
+              });
+            },
           ),
 
           const SizedBox(height: 20),
 
-          // Do you Drink?
-          _buildLabel("Do you Drink?"),
-          const SizedBox(height: 8),
-          _buildDropdownField(
-            hint: "Do you Drink?",
-            selected: _selectedDrink,
-            onTap: () => _showBottomSheet(
-              context: context,
-              title: "Do you Drink?",
-              options: _drinkOptions,
-              selected: _selectedDrink,
-              onSelected: (val) => setState(() => _selectedDrink = val),
-            ),
+          // Drink
+          _buildExpandableField(
+            label: "Do you drink?",
+            value: _selectedDrink,
+            isOpen: _showDrink,
+            onTap: () {
+              setState(() {
+                _showDrink = !_showDrink;
+                _showSmoke = false;
+                _showDiet = false;
+              });
+            },
+            items: _drinkOptions,
+            onSelect: (val) {
+              setState(() {
+                _selectedDrink = val;
+                _showDrink = false;
+              });
+            },
           ),
 
           const SizedBox(height: 20),
 
           // Diet
-          _buildLabel("Diet"),
-          const SizedBox(height: 8),
-          _buildDropdownField(
-            hint: "Select Diet",
-            selected: _selectedDiet,
-            onTap: () => _showBottomSheet(
-              context: context,
-              title: "Diet",
-              options: _dietOptions,
-              selected: _selectedDiet,
-              onSelected: (val) => setState(() => _selectedDiet = val),
-            ),
+          _buildExpandableField(
+            label: "Diet",
+            value: _selectedDiet,
+            isOpen: _showDiet,
+            onTap: () {
+              setState(() {
+                _showDiet = !_showDiet;
+                _showSmoke = false;
+                _showDrink = false;
+              });
+            },
+            items: _dietOptions,
+            onSelect: (val) {
+              setState(() {
+                _selectedDiet = val;
+                _showDiet = false;
+              });
+            },
           ),
 
           const SizedBox(height: 24),
@@ -221,61 +140,106 @@ class _LifestyleState extends State<Lifestyle> {
     );
   }
 
-  Widget _buildLabel(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: Colors.black87,
-      ),
-    );
-  }
-
-  Widget _buildDropdownField({
-    required String hint,
-    String? selected,
-    VoidCallback? onTap,
+  Widget _buildExpandableField({
+    required String label,
+    required String? value,
+    required bool isOpen,
+    required VoidCallback? onTap,
+    required List<String> items,
+    required Function(String) onSelect,
     bool enabled = true,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 52,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300, width: 1),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              selected ?? hint,
-              style: TextStyle(
-                fontSize: 14,
-                color: selected != null
-                    ? Colors.black87
-                    : Colors.grey.shade400,
-              ),
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: enabled ? onTap : null,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              color: enabled ? Colors.white : Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
             ),
-            Container(
-              width: 28,
-              height: 28,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey.shade300, width: 1),
-              ),
-              child: Icon(
-                Icons.keyboard_arrow_down_rounded,
-                size: 18,
-                color: Colors.grey.shade500,
-              ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    value ?? "Select $label",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color:
+                      value != null ? Colors.black87 : Colors.grey.shade400,
+                    ),
+                  ),
+                ),
+                Icon(
+                  isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  color: enabled ? Colors.grey.shade600 : Colors.grey.shade300,
+                )
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+        if (isOpen)
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: Column(
+              children: items.map((item) {
+                final isSelected = value == item;
+                return InkWell(
+                  onTap: () => onSelect(item),
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            item,
+                            style: TextStyle(
+                              color: isSelected ? Colors.black : Colors.black54,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 20,
+                          width: 20,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: isSelected ? Colors.pink : Colors.grey),
+                          ),
+                          child: isSelected
+                              ? const Center(
+                            child: CircleAvatar(
+                              radius: 4,
+                              backgroundColor: Colors.pink,
+                            ),
+                          )
+                              : null,
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+      ],
     );
   }
 }

@@ -93,7 +93,7 @@ class _DreamsAndFuturePlansState extends State<DreamsAndFuturePlans> {
                       color: isSelected
                           ? const Color(0xFFB33771) // Image ka purple/pink border
                           : Colors.grey.shade200,
-                      width: isSelected ? 2 : 1,
+                      width: isSelected ? 1 : 1,
                     ),
                   ),
                   child: Column(

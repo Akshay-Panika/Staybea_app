@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:staybea_app/core/utils/app_size.dart';
+import 'package:staybea_app/feature/profile/screen/profile_screen.dart';
 
-import '../dat_to_marry/marriage_profile_screen.dart';
+import 'marriage_profile_screen.dart';
 
 final List<Map<String, dynamic>> _data = [
   {
@@ -123,11 +124,16 @@ class _TopBar extends StatelessWidget {
           // Avatar with online indicator
           Stack(
             children: [
-              CircleAvatar(
-                radius: 22,
-                backgroundColor: Colors.grey.shade300,
-                backgroundImage:
-                const NetworkImage('https://picsum.photos/100/100?random=99'),
+              InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen(),));
+                },
+                child: CircleAvatar(
+                  radius: 22,
+                  backgroundColor: Colors.grey.shade300,
+                  backgroundImage:
+                  const NetworkImage('https://picsum.photos/100/100?random=99'),
+                ),
               ),
               Positioned(
                 right: 0,
@@ -457,8 +463,8 @@ class _ProfileCardState extends State<_ProfileCard> {
                       border: Border.all(color: Colors.white,width: 1)
                     ),
                 child: IconButton(onPressed: () {
-
-              }, icon: Icon(Icons.more_vert, color: Colors.white,)),)),
+                  _showMoreOptionsSheet(context);
+                }, icon: Icon(Icons.more_vert, color: Colors.white,)),)),
             ],
           ),
         );
@@ -694,5 +700,113 @@ void _showConversationSheet(BuildContext context) {
         },
       );
     },
+  );
+}
+void _showMoreOptionsSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.white,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    builder: (context) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // drag handle
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+
+            _moreOptionTile(
+              context,
+              icon: Icons.share_outlined,
+              label: "Share Profile",
+              onTap: () {
+                Navigator.pop(context);
+                // TODO: share logic
+              },
+            ),
+
+            _moreOptionTile(
+              context,
+              icon: Icons.star_border_outlined,
+              label: "Add to shortlist",
+              onTap: () {
+                Navigator.pop(context);
+                // TODO: shortlist logic
+              },
+            ),
+
+            _moreOptionTile(
+              context,
+              icon: Icons.visibility_off_outlined,
+              label: "Hide this profile",
+              onTap: () {
+                Navigator.pop(context);
+                // TODO: hide logic
+              },
+            ),
+
+            _moreOptionTile(
+              context,
+              icon: Icons.block_outlined,
+              label: "Block this profile",
+              onTap: () {
+                Navigator.pop(context);
+                // TODO: block logic
+              },
+            ),
+
+            _moreOptionTile(
+              context,
+              icon: Icons.warning_amber_outlined,
+              label: "Report this profile",
+              onTap: () {
+                Navigator.pop(context);
+                // TODO: report logic
+              },
+            ),
+
+            const SizedBox(height: 10),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+Widget _moreOptionTile(
+    BuildContext context, {
+      required IconData icon,
+      required String label,
+      required VoidCallback onTap,
+    }) {
+  return InkWell(
+    onTap: onTap,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+      child: Row(
+        children: [
+          Icon(icon, size: 22, color: Colors.black54),
+          const SizedBox(width: 16),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 15,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
+    ),
   );
 }

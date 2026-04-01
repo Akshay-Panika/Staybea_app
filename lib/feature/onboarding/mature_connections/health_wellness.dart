@@ -13,6 +13,10 @@ class _HealthAndWellnessState extends State<HealthAndWellness> {
   String? _selectedHealthCondition;
   String? _selectedConditionType;
 
+  bool _showExercise = false;
+  bool _showHealthCondition = false;
+  bool _showConditionType = false;
+
   final List<String> _exerciseOptions = [
     'Daily',
     'Several times a week',
@@ -53,122 +57,21 @@ class _HealthAndWellnessState extends State<HealthAndWellness> {
           ? (_conditionTypeMap[_selectedHealthCondition] ?? [])
           : [];
 
-  void _showBottomSheet({
-    required BuildContext context,
-    required String title,
-    required List<String> options,
-    required String? selected,
-    required ValueChanged<String> onSelected,
-  }) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 12, bottom: 8),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Navigator.pop(ctx),
-                      child: const Icon(Icons.close,
-                          size: 20, color: Colors.black54),
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(height: 1),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.4,
-                ),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: options.length,
-                  itemBuilder: (_, index) {
-                    final option = options[index];
-                    final isSelected = option == selected;
-                    return InkWell(
-                      onTap: () {
-                        onSelected(option);
-                        Navigator.pop(ctx);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 14),
-                        color: isSelected
-                            ? Colors.grey.shade100
-                            : Colors.white,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              option,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: isSelected
-                                    ? FontWeight.w600
-                                    : FontWeight.w500,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            if (isSelected)
-                              const Icon(
-                                Icons.check_circle_rounded,
-                                size: 18,
-                                color: Colors.black87,
-                              ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 12),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  bool get _hasCondition => _selectedHealthCondition != null;
 
   @override
   Widget build(BuildContext context) {
     AppSize appSize = AppSize(context);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           SizedBox(height: appSize.height*0.02),
+          SizedBox(height: appSize.height * 0.02),
 
           // Title
-           Text(
+          Text(
             "Health & Wellness",
             style: TextStyle(
               fontSize: appSize.largeText,
@@ -177,64 +80,77 @@ class _HealthAndWellnessState extends State<HealthAndWellness> {
             ),
           ),
 
-          SizedBox(height: appSize.height*0.02),
+          SizedBox(height: appSize.height * 0.02),
 
-          // Do you exercise?
-          _buildLabel("Do you exercise?"),
-          const SizedBox(height: 8),
-          _buildDropdownField(
-            hint: "Exercise?",
-            selected: _selectedExercise,
-            onTap: () => _showBottomSheet(
-              context: context,
-              title: "Do you exercise?",
-              options: _exerciseOptions,
-              selected: _selectedExercise,
-              onSelected: (val) => setState(() => _selectedExercise = val),
-            ),
+          // Exercise
+          _buildExpandableField(
+            label: "Do you exercise?",
+            value: _selectedExercise,
+            isOpen: _showExercise,
+            onTap: () {
+              setState(() {
+                _showExercise = !_showExercise;
+                _showHealthCondition = false;
+                _showConditionType = false;
+              });
+            },
+            items: _exerciseOptions,
+            onSelect: (val) {
+              setState(() {
+                _selectedExercise = val;
+                _showExercise = false;
+              });
+            },
           ),
 
           const SizedBox(height: 20),
 
-          // Any health conditions
-          _buildLabel("Any health conditions you would like to share?"),
-          const SizedBox(height: 8),
-          _buildDropdownField(
-            hint: "Select  Any health conditiont",
-            selected: _selectedHealthCondition,
-            onTap: () => _showBottomSheet(
-              context: context,
-              title: "Health Conditions",
-              options: _healthConditionOptions,
-              selected: _selectedHealthCondition,
-              onSelected: (val) {
-                setState(() {
-                  _selectedHealthCondition = val;
-                  _selectedConditionType = null;
-                });
-              },
-            ),
+          // Health Condition
+          _buildExpandableField(
+            label: "Any health conditions?",
+            value: _selectedHealthCondition,
+            isOpen: _showHealthCondition,
+            onTap: () {
+              setState(() {
+                _showHealthCondition = !_showHealthCondition;
+                _showExercise = false;
+                _showConditionType = false;
+              });
+            },
+            items: _healthConditionOptions,
+            onSelect: (val) {
+              setState(() {
+                _selectedHealthCondition = val;
+                _selectedConditionType = null; // reset
+                _showHealthCondition = false;
+              });
+            },
           ),
 
           const SizedBox(height: 20),
 
-          // Type of condition
-          _buildLabel("Type of condition"),
-          const SizedBox(height: 8),
-          _buildDropdownField(
-            hint: "Select  Type of condition",
-            selected: _selectedConditionType,
-            enabled: _selectedHealthCondition != null,
-            onTap: _selectedHealthCondition == null
-                ? null
-                : () => _showBottomSheet(
-              context: context,
-              title: "Type of condition",
-              options: _conditionTypes,
-              selected: _selectedConditionType,
-              onSelected: (val) =>
-                  setState(() => _selectedConditionType = val),
-            ),
+          // Condition Type
+          _buildExpandableField(
+            label: "Type of condition",
+            value: _selectedConditionType,
+            isOpen: _showConditionType,
+            enabled: _hasCondition,
+            onTap: _hasCondition
+                ? () {
+              setState(() {
+                _showConditionType = !_showConditionType;
+                _showExercise = false;
+                _showHealthCondition = false;
+              });
+            }
+                : null,
+            items: _conditionTypes,
+            onSelect: (val) {
+              setState(() {
+                _selectedConditionType = val;
+                _showConditionType = false;
+              });
+            },
           ),
 
           const SizedBox(height: 24),
@@ -243,67 +159,106 @@ class _HealthAndWellnessState extends State<HealthAndWellness> {
     );
   }
 
-  Widget _buildLabel(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: Colors.black87,
-      ),
-    );
-  }
-
-  Widget _buildDropdownField({
-    required String hint,
-    String? selected,
-    VoidCallback? onTap,
+  Widget _buildExpandableField({
+    required String label,
+    required String? value,
+    required bool isOpen,
+    required VoidCallback? onTap,
+    required List<String> items,
+    required Function(String) onSelect,
     bool enabled = true,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 52,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: enabled ? Colors.white : Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300, width: 1),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                selected ?? hint,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: selected != null
-                      ? Colors.black87
-                      : Colors.grey.shade400,
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: enabled ? onTap : null,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              color: enabled ? Colors.white : Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    value ?? "Select $label",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color:
+                      value != null ? Colors.black87 : Colors.grey.shade400,
+                    ),
+                  ),
                 ),
-              ),
+                Icon(
+                  isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  color: enabled ? Colors.grey.shade600 : Colors.grey.shade300,
+                )
+              ],
             ),
-            const SizedBox(width: 8),
-            Container(
-              width: 28,
-              height: 28,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey.shade300, width: 1),
-              ),
-              child: Icon(
-                Icons.keyboard_arrow_down_rounded,
-                size: 18,
-                color: enabled
-                    ? Colors.grey.shade500
-                    : Colors.grey.shade300,
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+        if (isOpen)
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: Column(
+              children: items.map((item) {
+                final isSelected = value == item;
+                return InkWell(
+                  onTap: () => onSelect(item),
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            item,
+                            style: TextStyle(
+                              color: isSelected ? Colors.black : Colors.black54,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 20,
+                          width: 20,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: isSelected ? Colors.pink : Colors.grey),
+                          ),
+                          child: isSelected
+                              ? const Center(
+                            child: CircleAvatar(
+                              radius: 4,
+                              backgroundColor: Colors.pink,
+                            ),
+                          )
+                              : null,
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+      ],
     );
   }
 }
