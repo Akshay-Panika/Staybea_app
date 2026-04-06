@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'edit_proile_screen.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -563,33 +565,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
         const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 9),
-          decoration: BoxDecoration(
-            color: const Color(0xFFCC3399),
-            borderRadius: BorderRadius.circular(22),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFFCC3399).withOpacity(0.35),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Icon(Icons.edit, size: 14, color: Colors.white),
-              SizedBox(width: 6),
-              Text(
-                'Edit Profile',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13,
+        InkWell(
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfileScreen(),)),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 9),
+            decoration: BoxDecoration(
+              color: const Color(0xFFCC3399),
+              borderRadius: BorderRadius.circular(22),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFCC3399).withOpacity(0.35),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
-              ),
-            ],
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.edit, size: 14, color: Colors.white),
+                SizedBox(width: 6),
+                Text(
+                  'Edit Profile',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 12),

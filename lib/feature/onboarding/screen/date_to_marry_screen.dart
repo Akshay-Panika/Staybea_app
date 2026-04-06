@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:staybea_app/core/utils/app_size.dart';
 import 'package:staybea_app/feature/profile/screen/profile_screen.dart';
 
+import '../../get_boost/screen/get_boost_screen.dart';
+import '../../notification/screen/notification_screen.dart';
 import 'marriage_profile_screen.dart';
 
 final List<Map<String, dynamic>> _data = [
@@ -153,14 +155,19 @@ class _TopBar extends StatelessWidget {
           const Spacer(),
           // Notification icons
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_none_outlined, size: 26),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GetBoostScreen(),));
+            },
+            icon:  Icon(Icons.star, size: 26),
             color: Colors.black87,
           ),
           Stack(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen(),));
+
+    },
                 icon: const Icon(Icons.notifications_active_outlined, size: 26),
                 color: Colors.black87,
               ),

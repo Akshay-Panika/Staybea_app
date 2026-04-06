@@ -83,12 +83,12 @@ class AuthScreen extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                 60.height,
 
                   /// 🔥 Logo
                   Image.asset(AppLogo.appLogo, height: 40),
 
-                  const SizedBox(height: 14),
+                  30.height,
 
                   /// 🌐 Translated Terms Text
                   Text(
@@ -99,7 +99,8 @@ class AuthScreen extends StatelessWidget {
                         color: Colors.black87),
                   ),
 
-                  const SizedBox(height: 30),
+                  50.height,
+
 
                   /// 📱 Button
                   _socialButton(
@@ -117,7 +118,8 @@ class AuthScreen extends StatelessWidget {
                     },
                   ),
 
-                  const SizedBox(height: 40),
+                  50.height,
+
                 ],
               ),
             ),
