@@ -4,6 +4,7 @@ import 'package:staybea_app/feature/profile/screen/profile_screen.dart';
 import '../../../core/utils/app_size.dart';
 import '../../get_boost/screen/get_boost_screen.dart';
 import '../../notification/screen/notification_screen.dart';
+import '../dating/datign_gift.dart';
 
 class DatingScreen extends StatefulWidget {
   const DatingScreen({super.key});
@@ -639,14 +640,17 @@ void _showInterestSheet(BuildContext context) {
                               ),
                             ),
                             const SizedBox(width: 12),
-                            Container(
-                              height: 90,
-                              width: 70,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(12),
+                            InkWell(
+                              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DatingGift(),)),
+                              child: Container(
+                                height: 90,
+                                width: 70,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(Icons.card_giftcard, size: 35, color: Colors.blue),
                               ),
-                              child: const Icon(Icons.card_giftcard, size: 35, color: Colors.blue),
                             ),
                           ],
                         ),
