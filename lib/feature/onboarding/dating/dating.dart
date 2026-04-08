@@ -4,7 +4,7 @@ import 'package:staybea_app/core/widget/custom_button.dart';
 import 'package:staybea_app/feature/dashboard/screen/dashboard_screen.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/profile_stape.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/talk_lifestyle.dart';
-import 'package:staybea_app/feature/onboarding/dat_to_marry/verify_your_profile.dart';
+import 'package:staybea_app/feature/onboarding/dat_to_marry/take_a_selfie.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/you_love.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/you_matters.dart';
 import '../../../core/constant/App_color.dart';
@@ -40,7 +40,7 @@ class _DatingState extends State<Dating> {
     YouLove(),
     LatestPhotos(),
     AboutYourself(),
-    VerifyYourProfile(),
+    TakeASelfie(),
   ];
 
   void _goToStep(int step) {

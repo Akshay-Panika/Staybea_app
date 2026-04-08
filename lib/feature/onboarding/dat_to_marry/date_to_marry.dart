@@ -5,7 +5,9 @@ import 'package:staybea_app/feature/dashboard/screen/dashboard_screen.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/profile_stape.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/seeing_for_a_date.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/talk_lifestyle.dart';
+import 'package:staybea_app/feature/onboarding/dat_to_marry/take_a_selfie.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/verify_your_profile.dart';
+import 'package:staybea_app/feature/onboarding/dat_to_marry/work_details.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/you_love.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/you_matters.dart';
 
@@ -16,6 +18,7 @@ import '../mature_connections/location.dart';
 import '../mature_connections/religion.dart';
 import '../mature_connections/your_education.dart';
 import 'about_yourself.dart';
+import 'annual_earning.dart';
 import 'latest_photos.dart';
 
 class DateToMarry extends StatefulWidget {
@@ -35,12 +38,15 @@ class _DateToMarryState extends State<DateToMarry> {
     Location(),
     MoreAboutYourself(),
     YourEducation(),
+    WorkDetails(),
+    AnnualEarning(),
     TalkLifestyle(),
     YouMatters(),
     YouLove(),
     LatestPhotos(),
     AboutYourself(),
     VerifyYourProfile(),
+    TakeASelfie(),
   ];
 
   void _goToStep(int step) {

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart'; // Import for camera access
 import 'package:staybea_app/core/utils/app_size.dart';
 
 class VerifyYourProfile extends StatefulWidget {
@@ -12,177 +12,131 @@ class VerifyYourProfile extends StatefulWidget {
 
 class _VerifyYourProfileState extends State<VerifyYourProfile> {
   File? _image;
-  bool _biometricConsent = false;
+  final ImagePicker _picker = ImagePicker();
 
-  Future<void> _pickImage() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
+  Future<void> _clickImage() async {
+    try {
+      if (!mounted) return;
 
-    if (result != null && result.files.single.path != null) {
-      setState(() {
-        _image = File(result.files.single.path!);
-      });
+      final XFile? photo = await _picker.pickImage(
+        source: ImageSource.camera,
+        preferredCameraDevice: CameraDevice.front,
+        imageQuality: 80, // Lowering quality slightly can prevent memory crashes on older devices
+      );
+
+      if (photo != null) {
+        setState(() {
+          _image = File(photo.path);
+        });
+      } else {
+        debugPrint("Camera closed by user");
+      }
+    } catch (e) {
+      // This is the most important part - check your console for this output!
+      debugPrint("Error capturing image: $e");
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Could not open camera: $e")),
+        );
+      }
     }
   }
-
   @override
   Widget build(BuildContext context) {
     AppSize appSize = AppSize(context);
 
-    final tips = [
-      (Icons.sentiment_satisfied_alt_outlined, 'Show your face clearly'),
-      (Icons.wb_sunny_outlined, 'Use good lighting'),
-      (Icons.camera_alt_outlined, 'Look straight at the camera'),
-      (Icons.face_retouching_off_outlined, 'Remove sunglasses & hats'),
-    ];
-
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: appSize.height * 0.02),
-
-              // Camera icon placeholder
-              Center(
-                child: GestureDetector(
-                  onTap: _pickImage,
-                  child: Container(
-                    width: appSize.height*0.15,
-                    height: appSize.height*0.15,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: _image != null
-                        ? ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Image.file(
-                        _image!,
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                        : Center(
-                      child: Icon(
-                        Icons.crop_free_rounded,
-                        size: 48,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              SizedBox(height: appSize.height * 0.03),
-
-              // Title
-              Text(
-                "Take a selfie",
-                style: TextStyle(
-                  fontSize: appSize.largeText,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                "Take a selfie to verify your identity.",
-                style: TextStyle(
-                  fontSize: appSize.mediumText,
-                  color: Colors.grey.shade600,
-                ),
-              ),
-
-              SizedBox(height: appSize.height * 0.03),
-
-              // Tips card
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 16,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade200),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  children: tips.map((tip) {
-                    final isLast = tip == tips.last;
-                    return Column(
-                      children: [
-                        Row(
-                          children: [
-                            Icon(tip.$1, size: 22, color: Colors.black87),
-                            const SizedBox(width: 14),
-                            Text(
-                              tip.$2,
-                              style: TextStyle(
-                                fontSize: appSize.mediumText,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ],
-                        ),
-                        if (!isLast)
-                          Divider(
-                            height: 24,
-                            color: Colors.grey.shade200,
-                          ),
-                      ],
-                    );
-                  }).toList(),
-                ),
-              ),
-
-              SizedBox(height: appSize.height * 0.03),
-            ],
+          Text(
+            "Verify your profile",
+            style: TextStyle(
+              fontSize: appSize.largeText,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            "Verify profiles get better matches.",
+            style: TextStyle(
+              fontSize: appSize.mediumText,
+              color: Colors.grey.shade600,
+            ),
           ),
 
-          SizedBox(height: appSize.height*0.07,),
+          const SizedBox(height: 60),
 
-
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          // Camera Click Area
+          Center(
+            child: Stack(
+              alignment: Alignment.bottomRight,
               children: [
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Checkbox(
-                    activeColor: Colors.green,
-                    value: _biometricConsent,
-                    onChanged: (val) {
-                      setState(() {
-                        _biometricConsent = val ?? false;
-                      });
-                    },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+                GestureDetector(
+                  onTap: _clickImage, // Tap to click image
+                  child: Container(
+                    height: 250,
+                    width: 250,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: Colors.grey.shade300),
+                      image: _image != null
+                          ? DecorationImage(
+                        image: FileImage(_image!),
+                        fit: BoxFit.cover,
+                      )
+                          : null,
                     ),
-                    side: BorderSide(color: Colors.grey.shade400),
+                    child: _image == null
+                        ? Icon(Icons.camera_enhance_rounded,
+                        size: 50, color: Colors.grey.shade400)
+                        : null,
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    "I concert to Bureau to process and store my biometrics data to verify my identity and prevent fraud.",
-                    style: TextStyle(
-                      fontSize: appSize.mediumText,
-                      color: Colors.black87,
-                      height: 1.4,
+
+                // Blue Verification Badge
+                if (_image != null)
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      padding: const EdgeInsets.all(2),
+                      child: const Icon(
+                        Icons.verified,
+                        color: Colors.blue,
+                        size: 40,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
+          ),
+
+          const SizedBox(height: 60),
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.verified_user_outlined,
+                      color: Colors.green, size: 18),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Verification selfies are not shown to others",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),

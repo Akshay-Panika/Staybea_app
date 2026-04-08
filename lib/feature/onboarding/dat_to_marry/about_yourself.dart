@@ -13,8 +13,10 @@ class AboutYourself extends StatefulWidget {
 class _AboutYourselfState extends State<AboutYourself> {
   final TextEditingController _bioController = TextEditingController();
   final int _maxChars = 300;
-
   bool _addBio = false;
+
+  final String _exampleBio =
+      "I am a highly motivated and results-oriented professional with a passion for creative problem-solving. I am currently seeking new opportunities to apply my skills in [Your Field] to drive meaningful results";
 
   @override
   void dispose() {
@@ -123,22 +125,34 @@ class _AboutYourselfState extends State<AboutYourself> {
         Stack(
           alignment: Alignment.topCenter,
           children: [
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.grey.shade300),
-              ),
-              padding: EdgeInsets.all(16),
-              child: Padding(
-                padding:  EdgeInsets.only(top: 20.0),
-                child: const Text(
-                  '"I am a highly motivated and results-oriented professional with a passion for creative problem-solving. I am currently seeking new opportunities to apply my skills in [Your Field] to drive meaningful results',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.black87,
-                    height: 1.5,
+            InkWell(
+              onTap: () {
+                // Logic to put suggestion data into TextField
+                setState(() {
+                  _bioController.text = _exampleBio;
+                  // Set cursor to the end of the text
+                  _bioController.selection = TextSelection.fromPosition(
+                    TextPosition(offset: _bioController.text.length),
+                  );
+                });
+              },
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                padding: EdgeInsets.all(16),
+                child: Padding(
+                  padding:  EdgeInsets.only(top: 20.0),
+                  child:  Text(
+                    '"$_exampleBio',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.black87,
+                      height: 1.5,
+                    ),
                   ),
                 ),
               ),
