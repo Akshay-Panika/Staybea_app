@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/utils/app_logo.dart';
 import 'intro_screen.dart';
@@ -16,23 +15,33 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Timer(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const IntroScreen()));
+    // ✅ Fast navigation (no lag)
+    Future.delayed(const Duration(milliseconds: 400), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const IntroScreen()),
+        );
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      backgroundColor: Colors.white,
       body: Center(
         child: Container(
-          height: 200,width: 400,
-          padding: EdgeInsets.all(75),
-          decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage('assets/intro/intro_card_bgi.png'),fit: BoxFit.fill)
+          height: 200,
+          width: 400,
+          padding: const EdgeInsets.all(60),
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/intro/intro_card_bgi.png'),
+              fit: BoxFit.fill,
+            ),
           ),
-          child: Image.asset(AppLogo.appLogo,),
+          child: Image.asset(AppLogo.appLogo),
         ),
       ),
     );

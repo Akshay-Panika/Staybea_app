@@ -85,29 +85,6 @@ class ProfilePage extends StatelessWidget {
     );
   }
 }
-
-
-
-
-class _FooterLink extends StatelessWidget {
-  final String label;
-  final Color color;
-  const _FooterLink({required this.label, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Text(label,
-          style: TextStyle(
-              fontSize: 13,
-              color: color,
-              decoration: TextDecoration.underline,
-              decorationColor: color.withOpacity(0.4))),
-    );
-  }
-}
-
 Widget _lookingCard(AppSize appSize){
   return _card(
     child: Column(
@@ -889,8 +866,6 @@ class _LibraryThumb extends StatelessWidget {
     );
   }
 }
-
-
 Widget _divider(){
   return Container(
     height: 2,
@@ -1010,7 +985,6 @@ Widget _profileActions(String name) {
     ],
   );
 }
-
 Widget _actionButton(String title, Color textColor) {
   return _card(
     child: Center(

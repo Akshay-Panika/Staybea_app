@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'feature/auth/screen/splash_screen.dart';
+import 'package:flutter/services.dart';
+import 'feature/auth/screen/intro_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  //  Full screen enable
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.transparent,
+    ),
+  );
+
   runApp(const MyApp());
 }
 
@@ -15,9 +28,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Stay Bea',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        scaffoldBackgroundColor: Colors.white,
+        useMaterial3: true,
       ),
-      home:  SplashScreen(),
+      home:  IntroScreen(),
     );
   }
 }

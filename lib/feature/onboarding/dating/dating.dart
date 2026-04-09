@@ -11,6 +11,7 @@ import '../../../core/constant/App_color.dart';
 import '../dat_to_marry/about_yourself.dart';
 import '../dat_to_marry/latest_photos.dart';
 import '../dat_to_marry/seeing_for_a_date.dart';
+import '../dat_to_marry/verify_your_profile.dart';
 import '../mature_connections/about_yourself.dart';
 import '../mature_connections/location.dart';
 import '../mature_connections/religion.dart';
@@ -40,6 +41,7 @@ class _DatingState extends State<Dating> {
     YouLove(),
     LatestPhotos(),
     AboutYourself(),
+    VerifyYourProfile(),
     TakeASelfie(),
   ];
 

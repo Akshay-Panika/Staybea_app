@@ -10,6 +10,7 @@ import '../../../core/constant/App_color.dart';
 import '../dat_to_marry/about_yourself.dart';
 import '../dat_to_marry/latest_photos.dart';
 import '../dat_to_marry/take_a_selfie.dart';
+import '../dat_to_marry/verify_your_profile.dart';
 import 'about_yourself.dart';
 import 'dreams_future_plans.dart';
 import 'financial_situation.dart';
@@ -44,6 +45,7 @@ class _MatureConnectionsState extends State<MatureConnections> {
     DreamsAndFuturePlans(),
     LatestPhotos(),
     AboutYourself(),
+    VerifyYourProfile(),
     TakeASelfie(),
     // TalkLifestyle(),
     // YouMatters(),
