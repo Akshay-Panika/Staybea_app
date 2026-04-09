@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/utils/app_size.dart';
 
-class Location extends StatefulWidget {
-  const Location({super.key});
+import '../../../../core/widget/app_expandable_field.dart';
+
+class YourLocationScreen extends StatefulWidget {
+  const YourLocationScreen({super.key});
 
   @override
-  State<Location> createState() => _LocationState();
+  State<YourLocationScreen> createState() => _YourLocationScreenState();
 }
 
-class _LocationState extends State<Location> {
+class _YourLocationScreenState extends State<YourLocationScreen> {
   String? _selectedCountry;
   String? _selectedState;
   String? _selectedCity;
@@ -65,7 +67,7 @@ class _LocationState extends State<Location> {
           SizedBox(height: appSize.height * 0.02),
 
           /// 🌍 Country
-          _buildExpandableField(
+          AppExpandableField(
             label: "Country",
             hint: "Select Country",
             value: _selectedCountry,
@@ -82,7 +84,6 @@ class _LocationState extends State<Location> {
               });
             },
             items: _countries,
-            appSize: appSize,
             onSelect: (val) {
               setState(() {
                 _selectedCountry = val;
@@ -96,12 +97,11 @@ class _LocationState extends State<Location> {
           const SizedBox(height: 20),
 
           /// 🏙 State
-          _buildExpandableField(
+          AppExpandableField(
             label: "State",
             hint: "Select State",
             value: _selectedState,
             isOpen: _showState,
-            appSize: appSize,
             enabled: _selectedCountry != null,
             onTap: () {
               if (_selectedCountry == null) return;
@@ -129,12 +129,11 @@ class _LocationState extends State<Location> {
           const SizedBox(height: 20),
 
           /// 🏢 City
-          _buildExpandableField(
+          AppExpandableField(
             label: "City",
             hint: "Select City",
             value: _selectedCity,
             isOpen: _showCity,
-            appSize: appSize,
             enabled: _selectedState != null,
             onTap: () {
               if (_selectedState == null) return;
@@ -159,121 +158,6 @@ class _LocationState extends State<Location> {
           ),
         ],
       ),
-    );
-  }
-
-  /// 🔥 COMMON UI
-  Widget _buildExpandableField({
-    required String label,
-    required String hint,
-    required String? value,
-    required bool isOpen,
-    required VoidCallback onTap,
-    required List<String> items,
-    required Function(String) onSelect,
-    bool enabled = true,
-  required AppSize appSize,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-
-        Text(
-          label,
-          style:  TextStyle(
-            fontSize: appSize.mediumText,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-
-        const SizedBox(height: 8),
-
-        /// Main Box
-        GestureDetector(
-          onTap: enabled ? onTap : null,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            decoration: BoxDecoration(
-              color: enabled ? Colors.white : Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade300),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    value ?? hint,
-                    style: TextStyle(
-                      fontSize: appSize.mediumText,
-                      color: value != null
-                          ? Colors.black87
-                          : Colors.grey.shade400,
-                    ),
-                  ),
-                ),
-                Icon(
-                  isOpen
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
-                  color: enabled
-                      ? Colors.grey.shade600
-                      : Colors.grey.shade300,
-                )
-              ],
-            ),
-          ),
-        ),
-
-        /// Expand List
-        if (isOpen)
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade300),
-            ),
-            child: Column(
-              children: items.map((item) {
-                final isSelected = value == item;
-
-                return InkWell(
-                  onTap: () => onSelect(item),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 14),
-                    child: Row(
-                      children: [
-                        Expanded(child: Text(item, style: TextStyle(color: isSelected ? Colors.black : Colors.black54,fontSize: appSize.mediumText),)),
-
-                        /// Radio UI
-                        Container(
-                          height: 20,
-                          width: 20,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isSelected
-                                  ? Colors.pink
-                                  : Colors.grey,
-                            ),
-                          ),
-                          child: isSelected
-                              ? const Center(
-                            child: CircleAvatar(
-                              radius: 4,
-                              backgroundColor: Colors.pink,
-                            ),
-                          )
-                              : null,
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-      ],
     );
   }
 }

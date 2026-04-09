@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/utils/app_size.dart';
-import 'package:staybea_app/core/widget/custom_button.dart';
+import 'package:staybea_app/core/widget/app_button.dart';
 import 'package:staybea_app/feature/dashboard/screen/dashboard_screen.dart';
-import 'package:staybea_app/feature/onboarding/dat_to_marry/profile_stape.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/seeing_for_a_date.dart';
-import 'package:staybea_app/feature/onboarding/mature_connections/religion.dart';
-import 'package:staybea_app/feature/onboarding/mature_connections/your_education.dart';
 import '../../../core/constant/App_color.dart';
 import '../dat_to_marry/about_yourself.dart';
 import '../dat_to_marry/latest_photos.dart';
 import '../dat_to_marry/take_a_selfie.dart';
 import '../dat_to_marry/verify_your_profile.dart';
-import '../religion/screen/religion_screen.dart';
-import 'about_yourself.dart';
+import '../you_education/screen/your_education_screen.dart';
+import '../you_self_screen/screen/your_self_screen.dart';
+import '../your_location/screen/your_location_screen.dart';
+import '../your_profile/screen/your_profile_screen.dart';
+import '../your_religion/screen/your_religion_screen.dart';
 import 'dreams_future_plans.dart';
 import 'financial_situation.dart';
 import 'health_wellness.dart';
 import 'interests_hobbies.dart';
 import 'lifestyle.dart';
-import 'location.dart';
 
 
 class MatureConnections extends StatefulWidget {
@@ -33,12 +32,12 @@ class _MatureConnectionsState extends State<MatureConnections> {
   int _currentStep = 0;
 
   List<Widget> get _steps => [
-    ProfileStep(),
+    YourProfileScreen(),
     SeeingForADate(),
-    ReligionScreen(),
-    Location(),
-    MoreAboutYourself(),
-    YourEducation(),
+    YourReligionScreen(),
+    YourLocationScreen(),
+    YourSelfScreen(),
+    YourEducationScreen(),
     FinancialSituation(),
     Lifestyle(),
     HealthAndWellness(),

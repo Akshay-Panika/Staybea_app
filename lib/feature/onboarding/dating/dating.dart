@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/utils/app_size.dart';
-import 'package:staybea_app/core/widget/custom_button.dart';
+import 'package:staybea_app/core/widget/app_button.dart';
 import 'package:staybea_app/feature/dashboard/screen/dashboard_screen.dart';
-import 'package:staybea_app/feature/onboarding/dat_to_marry/profile_stape.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/talk_lifestyle.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/take_a_selfie.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/you_love.dart';
@@ -12,10 +11,8 @@ import '../dat_to_marry/about_yourself.dart';
 import '../dat_to_marry/latest_photos.dart';
 import '../dat_to_marry/seeing_for_a_date.dart';
 import '../dat_to_marry/verify_your_profile.dart';
-import '../mature_connections/about_yourself.dart';
-import '../mature_connections/location.dart';
-import '../mature_connections/religion.dart';
-import '../mature_connections/your_education.dart';
+import '../your_location/screen/your_location_screen.dart';
+import '../your_profile/screen/your_profile_screen.dart';
 
 
 class Dating extends StatefulWidget {
@@ -30,9 +27,8 @@ class _DatingState extends State<Dating> {
   int _currentStep = 0;
 
   List<Widget> get _steps => [
-    ProfileStep(),
-    // Religion(),
-    Location(),
+    YourProfileScreen(),
+    YourLocationScreen(),
     SeeingForADate(),
     // MoreAboutYourself(),
     // YourEducation(),

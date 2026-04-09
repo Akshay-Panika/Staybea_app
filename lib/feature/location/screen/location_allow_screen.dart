@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:staybea_app/core/constant/app_color.dart';
-import 'package:staybea_app/core/widget/custom_button.dart';
+import 'package:staybea_app/core/widget/app_button.dart';
 import '../../google/translation_service.dart';
 import '../controller/location_controller.dart';
 import '../../onboarding/screen/onboarding_screen.dart';

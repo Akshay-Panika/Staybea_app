@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/constant/app_color.dart';
-import 'package:staybea_app/core/widget/custom_button.dart';
+import 'package:staybea_app/core/widget/app_button.dart';
 
 class BoostOption {
   final String quantity;

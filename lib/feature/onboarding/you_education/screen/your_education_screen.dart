@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/utils/app_size.dart';
+import 'package:staybea_app/core/widget/app_expandable_field.dart';
 
-class YourEducation extends StatefulWidget {
-  const YourEducation({super.key});
+import '../../../../core/widget/app_input_field.dart';
+
+class YourEducationScreen extends StatefulWidget {
+  const YourEducationScreen({super.key});
 
   @override
-  State<YourEducation> createState() => _YourEducationState();
+  State<YourEducationScreen> createState() => _YourEducationScreenState();
 }
 
-class _YourEducationState extends State<YourEducation> {
+class _YourEducationScreenState extends State<YourEducationScreen> {
   String? _selectedEducation;
   final TextEditingController _collegeController = TextEditingController();
   bool _showEducation = false;
@@ -55,11 +58,11 @@ class _YourEducationState extends State<YourEducation> {
           SizedBox(height: appSize.height * 0.02),
 
           // Highest Education
-          _buildExpandableField(
+          AppExpandableField(
             label: "Your highest education",
+            hint: 'Your education',
             value: _selectedEducation,
             isOpen: _showEducation,
-            appSize: appSize,
             onTap: () {
               setState(() {
                 _showEducation = !_showEducation;
@@ -76,38 +79,11 @@ class _YourEducationState extends State<YourEducation> {
 
           const SizedBox(height: 20),
 
-          // College text field
-           Text(
-            "College",
-            style: TextStyle(
-              fontSize: appSize.mediumText,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextField(
+          AppInputField(
+            label: 'College',
             controller: _collegeController,
-            style:  TextStyle(fontSize: appSize.mediumText, color: Colors.black87),
-            decoration: InputDecoration(
-              hintText: "College you attended",
-              hintStyle: TextStyle(
-                fontSize: appSize.mediumText,
-                color: Colors.grey.shade400,
-              ),
-              contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
-              ),
-              filled: true,
-              fillColor: Colors.white,
-            ),
+            hint: 'College you attended',
+            keyboardType: TextInputType.name,
           ),
 
           const SizedBox(height: 24),

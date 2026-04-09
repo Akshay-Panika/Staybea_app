@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:staybea_app/core/utils/app_size.dart';
+import 'package:staybea_app/core/widget/app_expandable_field.dart';
 
 import '../bloc/religion/religion_bloc.dart';
 import '../bloc/religion/religion_event.dart';
@@ -9,8 +10,8 @@ import '../model/religion_model.dart';
 import '../repository/religion_repository.dart';
 import '../widget/religion_shimmer.dart';
 
-class ReligionScreen extends StatelessWidget {
-  const ReligionScreen({super.key});
+class YourReligionScreen extends StatelessWidget {
+  const YourReligionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -104,8 +105,7 @@ class _ReligionViewState extends State<_ReligionView> {
 
                 SizedBox(height: appSize.height * 0.02),
 
-                // ── Religion Field ──────────────────────────────
-                _buildExpandableField(
+                AppExpandableField(
                   label: "Religion",
                   hint: "Select Religion",
                   value: _selectedReligion,
@@ -116,28 +116,25 @@ class _ReligionViewState extends State<_ReligionView> {
                       _showCommunity = false;
                     });
                   },
-                  items: religionNames, // ← from API
-                  appSize: appSize,
+                  items: religionNames,
                   onSelect: (val) {
                     setState(() {
                       _selectedReligion = val;
                       _selectedCommunity = null;
                       _showReligion = false;
-                      _showCommunity = true;
+                      // _showCommunity = true;
                     });
                   },
                 ),
 
                 const SizedBox(height: 20),
 
-                // ── Community Field ─────────────────────────────
-                _buildExpandableField(
+                AppExpandableField(
                   label: "Community",
                   hint: "Select Community",
                   value: _selectedCommunity,
                   isOpen: _showCommunity,
                   enabled: _selectedReligion != null,
-                  appSize: appSize,
                   onTap: () {
                     if (_selectedReligion != null) {
                       setState(() {
@@ -161,127 +158,6 @@ class _ReligionViewState extends State<_ReligionView> {
 
         return const SizedBox.shrink();
       },
-    );
-  }
-
-  // ── Same UI widget as before — no changes ──────────────────────
-  Widget _buildExpandableField({
-    required String label,
-    required String hint,
-    required String? value,
-    required bool isOpen,
-    required VoidCallback onTap,
-    required List<String> items,
-    required Function(String) onSelect,
-    bool enabled = true,
-    required AppSize appSize,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: appSize.mediumText,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 8),
-
-        GestureDetector(
-          onTap: enabled ? onTap : null,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            decoration: BoxDecoration(
-              color: enabled ? Colors.white : Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade300),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    value ?? hint,
-                    style: TextStyle(
-                      fontSize: appSize.mediumText,
-                      color: value != null
-                          ? Colors.black87
-                          : Colors.grey.shade400,
-                    ),
-                  ),
-                ),
-                Icon(
-                  isOpen
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
-                  color: enabled
-                      ? Colors.grey.shade500
-                      : Colors.grey.shade300,
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        if (isOpen)
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade300),
-            ),
-            child: Column(
-              children: items.map((item) {
-                final isSelected = value == item;
-                return InkWell(
-                  onTap: () => onSelect(item),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 14),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            item,
-                            style: TextStyle(
-                              fontSize: appSize.mediumText,
-                              color: isSelected
-                                  ? Colors.black
-                                  : Colors.black54,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 20,
-                          width: 20,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isSelected ? Colors.pink : Colors.grey,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: isSelected
-                              ? Center(
-                            child: Container(
-                              height: 10,
-                              width: 10,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.pink,
-                              ),
-                            ),
-                          )
-                              : null,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-      ],
     );
   }
 }

@@ -4,7 +4,7 @@ import 'package:staybea_app/core/utils/app_size.dart';
 import '../../google/translation_service.dart';
 
 import '../../../core/constant/App_color.dart';
-import '../../../core/widget/custom_button.dart';
+import '../../../core/widget/app_button.dart';
 import '../dat_to_marry/date_to_marry.dart';
 import '../mature_connections/mature_connections.dart';
 import '../dating/dating.dart';
@@ -204,6 +204,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }) {
     return showDialog<String>(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         String selected = selectedValue;
         return StatefulBuilder(

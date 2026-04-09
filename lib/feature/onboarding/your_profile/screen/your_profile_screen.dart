@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:staybea_app/core/utils/app_size.dart';
 
-import '../../../core/constant/App_color.dart';
+import '../../../../core/constant/App_color.dart';
+import '../../../../core/widget/app_expandable_field.dart';
+import '../../../../core/widget/app_input_field.dart';
 
-class ProfileStep extends StatefulWidget {
-  const ProfileStep({super.key});
+class YourProfileScreen extends StatefulWidget {
+  const YourProfileScreen({super.key});
 
   @override
-  State<ProfileStep> createState() => _ProfileStepState();
+  State<YourProfileScreen> createState() => _YourProfileStepState();
 }
 
-class _ProfileStepState extends State<ProfileStep> with SingleTickerProviderStateMixin {
+class _YourProfileStepState extends State<YourProfileScreen> with SingleTickerProviderStateMixin {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _dayController = TextEditingController();
@@ -21,7 +23,6 @@ class _ProfileStepState extends State<ProfileStep> with SingleTickerProviderStat
   String? _selectedHeight;
   String? _selectedGender;
   bool _showHeightOptions = false;
-  bool _showGenderOptions = false;
 
   final List<String> _heights = [
     'Below 5ft',
@@ -67,33 +68,28 @@ class _ProfileStepState extends State<ProfileStep> with SingleTickerProviderStat
         children: [
           _buildHeader(appSize: appSize),
           const SizedBox(height: 36),
-          _buildInputField(
+          AppInputField(
             label: 'Full Name',
             controller: _nameController,
             hint: 'Enter your full name',
-            icon: Icons.person_outline_rounded,
             keyboardType: TextInputType.name,
-            appSize: appSize,
           ),
           const SizedBox(height: 20),
-          _buildInputField(
+          AppInputField(
             label: 'Email Id',
             controller: _emailController,
             hint: 'Enter your email',
-            icon: Icons.mail_outline_rounded,
             keyboardType: TextInputType.emailAddress,
-            appSize: appSize,
           ),
           const SizedBox(height: 20),
           _buildDOBField(appSize: appSize),
           const SizedBox(height: 20),
-          _buildExpandableField(
+          AppExpandableField(
             label: 'Height',
             hint: 'Select Height',
             value: _selectedHeight,
             isOpen: _showHeightOptions,
             isDOB: false,
-            appSize: appSize,
             onTap: () {
               setState(() => _showHeightOptions = !_showHeightOptions);
             },
@@ -123,7 +119,7 @@ class _ProfileStepState extends State<ProfileStep> with SingleTickerProviderStat
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-         Text(
+        Text(
           "Let's set up your profile.",
           style: TextStyle(
               fontSize: appSize.largeText,
@@ -131,194 +127,11 @@ class _ProfileStepState extends State<ProfileStep> with SingleTickerProviderStat
               color: Colors.black87
           ),
         ),
-         SizedBox(height: 8),
-         Text(
-          'Tell us a little about yourself to get started.',
-          style: TextStyle(
-            fontSize: appSize.mediumText,
-            color: Colors.grey.shade500,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+
       ],
     );
   }
 
-  Widget _buildInputField({
-    required String label,
-    required TextEditingController controller,
-    required String hint,
-    required IconData icon,
-    required AppSize appSize,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style:  TextStyle(
-              fontSize: appSize.mediumText,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87
-          ),
-        ),
-       5.height,
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFFB3B3B3), width: 0.6),
-
-          ),
-          child: TextField(
-            controller: controller,
-            keyboardType: keyboardType,
-            style:  TextStyle(
-              fontSize: appSize.mediumText,
-              fontWeight: FontWeight.w400,
-              color: Color(0xFF1A1A2E),
-            ),
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: TextStyle(
-                fontSize: appSize.mediumText,
-                color: Colors.grey.shade400,
-                fontWeight: FontWeight.w400,
-              ),
-              prefixIcon: Icon(icon, color: Colors.grey.shade400, size: 20),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-
-  Widget _buildExpandableField({
-    required String label,
-    required String hint,
-    required String? value,
-    required bool isOpen,
-    required bool isDOB,
-    required VoidCallback onTap,
-    required List<String> items,
-    required Function(String) onSelect,
-    required AppSize appSize,
-
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style:  TextStyle(
-            fontSize: appSize.mediumText,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 8),
-
-        /// 🔹 Main Box
-        GestureDetector(
-          onTap: onTap,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFB3B3B3), width: 0.6),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    value ?? hint,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: value == null
-                          ? Colors.grey.shade400
-                          : Colors.black,
-                    ),
-                  ),
-                ),
-                Icon(
-                  isOpen
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
-                  color: Colors.grey,
-                )
-              ],
-            ),
-          ),
-        ),
-
-        /// 🔽 Expand Options
-        if (isOpen)
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFB3B3B3), width: 0.6),
-            ),
-            child: Column(
-              children: items.map((item) {
-                final isSelected = value == item;
-
-                return InkWell(
-                  onTap: () => onSelect(item),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(item,
-                            style:  TextStyle(fontSize: appSize.mediumText, color: isSelected ? Colors.black : Colors.black54),
-                          ),
-                        ),
-
-                        /// 🔘 Radio UI
-                        Container(
-                          height: 20,
-                          width: 20,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isSelected
-                                  ? Colors.pink
-                                  : Colors.grey,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: isSelected
-                              ? Center(
-                            child: Container(
-                              height: 10,
-                              width: 10,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.pink,
-                              ),
-                            ),
-                          )
-                              : null,
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-      ],
-    );
-  }
 
   Widget _buildExpandableDOBField({
     required String label,
@@ -342,140 +155,144 @@ class _ProfileStepState extends State<ProfileStep> with SingleTickerProviderStat
             ),
             const SizedBox(height: 8),
 
-            // Main Box
-            GestureDetector(
-              onTap: () => setState(() => isOpen = !isOpen),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFFB3B3B3), width: 0.6),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        _selectedGender ?? hint, // <-- directly use parent variable
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: _selectedGender == null
-                              ? Colors.grey.shade400
-                              : Colors.black,
-                        ),
-                      ),
+            Stack(
+              children: [
+                // Main Box
+                GestureDetector(
+                  onTap: () => setState(() => isOpen = !isOpen),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: const Color(0xFFB3B3B3), width: 0.6),
                     ),
-                    Icon(
-                      isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                      color: Colors.grey,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Dropdown List
-            if (isOpen)
-              Container(
-                margin: const EdgeInsets.only(top: 8),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFFB3B3B3), width: 0.6),
-                ),
-                child: Column(
-                  children: items.map((item) {
-                    final isSelected = _selectedGender == item; // use parent variable
-
-                    return InkWell(
-                      onTap: () {
-                        setState(() {
-                          _selectedGender = item;
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item,
-                                    style: TextStyle(
-                                      fontSize: appSize.mediumText,
-                                      color: isSelected ? Colors.black : Colors.black54,
-                                    ),
-                                  ),
-                                  if (isSelected)
-                                    TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          _selectedGender = item;
-                                          // isOpen = false;
-                                          // open diloag here
-                                          _showGenderIdentityDialog(context, appSize);
-                                        });
-                                      },
-                                      style: TextButton.styleFrom(
-                                        padding: EdgeInsets.zero,
-                                        minimumSize: Size(0, 0),
-                                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            'Identify your gender',
-                                            style: TextStyle(
-                                              fontSize: appSize.smallText,
-                                              color: AppColors.secondary,
-                                            ),
-                                          ),
-                                          Icon(
-                                            Icons.arrow_forward_ios_outlined,
-                                            color: AppColors.secondary,
-                                            size: 16,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                ],
-                              ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            _selectedGender ?? hint, // <-- directly use parent variable
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: _selectedGender == null
+                                  ? Colors.grey.shade400
+                                  : Colors.black,
                             ),
+                          ),
+                        ),
+                        Icon(
+                          isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
 
-                            // Radio Circle
-                            Container(
-                              height: 20,
-                              width: 20,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: isSelected ? Colors.pink : Colors.grey,
-                                  width: 1.5,
+                // Dropdown List
+                if (isOpen)
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: const Color(0xFFB3B3B3), width: 0.6),
+                    ),
+                    child: Column(
+                      children: items.map((item) {
+                        final isSelected = _selectedGender == item; // use parent variable
+
+                        return InkWell(
+                          onTap: () {
+                            setState(() {
+                              _selectedGender = item;
+                            });
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item,
+                                        style: TextStyle(
+                                          fontSize: appSize.mediumText,
+                                          color: isSelected ? Colors.black : Colors.black54,
+                                        ),
+                                      ),
+                                      if (isSelected)
+                                        TextButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _selectedGender = item;
+                                              // isOpen = false;
+                                              // open diloag here
+                                              _showGenderIdentityDialog(context, appSize);
+                                            });
+                                          },
+                                          style: TextButton.styleFrom(
+                                            padding: EdgeInsets.zero,
+                                            minimumSize: Size(0, 0),
+                                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                'Identify your gender',
+                                                style: TextStyle(
+                                                  fontSize: appSize.smallText,
+                                                  color: AppColors.secondary,
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.arrow_forward_ios_outlined,
+                                                color: AppColors.secondary,
+                                                size: 16,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              child: isSelected
-                                  ? Center(
-                                child: Container(
-                                  height: 10,
-                                  width: 10,
-                                  decoration: const BoxDecoration(
+
+                                // Radio Circle
+                                Container(
+                                  height: 20,
+                                  width: 20,
+                                  decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.pink,
+                                    border: Border.all(
+                                      color: isSelected ? Colors.pink : Colors.grey,
+                                      width: 1.5,
+                                    ),
                                   ),
+                                  child: isSelected
+                                      ? Center(
+                                    child: Container(
+                                      height: 10,
+                                      width: 10,
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.pink,
+                                      ),
+                                    ),
+                                  )
+                                      : null,
                                 ),
-                              )
-                                  : null,
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+              ],
+            ),
           ],
         );
       },
@@ -487,7 +304,7 @@ class _ProfileStepState extends State<ProfileStep> with SingleTickerProviderStat
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-         Text(
+        Text(
           'Date of Birth',
           style: TextStyle(
             fontSize: appSize.mediumText,

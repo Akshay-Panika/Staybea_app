@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/utils/app_size.dart';
-import 'package:staybea_app/core/widget/custom_button.dart';
+import 'package:staybea_app/core/widget/app_button.dart';
 import 'package:staybea_app/feature/dashboard/screen/dashboard_screen.dart';
-import 'package:staybea_app/feature/onboarding/dat_to_marry/profile_stape.dart';
-import 'package:staybea_app/feature/onboarding/dat_to_marry/seeing_for_a_date.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/talk_lifestyle.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/take_a_selfie.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/verify_your_profile.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/work_details.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/you_love.dart';
 import 'package:staybea_app/feature/onboarding/dat_to_marry/you_matters.dart';
-
 import '../../../core/constant/App_color.dart';
-import '../../verification/user_details_stape/profile_step_widget.dart';
-import '../mature_connections/about_yourself.dart';
-import '../mature_connections/location.dart';
-import '../mature_connections/religion.dart';
-import '../mature_connections/your_education.dart';
-import '../religion/screen/religion_screen.dart';
+import '../you_education/screen/your_education_screen.dart';
+import '../you_self_screen/screen/your_self_screen.dart';
+import '../your_location/screen/your_location_screen.dart';
+import '../your_profile/screen/your_profile_screen.dart';
+import '../your_religion/screen/your_religion_screen.dart';
 import 'about_yourself.dart';
 import 'annual_earning.dart';
 import 'latest_photos.dart';
@@ -34,11 +30,11 @@ class _DateToMarryState extends State<DateToMarry> {
   int _currentStep = 0;
 
   List<Widget> get _steps => [
-    ProfileStep(),
-    ReligionScreen(),
-    Location(),
-    MoreAboutYourself(),
-    YourEducation(),
+    YourProfileScreen(),
+    YourReligionScreen(),
+    YourLocationScreen(),
+    YourSelfScreen(),
+    YourEducationScreen(),
     WorkDetails(),
     AnnualEarning(),
     TalkLifestyle(),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/utils/app_size.dart';
 import '../../../core/constant/App_color.dart';
-import '../../../core/widget/custom_button.dart';
+import '../../../core/widget/app_button.dart';
 import '../../google/translation_service.dart';
 import 'otp_verify_screen.dart';
 

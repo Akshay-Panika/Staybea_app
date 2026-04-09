@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:staybea_app/core/utils/app_size.dart';
+import 'package:staybea_app/core/widget/app_expandable_field.dart';
 
-class MoreAboutYourself extends StatefulWidget {
-  const MoreAboutYourself({super.key});
+class YourSelfScreen extends StatefulWidget {
+  const YourSelfScreen({super.key});
 
   @override
-  State<MoreAboutYourself> createState() => _MoreAboutYourselfState();
+  State<YourSelfScreen> createState() => _YourSelfScreenState();
 }
 
-class _MoreAboutYourselfState extends State<MoreAboutYourself> {
+class _YourSelfScreenState extends State<YourSelfScreen> {
   String? _selectedMaritalStatus;
   String? _selectedHaveChild;
   String? _selectedNumberOfChild;
@@ -79,11 +80,11 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
           SizedBox(height: appSize.height * 0.02),
 
           // Marital Status
-          _buildExpandableField(
+          AppExpandableField(
             label: "Marital Status",
+            hint: 'Select Marital Status',
             value: _selectedMaritalStatus,
             isOpen: _showMaritalStatus,
-            appSize: appSize,
             onTap: () {
               setState(() {
                 _showMaritalStatus = !_showMaritalStatus;
@@ -104,12 +105,11 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
 
           const SizedBox(height: 20),
 
-          // Do you have child
-          _buildExpandableField(
+          AppExpandableField(
             label: "Do you have child?",
+            hint: "Select have child or not",
             value: _selectedHaveChild,
             isOpen: _showHaveChild,
-            appSize: appSize,
             onTap: () {
               setState(() {
                 _showHaveChild = !_showHaveChild;
@@ -135,14 +135,14 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
           const SizedBox(height: 20),
 
           // Number of child
-          _buildExpandableField(
+          AppExpandableField(
             label: "Number of child",
+            hint: "Select Number of child",
             value: _selectedNumberOfChild,
             isOpen: _showNumberOfChild,
             enabled: _hasChildren,
-            appSize: appSize,
-            onTap: _hasChildren
-                ? () {
+            onTap: () {
+              if (!_hasChildren) return;
               setState(() {
                 _showNumberOfChild = !_showNumberOfChild;
                 _showMaritalStatus = false;
@@ -150,8 +150,7 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
                 _showLiveWithYou = false;
                 _showCurrentlyLive = false;
               });
-            }
-                : null,
+            },
             items: _numberOfChildOptions,
             onSelect: (val) {
               setState(() {
@@ -161,17 +160,14 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
             },
           ),
 
-          const SizedBox(height: 20),
-
-          // Do they live with you?
-          _buildExpandableField(
+          AppExpandableField(
             label: "Do they live with you?",
+            hint: "live with you",
             value: _selectedLiveWithYou,
             isOpen: _showLiveWithYou,
             enabled: _hasChildren,
-            appSize: appSize,
-            onTap: _hasChildren
-                ? () {
+            onTap: () {
+              if (!_hasChildren) return;
               setState(() {
                 _showLiveWithYou = !_showLiveWithYou;
                 _showMaritalStatus = false;
@@ -179,8 +175,7 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
                 _showNumberOfChild = false;
                 _showCurrentlyLive = false;
               });
-            }
-                : null,
+            },
             items: _liveWithYouOptions,
             onSelect: (val) {
               setState(() {
@@ -193,11 +188,11 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
           const SizedBox(height: 20),
 
           // Currently live
-          _buildExpandableField(
+          AppExpandableField(
             label: "Where do you currently live?",
+            hint: "Where do you live?",
             value: _selectedCurrentlyLive,
             isOpen: _showCurrentlyLive,
-            appSize: appSize,
             onTap: () {
               setState(() {
                 _showCurrentlyLive = !_showCurrentlyLive;
@@ -219,111 +214,6 @@ class _MoreAboutYourselfState extends State<MoreAboutYourself> {
           const SizedBox(height: 24),
         ],
       ),
-    );
-  }
-
-  Widget _buildExpandableField({
-    required String label,
-    required String? value,
-    required bool isOpen,
-    required VoidCallback? onTap,
-    required List<String> items,
-    required AppSize appSize,
-    required Function(String) onSelect,
-    bool enabled = true,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style:  TextStyle(
-            fontSize: appSize.mediumText,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
-        ),
-        const SizedBox(height: 8),
-        GestureDetector(
-          onTap: enabled ? onTap : null,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            decoration: BoxDecoration(
-              color: enabled ? Colors.white : Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade300),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    value ?? "Select $label",
-                    style: TextStyle(
-                      fontSize: appSize.mediumText,
-                      color: value != null
-                          ? Colors.black87
-                          : Colors.grey.shade400,
-                    ),
-                  ),
-                ),
-                Icon(
-                  isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                  color: enabled ? Colors.grey.shade600 : Colors.grey.shade300,
-                )
-              ],
-            ),
-          ),
-        ),
-        if (isOpen)
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade300),
-            ),
-            child: Column(
-              children: items.map((item) {
-                final isSelected = value == item;
-                return InkWell(
-                  onTap: () => onSelect(item),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 14),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            item,
-                            style: TextStyle(
-                                fontSize: appSize.mediumText,
-                                color: isSelected ? Colors.black : Colors.black54),
-                          ),
-                        ),
-                        Container(
-                          height: 20,
-                          width: 20,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: isSelected ? Colors.pink : Colors.grey),
-                          ),
-                          child: isSelected
-                              ? const Center(
-                            child: CircleAvatar(
-                              radius: 4,
-                              backgroundColor: Colors.pink,
-                            ),
-                          )
-                              : null,
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-      ],
     );
   }
 }
