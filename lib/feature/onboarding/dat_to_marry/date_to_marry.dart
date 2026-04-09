@@ -17,6 +17,7 @@ import '../mature_connections/about_yourself.dart';
 import '../mature_connections/location.dart';
 import '../mature_connections/religion.dart';
 import '../mature_connections/your_education.dart';
+import '../religion/screen/religion_screen.dart';
 import 'about_yourself.dart';
 import 'annual_earning.dart';
 import 'latest_photos.dart';
@@ -34,7 +35,7 @@ class _DateToMarryState extends State<DateToMarry> {
 
   List<Widget> get _steps => [
     ProfileStep(),
-    Religion(),
+    ReligionScreen(),
     Location(),
     MoreAboutYourself(),
     YourEducation(),
