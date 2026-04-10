@@ -159,7 +159,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const Spacer(),
 
                 /// Continue Button
-                CustomButton(
+                AppButton(
                   isLoading: false,
                   onTap: () {
                     selectedInterest = _selectedInterest; // Ensure global sync

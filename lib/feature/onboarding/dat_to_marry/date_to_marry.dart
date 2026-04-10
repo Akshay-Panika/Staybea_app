@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:staybea_app/core/utils/app_size.dart';
 import 'package:staybea_app/core/widget/app_button.dart';
 import 'package:staybea_app/feature/dashboard/screen/dashboard_screen.dart';
-import 'package:staybea_app/feature/onboarding/dat_to_marry/talk_lifestyle.dart';
-import 'package:staybea_app/feature/onboarding/dat_to_marry/take_a_selfie.dart';
-import 'package:staybea_app/feature/onboarding/dat_to_marry/verify_your_profile.dart';
-import 'package:staybea_app/feature/onboarding/dat_to_marry/work_details.dart';
-import 'package:staybea_app/feature/onboarding/dat_to_marry/you_love.dart';
-import 'package:staybea_app/feature/onboarding/dat_to_marry/you_matters.dart';
+import 'package:staybea_app/feature/onboarding/your_selfie/screen/your_selfie_screen.dart';
+import 'package:staybea_app/feature/onboarding/your_verify_profile/screen/your_verify_profile.dart';
+import 'package:staybea_app/feature/onboarding/your_thins_love/screen/your_things_love_screen.dart';
+import 'package:staybea_app/feature/onboarding/your_matter/screen/your_matters_screen.dart';
 import '../../../core/constant/App_color.dart';
 import '../you_education/screen/your_education_screen.dart';
 import '../you_self_screen/screen/your_self_screen.dart';
+import '../your_earning/screen/your_earning_screen.dart';
 import '../your_location/screen/your_location_screen.dart';
 import '../your_profile/screen/your_profile_screen.dart';
 import '../your_religion/screen/your_religion_screen.dart';
-import 'about_yourself.dart';
-import 'annual_earning.dart';
-import 'latest_photos.dart';
+import '../your_talk_lifestyle/screen/your_talk_lifestyle_screen.dart';
+import '../your_work/screen/your_work_screen.dart';
+import '../yoor_yourself/screen/your_yourself_screen.dart';
+import '../your_photos/screen/your_photos_screen.dart';
 
 class DateToMarry extends StatefulWidget {
   const DateToMarry({super.key});
@@ -26,7 +26,7 @@ class DateToMarry extends StatefulWidget {
 }
 
 class _DateToMarryState extends State<DateToMarry> {
-  final ScrollController _progressController = ScrollController();
+  // ✅ REMOVED: ScrollController — no longer needed
   int _currentStep = 0;
 
   List<Widget> get _steps => [
@@ -35,26 +35,20 @@ class _DateToMarryState extends State<DateToMarry> {
     YourLocationScreen(),
     YourSelfScreen(),
     YourEducationScreen(),
-    WorkDetails(),
-    AnnualEarning(),
-    TalkLifestyle(),
-    YouMatters(),
-    YouLove(),
-    LatestPhotos(),
-    AboutYourself(),
-    VerifyYourProfile(),
-    TakeASelfie(),
+    YourWorkScreen(),
+    YourEarningScreen(),
+    YourTalkLifestyleScreen(),
+    YourMattersScreen(),
+    YourThingsLoveScreen(),
+    YourPhotosScreen(),
+    YourYourselfScreen(),
+    YourVerifyProfile(),
+    YourSelfieScreen(),
   ];
 
+  // ✅ FIXED: No animateTo — just setState
   void _goToStep(int step) {
     setState(() => _currentStep = step);
-
-    // auto scroll to active step
-    _progressController.animateTo(
-      step * 40, // approx item width
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
-    );
   }
 
   @override
@@ -62,102 +56,111 @@ class _DateToMarryState extends State<DateToMarry> {
     AppSize appSize = AppSize(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      // backgroundColor: Color(0xffF7F8FA),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-
             children: [
-              Container(
-                height: 4,
-                color: Colors.grey.shade200,
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                child: ListView.builder(
-                  controller: _progressController,
-                  itemCount: _steps.length,
-                  scrollDirection: Axis.horizontal,
-                  // padding: EdgeInsets.zero,
-                  itemBuilder: (context, index) {
-                    final isActive = index <= _currentStep;
 
-                    return Row(
-                      children: [
-                        // if (index != 0)
-                          AnimatedContainer(
-                              duration:  Duration(milliseconds: 350),
-                              curve: Curves.easeInOut,
-                              height: 4,
-                              width: 50,
-                              color: isActive
-                                  ? AppColors.secondary
-                                  :Colors.grey.shade100
-                            // : const Color(0xFFEEAECF),
-                          ),
-                        // AnimatedContainer(
-                        //   duration: const Duration(milliseconds: 350),
-                        //   curve: Curves.easeInOut,
-                        //   child: CircleAvatar(
-                        //     radius: 12,
-                        //     backgroundColor: isActive
-                        //         ? AppColors.secondary
-                        //         : Colors.grey.withOpacity(0.16),
-                        //     child: Text(
-                        //       "${index + 1}",
-                        //       style: TextStyle(
-                        //         fontSize: 12,
-                        //         color: isActive ? Colors.white : Colors.black54,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                    );
-                  },
-                ),
+              /// Progress Indicator
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final totalWidth = constraints.maxWidth - 20;
+                  final segmentWidth = totalWidth / _steps.length;
+
+                  return Row(
+                    children: List.generate(_steps.length, (index) {
+                      final isActive = index <= _currentStep;
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 350),
+                        curve: Curves.easeInOut,
+                        height: 4,
+                        width: segmentWidth,
+                        color: isActive
+                            ? AppColors.secondary
+                            : Colors.grey.shade200,
+                      );
+                    }),
+                  );
+                },
               ),
 
-              /// back
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        if (_currentStep == 0) {
-                          Navigator.pop(context);
-                        } else {
-                          _goToStep(_currentStep - 1);
-                        }
-                      },
-                      child: Container(
-                        padding:  EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.arrow_back_ios,size: appSize.mediumText,color: Colors.grey,),
-                            // const SizedBox(width: 10),
-                            Text(
-                              'Back',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w500),
-                            )
-                          ],
+              SizedBox(height: appSize.height * 0.02),
+
+              /// Back + Skip
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Back
+                  InkWell(
+                    onTap: () {
+                      if (_currentStep == 0) {
+                        Navigator.pop(context);
+                      } else {
+                        _goToStep(_currentStep - 1);
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.arrow_back_ios,
+                              size: appSize.mediumText, color: Colors.grey),
+                          Text(
+                            'Back',
+                            style: TextStyle(
+                              fontSize: appSize.mediumText,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Skip
+                  InkWell(
+                    onTap: () {
+                      if (_currentStep < _steps.length - 1) {
+                        _goToStep(_currentStep + 1);
+                      } else {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => DashboardScreen()),
+                        );
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: Text(
+                        'Skip',
+                        style: TextStyle(
+                          fontSize: appSize.mediumText,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-
-                  ],
-                ),
+                  ),
+                ],
               ),
 
-              /// STEP CONTENT (scrollable)
+              SizedBox(height: appSize.height * 0.02),
+
+              /// Step Content
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.only(bottom: 20),
@@ -165,29 +168,12 @@ class _DateToMarryState extends State<DateToMarry> {
                 ),
               ),
 
-              /// next button
-              // CustomButton(
-              //     onTap: () {
-              //       if (_currentStep < _steps.length - 1) {
-              //         _goToStep(_currentStep + 1);
-              //       } else {
-              //         Navigator.push(
-              //           context,
-              //           MaterialPageRoute(builder: (context) => DashboardScreen()),
-              //         );
-              //       }
-              //     },
-              //     text: "Next",
-              //     tColor: Colors.white,
-              //     bColor: AppColors.secondary,
-              // ),
-
-              CustomButton(
+              /// Next / Finish Button
+              AppButton(
                 onTap: () {
                   if (_currentStep < _steps.length - 1) {
                     _goToStep(_currentStep + 1);
-                  } else if (_currentStep == _steps.length - 1) {
-                    // Optionally show a confirmation or just go to Dashboard
+                  } else {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (_) => DashboardScreen()),
@@ -198,6 +184,7 @@ class _DateToMarryState extends State<DateToMarry> {
                 tColor: Colors.white,
                 bColor: AppColors.secondary,
               ),
+
               const SizedBox(height: 20),
             ],
           ),
@@ -205,6 +192,4 @@ class _DateToMarryState extends State<DateToMarry> {
       ),
     );
   }
-
-
 }

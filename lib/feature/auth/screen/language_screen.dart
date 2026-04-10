@@ -339,7 +339,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
               ),
 
               /// Button
-              CustomButton(
+              AppButton(
                 text: "NEXT",
                 onTap: onNext,
                 bColor: AppColors.secondary,

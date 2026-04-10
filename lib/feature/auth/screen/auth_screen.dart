@@ -3,6 +3,7 @@ import 'package:staybea_app/core/constant/App_color.dart';
 import 'package:staybea_app/core/constant/app_icon.dart';
 import 'package:staybea_app/core/utils/app_logo.dart';
 import 'package:staybea_app/core/utils/app_size.dart';
+import '../../../core/widget/app_button.dart';
 import '../../google/translation_service.dart';
 import 'number_verify_screen.dart';
 
@@ -91,32 +92,40 @@ class AuthScreen extends StatelessWidget {
                   30.height,
 
                   /// 🌐 Translated Terms Text
-                  Text(
-                    t["terms"]!,
-                    textAlign: TextAlign.center,
-                    style:  TextStyle(
-                        fontSize: appSize.mediumText,
-                        color: Colors.black87),
-                  ),
+                 Padding(
+                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                   child: Column(
+                     children: [
+                       Text(
+                         t["terms"]!,
+                         textAlign: TextAlign.center,
+                         style:  TextStyle(
+                             fontSize: appSize.mediumText,
+                             color: Colors.black87),
+                       ),
 
-                  50.height,
+                       50.height,
 
 
-                  /// 📱 Button
-                  _socialButton(
-                    iconPath: AppIcon.phone,
-                    text: t["phoneBtn"]!,
-                    appSize: appSize,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) =>
-                          const NumberVerifyScreen(),
-                        ),
-                      );
-                    },
-                  ),
+                       /// 📱 Button
+                       AppButton(
+                         text:  t["phoneBtn"]!,
+                         onTap: () {
+                           Navigator.push(
+                             context,
+                             MaterialPageRoute(
+                               builder: (_) =>
+                               const NumberVerifyScreen(),
+                             ),
+                           );
+                         },
+                         bColor: AppColors.secondary,
+                         tColor: Colors.white,
+                         borderRadius:20,
+                       ),
+                     ],
+                   ),
+                 ),
 
                   50.height,
 
@@ -143,37 +152,4 @@ class AuthScreen extends StatelessWidget {
     );
   }
 
-  Widget _socialButton({
-    required String iconPath,
-    required String text,
-    required VoidCallback onTap,
-    required AppSize  appSize,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: appSize.height*0.05,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: AppColors.primary),
-        ),
-        child: Row(
-          mainAxisAlignment:
-          MainAxisAlignment.center,
-          children: [
-            Image.asset(iconPath, height: 22),
-            const SizedBox(width: 10),
-            Text(
-              text,
-              style:  TextStyle(
-                fontSize: appSize.mediumText,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

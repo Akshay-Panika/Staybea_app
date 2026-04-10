@@ -320,7 +320,7 @@ class _GetBoostScreenState extends State<GetBoostScreen> {
 
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: CustomButton(
+              child: AppButton(
                   tColor: Colors.white,
                   bColor: AppColors.secondary,
                   text: _continueButtonText,

@@ -171,7 +171,7 @@ class _LocationAllowScreenState extends State<LocationAllowScreen> with SingleTi
                   Obx(() {
                     return controller.isLoading.value
                         ? const CircularProgressIndicator(color: AppColors.secondary,)
-                        : CustomButton(
+                        : AppButton(
                       text: t["allow"]!,
                       onTap: () async {
                         await controller.fetchLocation();
@@ -189,7 +189,7 @@ class _LocationAllowScreenState extends State<LocationAllowScreen> with SingleTi
 
                   const SizedBox(height: 12),
 
-                  CustomButton(
+                  AppButton(
                     text: t["skip"]!,
                     onTap: () {
                       Get.to(() =>

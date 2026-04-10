@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomButton extends StatelessWidget {
+class AppButton extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
   final bool isLoading;
@@ -9,7 +9,7 @@ class CustomButton extends StatelessWidget {
   final double height;
   final double borderRadius;
 
-  const CustomButton({
+  const AppButton({
     super.key,
     required this.text,
     required this.onTap,

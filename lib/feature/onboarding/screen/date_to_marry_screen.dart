@@ -126,30 +126,31 @@ class _TopBar extends StatelessWidget {
           // Avatar with online indicator
           Stack(
             children: [
-              InkWell(
-                onTap: () {
+              IconButton(
+                onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen(),));
                 },
-                child: CircleAvatar(
-                  radius: 22,
-                  backgroundColor: Colors.grey.shade300,
-                  backgroundImage:
-                  const NetworkImage('https://picsum.photos/100/100?random=99'),
-                ),
+                icon: Icon(Icons.menu,size: 30,),
+                // child: CircleAvatar(
+                //   radius: 22,
+                //   backgroundColor: Colors.grey.shade300,
+                //   backgroundImage:
+                //   const NetworkImage('https://picsum.photos/100/100?random=99'),
+                // ),
               ),
-              Positioned(
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF4CAF50),
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   right: 0,
+              //   bottom: 0,
+              //   child: Container(
+              //     width: 12,
+              //     height: 12,
+              //     decoration: BoxDecoration(
+              //       color: const Color(0xFF4CAF50),
+              //       shape: BoxShape.circle,
+              //       border: Border.all(color: Colors.white, width: 2),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           const Spacer(),

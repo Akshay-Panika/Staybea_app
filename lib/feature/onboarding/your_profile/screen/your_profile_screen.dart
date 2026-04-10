@@ -180,7 +180,7 @@ class _YourProfileStepState extends State<YourProfileScreen> with SingleTickerPr
                           ),
                         ),
                         Icon(
-                          isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                          isOpen ? Icons.arrow_drop_down_circle_outlined : Icons.arrow_drop_down_circle_outlined,
                           color: Colors.grey,
                         ),
                       ],

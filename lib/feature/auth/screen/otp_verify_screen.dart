@@ -189,7 +189,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 const Spacer(),
 
                 /// Button
-                CustomButton(
+                AppButton(
                   text: t["btn"]!,
                   onTap: () {
                     Navigator.push(

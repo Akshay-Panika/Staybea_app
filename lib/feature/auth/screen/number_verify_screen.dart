@@ -146,7 +146,7 @@ class NumberVerifyScreen extends StatelessWidget {
                 const Spacer(),
 
                 /// Button
-                CustomButton(
+                AppButton(
                   text:t["btn"]!,
                   onTap: () {
                     Navigator.push(
