@@ -5,6 +5,7 @@ import 'package:staybea_app/feature/profile/screen/profile_screen.dart';
 
 import '../../get_boost/screen/get_boost_screen.dart';
 import '../../notification/screen/notification_screen.dart';
+import 'd2m_boost_screen.dart';
 import 'marriage_profile_screen.dart';
 
 final List<Map<String, dynamic>> _data = [
@@ -157,34 +158,18 @@ class _TopBar extends StatelessWidget {
           // Notification icons
           IconButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => GetBoostScreen(),));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => D2mBoostScreen(),));
             },
-            icon:  Icon(Icons.star, size: 26),
+            icon:  Icon(Icons.rocket_launch_outlined, size: 26),
             color: Colors.black87,
           ),
-          Stack(
-            children: [
-              IconButton(
-                onPressed: () {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen(),));
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen(),));
 
-    },
-                icon: const Icon(Icons.notifications_active_outlined, size: 26),
-                color: Colors.black87,
-              ),
-              Positioned(
-                right: 8,
-                top: 8,
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFE91E63),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ],
+            },
+            icon: const Icon(Icons.notifications_active_outlined, size: 26),
+            color: Colors.black87,
           ),
         ],
       ),
