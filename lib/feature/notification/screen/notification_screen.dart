@@ -73,9 +73,6 @@ final _earlierItems = [
   ),
 ];
 
-// ─────────────────────────────────────────────
-// Constants
-// ─────────────────────────────────────────────
 
 const Color kPrimary = Color(0xFFAD2F6D);
 const Color kPrimaryLight = Color(0xFFFDF0F7);
@@ -84,9 +81,7 @@ const Color kDivider = Color(0xFFE8E8E8);
 const Color kUnreadBg = Color(0xFFFDF0F7);
 const Color kReadBg = Colors.white;
 
-// ─────────────────────────────────────────────
-// Screen
-// ─────────────────────────────────────────────
+
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -94,29 +89,38 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: const Color(0xffFAFAFA),
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── App Bar ───────────────────────────
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+            /// Top App Bar
+            Container(
+              padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0x08000000),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  )
+                ],
+              ),
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-
-                    },
-                    child: const Icon(Icons.arrow_back_ios,
-                        size: 20, color: Colors.black87),
+                    onTap: () => Navigator.pop(context),
+                    child: const Icon(
+                      Icons.arrow_back_ios_new,
+                      size: 20,
+                      color: Colors.black87,
+                    ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 20),
                   const Text(
-                    'Notification',
+                    "Notification",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.black87,
                     ),
@@ -125,249 +129,188 @@ class NotificationScreen extends StatelessWidget {
               ),
             ),
 
-            // ── List ─────────────────────────────
+            /// Notification List
             Expanded(
               child: ListView(
-                padding: EdgeInsets.zero,
+                padding: const EdgeInsets.only(top: 8),
                 children: [
-                  _SectionHeader(label: 'Today'),
-                  ..._todayItems.map((item) => _NotificationTile(item: item)),
-                  const SizedBox(height: 12),
-                  _SectionHeader(label: 'Earlier'),
-                  ..._earlierItems.map((item) => _NotificationTile(item: item)),
-                  const SizedBox(height: 16),
+                  const _SectionHeader(label: "Today"),
+
+                  ..._todayItems.map(
+                        (item) => _NotificationTile(item: item),
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  const _SectionHeader(label: "Earlier"),
+
+                  ..._earlierItems.map(
+                        (item) => _NotificationTile(item: item),
+                  ),
+
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: _BottomBar(),
     );
   }
 }
 
-// ─────────────────────────────────────────────
-// Section Header
-// ─────────────────────────────────────────────
-
 class _SectionHeader extends StatelessWidget {
   final String label;
-  const _SectionHeader({required this.label});
+
+  const _SectionHeader({
+    required this.label,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
+      padding: EdgeInsets.only(left: 12),
       child: Text(
         label,
         style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: kSubtext,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          color: Color(0xff7D7D7D),
         ),
       ),
     );
   }
 }
 
-// ─────────────────────────────────────────────
-// Notification Tile
-// ─────────────────────────────────────────────
-
 class _NotificationTile extends StatelessWidget {
   final NotificationItem item;
-  const _NotificationTile({required this.item});
+
+  const _NotificationTile({
+    required this.item,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isHoroscope = item.type == NotificationType.horoscope;
-    final bgColor = item.isRead ? kReadBg : kUnreadBg;
+    final bool isHoroscope =
+        item.type == NotificationType.horoscope;
 
     return Container(
-      color: bgColor,
-      child: Column(
+      margin: const EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: 6,
+      ),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: item.isRead
+            ? Colors.white
+            : const Color(0xffFFF6FB),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            child: Row(
+          /// Avatar
+          CircleAvatar(
+            radius: 24,
+            backgroundImage: NetworkImage(item.avatarUrl),
+          ),
+
+          const SizedBox(width: 12),
+
+          /// Content
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Avatar
-                _Avatar(url: item.avatarUrl),
-                const SizedBox(width: 12),
-
-                // Content
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Title row
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: _buildTitle(item.title),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            item.time,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: kSubtext,
-                            ),
-                          ),
-                        ],
+                /// Title + Time
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: _buildTitle(item.title),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      item.time,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xffA0A0A0),
                       ),
+                    ),
+                  ],
+                ),
 
-                      // Subtitle
-                      if (item.subtitle != null) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          item.subtitle!,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: Color(0xFF555555),
-                            height: 1.4,
-                          ),
-                        ),
-                      ],
-
-                      // Read More button for horoscope
-                      if (isHoroscope) ...[
-                        const SizedBox(height: 8),
-                        OutlinedButton(
-                          onPressed: () {},
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(
-                                color: kPrimary, width: 1.2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 14, vertical: 5),
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: const Text(
-                            'Read More',
-                            style: TextStyle(
-                              color: kPrimary,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
+                /// Subtitle
+                if (item.subtitle != null) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    item.subtitle!,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      height: 1.4,
+                      color: Color(0xff6D6D6D),
+                    ),
                   ),
+                ],
+
+                const SizedBox(height: 10),
+
+                /// Button
+                _ActionButton(
+                  text: isHoroscope
+                      ? "Read More"
+                      : item.type == NotificationType.match
+                      ? "Connect"
+                      : "View Profile",
                 ),
               ],
             ),
           ),
-          const Divider(height: 1, thickness: 1, color: kDivider),
         ],
       ),
     );
   }
 
-  Widget _buildTitle(String title) {
-    // Bold names (Mayur G., Himanshu D, 3 other)
-    final boldPatterns = [
-      'Mayur G.',
-      'Himanshu D',
-      '3 other',
-    ];
-
-    List<TextSpan> spans = [];
-    String remaining = title;
-
-    while (remaining.isNotEmpty) {
-      int matchStart = -1;
-      String? matchedPattern;
-
-      for (final pattern in boldPatterns) {
-        final idx = remaining.indexOf(pattern);
-        if (idx != -1 && (matchStart == -1 || idx < matchStart)) {
-          matchStart = idx;
-          matchedPattern = pattern;
-        }
-      }
-
-      if (matchStart == -1 || matchedPattern == null) {
-        spans.add(TextSpan(text: remaining));
-        break;
-      }
-
-      if (matchStart > 0) {
-        spans.add(TextSpan(text: remaining.substring(0, matchStart)));
-      }
-
-      spans.add(TextSpan(
-        text: matchedPattern,
-        style: const TextStyle(fontWeight: FontWeight.w700),
-      ));
-
-      remaining = remaining.substring(matchStart + matchedPattern.length);
-    }
-
-    return RichText(
-      text: TextSpan(
-        style: const TextStyle(
-          fontSize: 14,
-          color: Colors.black87,
-          height: 1.4,
-        ),
-        children: spans,
+  Widget _buildTitle(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 14,
+        height: 1.4,
+        fontWeight: FontWeight.w500,
+        color: Colors.black87,
       ),
     );
   }
 }
 
-// ─────────────────────────────────────────────
-// Avatar
-// ─────────────────────────────────────────────
+class _ActionButton extends StatelessWidget {
+  final String text;
 
-class _Avatar extends StatelessWidget {
-  final String url;
-  const _Avatar({required this.url});
+  const _ActionButton({
+    required this.text,
+  });
 
-  @override
-  Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: 26,
-      backgroundColor: Colors.grey[200],
-      backgroundImage: NetworkImage(url),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────
-// Bottom Nav Bar (Android style)
-// ─────────────────────────────────────────────
-
-class _BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 56,
-      color: Colors.white,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black54),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.circle, color: Colors.black54, size: 20),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.stop, color: Colors.black54),
-            onPressed: () {},
-          ),
-        ],
+      padding: const EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: 6,
+      ),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: const Color(0xffC12A74),
+        ),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          color: Color(0xffC12A74),
+        ),
       ),
     );
   }

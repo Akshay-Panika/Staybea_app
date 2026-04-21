@@ -192,7 +192,6 @@ class _GetBoostScreenState extends State<GetBoostScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ── Top Bar ──────────────────────────────
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
@@ -217,7 +216,6 @@ class _GetBoostScreenState extends State<GetBoostScreen> {
               ),
             ),
 
-            // ── Tab Bar ──────────────────────────────
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: _TabBar(
@@ -280,7 +278,7 @@ class _GetBoostScreenState extends State<GetBoostScreen> {
                       final opt = options[i];
                       final isSelected = _selectedOptionIndex == i;
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.only(bottom: 20),
                         child: _BoostOptionCard(
                           option: opt,
                           isSelected: isSelected,
@@ -324,9 +322,7 @@ class _GetBoostScreenState extends State<GetBoostScreen> {
                   tColor: Colors.white,
                   bColor: AppColors.secondary,
                   text: _continueButtonText,
-                  onTap: () {
-
-                  },),
+                  onTap: () {},),
             ),
           ],
         ),
@@ -335,9 +331,6 @@ class _GetBoostScreenState extends State<GetBoostScreen> {
   }
 }
 
-// ─────────────────────────────────────────────
-// Tab Bar Widget
-// ─────────────────────────────────────────────
 
 class _TabBar extends StatelessWidget {
   final List<String> tabs;
@@ -353,56 +346,81 @@ class _TabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 44,
+      height: 54,
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFFF2F2F2),
-        borderRadius: BorderRadius.circular(22),
+        color: const Color(0xFFF2ECF2),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(
+          color: Colors.grey.shade200,
+        ),
       ),
-      child: Row(
-        children: List.generate(tabs.length, (i) {
-          final selected = selectedIndex == i;
-          return Expanded(
-            child: GestureDetector(
-              onTap: () => onTabSelected(i),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                margin: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                  color: selected ? Colors.white : Colors.transparent,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: selected
-                      ? [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    )
-                  ]
-                      : [],
-                ),
-                child: Center(
-                  child: Text(
-                    tabs[i],
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight:
-                      selected ? FontWeight.w600 : FontWeight.w400,
-                      color: selected ? Colors.black87 : kSubtext,
-                    ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final tabWidth = (constraints.maxWidth - 8) / tabs.length;
+
+          return Stack(
+            children: [
+              /// Sliding Selected Background
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 350),
+                curve: Curves.easeInOut,
+                left: selectedIndex * tabWidth,
+                top: 0,
+                bottom: 0,
+                child: Container(
+                  width: tabWidth,
+                  margin: const EdgeInsets.symmetric(horizontal: 2),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(26),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.06),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
+
+              /// Tab Items
+              Row(
+                children: List.generate(tabs.length, (i) {
+                  final isSelected = selectedIndex == i;
+
+                  return Expanded(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => onTabSelected(i),
+                      child: Center(
+                        child: AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeInOut,
+                          style: TextStyle(
+                            fontSize: isSelected ? 15 : 14,
+                            fontWeight: isSelected
+                                ? FontWeight.w600
+                                : FontWeight.w500,
+                            color: isSelected
+                                ? Colors.black87
+                                : kSubtext,
+                          ),
+                          child: Text(tabs[i]),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ],
           );
-        }),
+        },
       ),
     );
   }
 }
-
-// ─────────────────────────────────────────────
-// Avatar with Icon overlay
-// ─────────────────────────────────────────────
 
 class _AvatarWithIcon extends StatelessWidget {
   final IconData iconData;
@@ -575,36 +593,77 @@ class _BoostOptionCard extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// OR Divider
-// ─────────────────────────────────────────────
-
 class _OrDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Expanded(child: Divider(color: kDivider, thickness: 1)),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text(
-            'OR',
-            style: TextStyle(
-              fontSize: 13,
-              color: kSubtext,
-              fontWeight: FontWeight.w500,
+        /// Left Gradient Line
+        Expanded(
+          child: Container(
+            height: 2,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  AppColors.secondary.withOpacity(0.15),
+                  AppColors.secondary,
+                ],
+              ),
             ),
           ),
         ),
-        const Expanded(child: Divider(color: kDivider, thickness: 1)),
+
+        /// OR Text
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 4,
+            ),
+            // decoration: BoxDecoration(
+            //   color: Colors.white,
+            //   borderRadius: BorderRadius.circular(20),
+            //   border: Border.all(
+            //     color: AppColors.secondary.withOpacity(0.15),
+            //   ),
+            // ),
+            child: Text(
+              "OR",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: kSubtext,
+                letterSpacing: 1,
+              ),
+            ),
+          ),
+        ),
+
+        /// Right Gradient Line
+        Expanded(
+          child: Container(
+            height: 2,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  AppColors.secondary,
+                  AppColors.secondary.withOpacity(0.15),
+                ],
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
 }
-
-// ─────────────────────────────────────────────
-// Get Premium Row
-// ─────────────────────────────────────────────
 
 class _PremiumRow extends StatelessWidget {
   @override

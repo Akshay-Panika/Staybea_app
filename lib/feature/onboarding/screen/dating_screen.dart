@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staybea_app/feature/onboarding/dating/profile_page.dart';
+import 'package:staybea_app/feature/onboarding/screen/partner_preferences_screen.dart';
 import 'package:staybea_app/feature/profile/screen/profile_screen.dart';
 import '../../../core/utils/app_size.dart';
 import '../../get_boost/screen/get_boost_screen.dart';
@@ -374,7 +375,10 @@ class _DatingScreenState extends State<DatingScreen>
               ),
             ),
           ),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.tune, color: Colors.black54)),
+          IconButton(onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => PartnerPreferencesScreen(),));
+
+          }, icon: const Icon(Icons.tune, color: Colors.black54)),
           IconButton(onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => GetBoostScreen(),));
           }, icon: const Icon(Icons.rocket_launch_outlined, color: Colors.black54)),
@@ -527,7 +531,7 @@ Widget _profileData(BuildContext context,Map<dynamic, dynamic> profile, AppSize 
 void _showInterestSheet(BuildContext context) {
   final TextEditingController messageController = TextEditingController();
   bool isSelectMSGView = false;
-  bool isSentSuccess = false; // Success state track karne ke liye
+  bool isSentSuccess = false;
   String selectedMessage = "";
 
   showModalBottomSheet(
@@ -552,7 +556,6 @@ void _showInterestSheet(BuildContext context) {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // --- 1. SUCCESS VIEW (Replace logic) ---
                     if (isSentSuccess) ...[
                       const SizedBox(height: 40),
                       const Text(
@@ -564,7 +567,7 @@ void _showInterestSheet(BuildContext context) {
                       const SizedBox(height: 30),
                       const CircleAvatar(
                         radius: 45,
-                        backgroundColor: Color(0xFF76D746), // Green color from image
+                        backgroundColor: Color(0xFF76D746),
                         child: Icon(Icons.check, color: Colors.white, size: 55),
                       ),
                       const SizedBox(height: 40),
@@ -682,6 +685,8 @@ void _showInterestSheet(BuildContext context) {
                           ],
                         ),
                       ],
+
+                    SizedBox(height: 30,)
                   ],
                 ),
               ),

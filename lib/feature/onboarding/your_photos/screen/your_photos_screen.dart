@@ -14,7 +14,7 @@ class _YourPhotosScreenState extends State<YourPhotosScreen> {
   List<File?> photos = List.generate(5, (index) => null);
 
   Future<void> pickImage(int index) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    final FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.image,
     );
 
