@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widget/preference_bottom_sheet.dart';
+
 const _pink = Color(0xFFAD3B6E);
 const _cardBorder = Color(0xFFE8E8E8);
 const _labelColor = Color(0xFF9E9E9E);
@@ -101,13 +103,482 @@ class _PartnerPreferencesScreenState extends State<PartnerPreferencesScreen> {
           const SizedBox(height: 14),
           _upgradeBanner(),
           _sectionHeader('Advance Preference'),
-          ...List.generate(_advancedPrefs.length, (i) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: _simpleCard(child: _lockedRowInner(_advancedPrefs[i])),
-            );
-          }),
-          const SizedBox(height: 24),
+          Column(
+            spacing: 14,
+            children: [
+              _simpleCard(child: _lockedRowInner("Has Bio")),
+              _simpleCard(
+                child: _prefRowInner(
+                  label: 'Interests',
+                  value: 'Poetry, Writing',
+                  onTap: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PreferenceBottomSheet(
+                        title: "Interests",
+                        selectedItems: ["Poetry", "Content Creation", "Writing"],
+                        topic: "Creativity",
+                        icon: "🎨",
+                        isWrap: true,
+                        allItems: [
+                          "Poetry",
+                          "Photography",
+                          "Sneakers",
+                          "Writing",
+                          "Art",
+                          "Music",
+                          "Dance",
+                          "Literature",
+                          "Freelancing",
+                          "Content Creation",
+                          "Language Exchange"
+                        ],
+                        showSearch: true,
+                        showOpenToAll: false,
+                        maxSelection: 10,
+                      ),
+                    );
+
+                    if (result != null) {
+                      print(result);
+                    }
+                  },
+                ),
+              ),
+
+              _simpleCard(
+                child: _prefRowInner(
+                  label: 'Looking For',
+                  value: 'Long term ...',
+                  onTap: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PreferenceBottomSheet(
+                        title: "Looking For",
+                        selectedItems: ["Long term relationship", "New Friends"],
+                        topic: "",
+                        icon: "🎨",
+                        isWrap: false,
+                        allItems: [
+                          "Open to all",
+                          "Long term relationship",
+                          "Short term relationship",
+                          "New Friends",
+                          "Casual"
+                        ],
+                        showSearch: false,
+                        showOpenToAll: false,
+                        maxSelection: 10,
+                      ),
+                    );
+
+                    if (result != null) {
+                      print(result);
+                    }
+                  },
+                ),
+              ),
+              _simpleCard(
+                child: _prefRowInner(
+                  label: 'Languages',
+                  value: 'Marathi, Hindi, En...',
+                  onTap: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PreferenceBottomSheet(
+                        title: "Languages",
+                        selectedItems: ["Marathi", "Hindi","English"],
+                        topic: "",
+                        icon: "🎨",
+                        isWrap: false,
+                        allItems: [
+                          "Marathi", "Hindi","English"
+                        ],
+                        showSearch: true,
+                        showOpenToAll: false,
+                        maxSelection: 5,
+                      ),
+                    );
+
+                    if (result != null) {
+                      print(result);
+                    }
+                  },
+                ),
+              ),
+
+              _simpleCard(
+                child: _prefRowInner(
+                  label: 'Zodiac',
+                  value: 'Never married',
+                  onTap: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PreferenceBottomSheet(
+                        title: "Zodiac",
+                        selectedItems: ["Capricorn", "Aquarius","Pisces"],
+                        topic: "",
+                        icon: "🎨",
+                        isWrap: true,
+                        allItems: [
+                          "Capricorn", "Aquarius","Pisces",
+                          "Taurus", "Gemini","Leo",
+                        ],
+                        showSearch: true,
+                        showOpenToAll: true,
+                        maxSelection: 5,
+                      ),
+                    );
+
+                    if (result != null) {
+                      print(result);
+                    }
+                  },
+                ),
+              ),
+
+              _simpleCard(
+                child: _prefRowInner(
+                  label: 'Education',
+                  value: 'Open to all',
+                  onTap: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PreferenceBottomSheet(
+                        title: "Education",
+                        selectedItems: ["Bachelors", "In collage","High education"],
+                        topic: "",
+                        icon: "🎨",
+                        isWrap: true,
+                        allItems: [
+                          "Bachelors", "In collage","High education",
+                          "Taurus", "PhD","In grad school","Masters","Trade school"
+                        ],
+                        showSearch: false,
+                        showOpenToAll: true,
+                        maxSelection: 5,
+                      ),
+                    );
+
+                    if (result != null) {
+                      print(result);
+                    }
+                  },),
+              ),
+
+              _simpleCard(
+                child: _prefRowInner(
+                  label: 'Occupation',
+                  value: 'Open to all',
+                  onTap: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PreferenceBottomSheet(
+                        title: "Occupation",
+                        selectedItems: ["Open to all",],
+                        topic: "",
+                        icon: "🎨",
+                        isWrap: true,
+                        allItems: [
+                          "Engineering", "Arts / Design","Finance / Commerce",
+                          "Computers / IT", "Science","Medicine","Masters","Management"
+                        ],
+                        showSearch: false,
+                        showOpenToAll: true,
+                        maxSelection: 5,
+                      ),
+                    );
+
+                    if (result != null) {
+                      print(result);
+                    }
+                  },),
+              ),
+
+              _simpleCard(
+                child: _prefRowInner(
+                  label: 'Communication Style',
+                  value: 'Open to all',
+                  onTap: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PreferenceBottomSheet(
+                        title: "Occupation",
+                        selectedItems: ["Phone caller",],
+                        topic: "",
+                        icon: "🎨",
+                        isWrap: true,
+                        allItems: [
+                          "I stay WhatsApp all day", "Big time texter","Phone caller",
+                          "Video Chatter", "I’m show to answer on WhatsApp","Bad texter","Better in person",
+                        ],
+                        showSearch: false,
+                        showOpenToAll: true,
+                        maxSelection: 5,
+                      ),
+                    );
+
+                    if (result != null) {
+                      print(result);
+                    }
+                  },),
+              ),
+              _simpleCard(
+                child: _prefRowInner(
+                  label: 'Love Style',
+                  value: 'Open to all',
+                  onTap: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PreferenceBottomSheet(
+                        title: "Love Style",
+                        selectedItems: ["Open to all",],
+                        topic: "",
+                        icon: "🎨",
+                        isWrap: true,
+                        allItems: [
+                         "Thoughtful gestures",
+                         "Presents",
+                         "Touch",
+                         "Compliments",
+                        ],
+                        showSearch: false,
+                        showOpenToAll: true,
+                        maxSelection: 5,
+                      ),
+                    );
+
+                    if (result != null) {
+                      print(result);
+                    }
+                  },),
+              ),
+              _simpleCard(
+                child: _prefRowInner(
+                  label: 'Pets',
+                  value: 'Open to all',
+                  onTap: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PreferenceBottomSheet(
+                        title: "Pets",
+                        selectedItems: ["Open to all",],
+                        topic: "",
+                        icon: "🎨",
+                        isWrap: true,
+                        allItems: [
+                          "Dog",
+                          "Reptile",
+                          "Amphibian",
+                          "Rabbit",
+                          "Cat",
+                          "Don’t have, but love"
+                          "Fish",
+                          "Turtle",
+                          "Hamster",
+                          "Bird",
+                          "Pet-free",
+                          "All the pets",
+                        ],
+                        showSearch: false,
+                        showOpenToAll: true,
+                        maxSelection: 5,
+                      ),
+                    );
+
+                    if (result != null) {
+                      print(result);
+                    }
+                  },),
+              ),
+
+
+              _simpleCard(
+                child: _prefRowInner(
+                  label: 'Diet',
+                  value: 'Open to all',
+                  onTap: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PreferenceBottomSheet(
+                        title: "Diet",
+                        selectedItems: ["Open to all",],
+                        topic: "",
+                        icon: "🎨",
+                        isWrap: true,
+                        allItems: [
+                          "Non-Vegetarian",
+                          "Vegetarian",
+                          "Eggetarian",
+                          "Vegan",
+                        ],
+                        showSearch: false,
+                        showOpenToAll: true,
+                        maxSelection: 5,
+                      ),
+                    );
+
+                    if (result != null) {
+                      print(result);
+                    }
+                  },),
+              ),
+
+              _simpleCard(
+                child: _prefRowInner(
+                  label: 'Drinking',
+                  value: 'Open to all',
+                  onTap: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PreferenceBottomSheet(
+                        title: "Drinking",
+                        selectedItems: ["Open to all",],
+                        topic: "",
+                        icon: "🎨",
+                        isWrap: true,
+                        allItems: [
+                          "Non-Vegetarian",
+                          "Vegetarian",
+                          "Eggetarian",
+                          "Vegan",
+                        ],
+                        showSearch: false,
+                        showOpenToAll: true,
+                        maxSelection: 5,
+                      ),
+                    );
+
+                    if (result != null) {
+                      print(result);
+                    }
+                  },),
+              ),
+
+              _simpleCard(
+                child: _prefRowInner(
+                  label: 'Smoking',
+                  value: 'Open to all',
+                  onTap: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PreferenceBottomSheet(
+                        title: "Drinking",
+                        selectedItems: ["Open to all",],
+                        topic: "",
+                        icon: "🎨",
+                        isWrap: true,
+                        allItems: [
+                          "Non-Vegetarian",
+                          "Vegetarian",
+                          "Eggetarian",
+                          "Vegan",
+                        ],
+                        showSearch: false,
+                        showOpenToAll: true,
+                        maxSelection: 5,
+                      ),
+                    );
+
+                    if (result != null) {
+                      print(result);
+                    }
+                  },),
+              ),
+              _simpleCard(
+                child: _prefRowInner(
+                  label: 'Workout',
+                  value: 'Open to all',
+                  onTap: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PreferenceBottomSheet(
+                        title: "Workout",
+                        selectedItems: ["Open to all",],
+                        topic: "",
+                        icon: "🎨",
+                        isWrap: true,
+                        allItems: [
+                          "Every",
+                          "Often",
+                          "Sometimes ",
+                          "Never",
+                        ],
+                        showSearch: false,
+                        showOpenToAll: true,
+                        maxSelection: 5,
+                      ),
+                    );
+
+                    if (result != null) {
+                      print(result);
+                    }
+                  },),
+              ),
+
+              _simpleCard(
+                child: _prefRowInner(
+                  label: 'Social Media',
+                  value: 'Open to all',
+                  onTap: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PreferenceBottomSheet(
+                        title: "Social Media",
+                        selectedItems: ["Open to all",],
+                        topic: "",
+                        icon: "🎨",
+                        isWrap: true,
+                        allItems: [
+                          "Influencer status",
+                          "Socially active",
+                          "Off the grid ",
+                          "Passive scroller",
+                        ],
+                        showSearch: false,
+                        showOpenToAll: true,
+                        maxSelection: 5,
+                      ),
+                    );
+
+                    if (result != null) {
+                      print(result);
+                    }
+                  },),
+              ),
+            ],
+          ),
+
+
+          const SizedBox(height: 50),
         ],
       ),
     );
@@ -151,18 +622,29 @@ class _PartnerPreferencesScreenState extends State<PartnerPreferencesScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(label,
-                style: const TextStyle(fontSize: 13, color: _labelColor)),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 13,
+                color: _labelColor,
+              ),
+            ),
             Row(
               children: [
-                Text(value,
-                    style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: _valueColor)),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: _valueColor,
+                  ),
+                ),
                 const SizedBox(width: 2),
-                const Icon(Icons.chevron_right,
-                    size: 16, color: Colors.black45),
+                const Icon(
+                  Icons.chevron_right,
+                  size: 16,
+                  color: Colors.black45,
+                ),
               ],
             ),
           ],
@@ -322,14 +804,24 @@ class _PartnerPreferencesScreenState extends State<PartnerPreferencesScreen> {
 
   Widget _lockedRowInner(String label) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label,
               style: const TextStyle(fontSize: 13, color: _labelColor)),
-          Icon(Icons.lock_outline_rounded,
-              size: 18, color: Colors.grey.shade400),
+          SizedBox(
+            width: 40,
+            height: 24,
+            child: FittedBox(
+              fit: BoxFit.fill,
+              child: Switch(
+                value: false,
+                onChanged: (value) {},
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+            ),
+          )
         ],
       ),
     );
